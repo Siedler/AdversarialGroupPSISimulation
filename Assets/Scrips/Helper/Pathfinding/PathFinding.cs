@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using Priority_Queue;
+using Scrips;
 using Scrips.Agent;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class PathFinding {
 		
 		// Initiate algorithm
 		WorldCell startEnvironmentWorldCell = environmentMap[currentWorldCellCoordinates];
-		WorldCellAStar startAStarCell = new WorldCellAStar(startEnvironmentWorldCell, null, Direction.E, 0);
+		WorldCellAStar startAStarCell = new WorldCellAStar(startEnvironmentWorldCell, null, Direction.Unspecified, 0);
 		fastPriorityNodes.Add(startEnvironmentWorldCell, startAStarCell);
 		priorityQueue.Enqueue(startAStarCell, 0);
 
@@ -57,6 +58,7 @@ public class PathFinding {
 				directions.Reverse();
 				worldCells.Reverse();
 				
+				Debug.Log("Path found: " + MyDebugging.ListToString(directions));
 				return (directions, worldCells);
 			}
 
@@ -64,6 +66,7 @@ public class PathFinding {
 
 			for (int i = 0; i < neighbours.Length; i++) {
 				if(neighbours[i] == null) continue;
+				
 				WorldCell neighbour = neighbours[i];
 
 				float realDistanceFromStar = nextCell.GetDistanceFromStart() + 1; 

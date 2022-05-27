@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Scrips;
 using Scrips.Agent;
+using Unity.VisualScripting;
 using UnityEditor.Compilation;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -60,6 +62,7 @@ public abstract class ActionPlan
 		return ActionResult.Success;
 	}
 	
+	// TODO 
 	protected ActionResult WalkTo(Vector3Int destinationCellCoordinate) {
 		if (_prevDestination != destinationCellCoordinate) {
 			_prevDestination = destinationCellCoordinate;
@@ -76,7 +79,11 @@ public abstract class ActionPlan
 			HexagonGridUtility.GetCoordinatesOfNeighbouringCell(agent.GetCurrentWorldCell().cellCoordinates, nextDirection);
 
 		if (!environment.DoesCellWithCoordinateExist(newCoordinate)) {
-			throw new InvalidOperationException("The cell with coordinate " + newCoordinate + " with direction " + nextDirection + "that the agent " + agent.name + " wanted to navigate to does not exist!");
+			Debug.Log(MyDebugging.ListToString(_pathToWalk));
+			Debug.Log(agent.GetCurrentWorldCell().cellCoordinates);
+			Debug.Log(newCoordinate);
+			Debug.Log(destinationCellCoordinate);
+			throw new InvalidOperationException("The cell with coordinate " + newCoordinate + " with direction " + nextDirection + " that the agent " + agent.name + " wanted to navigate to does not exist!");
 		}
 
 		EnvironmentWorldCell newEnvironmentWorldCell = environment.GetWorldCellByCoordinates(newCoordinate);

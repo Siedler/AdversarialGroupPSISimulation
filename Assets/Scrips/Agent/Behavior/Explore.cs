@@ -23,18 +23,36 @@ public class Explore : ActionPlan {
 		_goalFound = false;
 	}
 
-	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+	private bool AreThereUnexploredWorldCells() {
 		Dictionary<Vector3Int, AgentMemoryWorldCell> agentWorldMemory = locationMemory.GetAgentsLocationMemory();
+		
+		foreach (AgentMemoryWorldCell agentMemoryWorldCell in agentWorldMemory.Values) {
+			if(!agentMemoryWorldCell.IsExplored()) return true;
+		}
+
+		return false;
+	}
+	
+	private List<AgentMemoryWorldCell> GetUnexploredWorldCells() {
+		Dictionary<Vector3Int, AgentMemoryWorldCell> agentWorldMemory = locationMemory.GetAgentsLocationMemory();
+		
+		List<AgentMemoryWorldCell> unexploredWorldCells = new List<AgentMemoryWorldCell>();
+
+		foreach (AgentMemoryWorldCell agentMemoryWorldCell in agentWorldMemory.Values) {
+			if(agentMemoryWorldCell.IsExplored()) continue;
+				
+			unexploredWorldCells.Add(agentMemoryWorldCell);
+		}
+
+		return unexploredWorldCells;
+	}
+
+	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+		
 
 		if (!_goalFound) {
-			List<AgentMemoryWorldCell> unexploredWorldCells = new List<AgentMemoryWorldCell>();
-
-			foreach (AgentMemoryWorldCell agentMemoryWorldCell in agentWorldMemory.Values) {
-				if(agentMemoryWorldCell.IsExplored()) continue;
-				
-				unexploredWorldCells.Add(agentMemoryWorldCell);
-			}
-
+			List<AgentMemoryWorldCell> unexploredWorldCells = GetUnexploredWorldCells();
+			
 			int randomIndex = Random.Range(0, unexploredWorldCells.Count - 1);
 			_goalCoordinate = unexploredWorldCells[randomIndex].cellCoordinates;
 			_goalFound = true;
@@ -54,6 +72,6 @@ public class Explore : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return true;
+		return AreThereUnexploredWorldCells();
 	}
 }

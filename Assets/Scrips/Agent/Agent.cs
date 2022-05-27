@@ -81,7 +81,6 @@ public class Agent : MonoBehaviour
         _actionPlans = new List<ActionPlan>();
         
         _actionPlans.Add(new Explore(this, _hypothalamus, _locationMemory, _socialMemory, _environment));
-        _actionPlans.Add(new Engage(this, _hypothalamus, _locationMemory, _socialMemory, _environment));
         _actionPlans.Add(new EatCloseFood(this, _hypothalamus, _locationMemory, _socialMemory, _environment));
     }
 
@@ -146,6 +145,10 @@ public class Agent : MonoBehaviour
         _socialMemory.SocialInfluence(healingAgent, 0.1f);
     }
 
+    public int GetTeam() {
+        return _team;
+    }
+    
     public bool IsAlive() {
         return _health > 0;
     }
@@ -232,9 +235,13 @@ public class Agent : MonoBehaviour
             // Check if the Agent already knows the 
             if (_socialMemory.KnowsAgent(agentOnWorldCell)) continue;
 
+            // If the agent is seen for the first time
+            // -> Assign social score depending on team
+            // -> Add to social memory
+            // -> Generate new Action Plans associated with the agent
             double initialSocialScore = agentOnWorldCell._team == _team ? Random.Range(0, 1) : Random.Range(-1, 0);
-            
             _socialMemory.AddNewlyMetAgent(agentOnWorldCell, initialSocialScore);
+            GenerateSocialActionPlans(agentOnWorldCell);
         }
 
         return agentsInFieldOfView;
@@ -251,6 +258,11 @@ public class Agent : MonoBehaviour
         return certaintyLevel * 0.1f;
     }
 
+    private void GenerateSocialActionPlans(Agent newlyMetAgent) {
+        // Add engagement and healing to the agents behavior
+        _actionPlans.Add(new Engage(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
+        _actionPlans.Add(new GoHeal(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
+    }
     private ActionPlan GetStrongestMotive(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
         double[] indicator = new double[] {
             _hypothalamus.GetPainAvoidanceDifference(),

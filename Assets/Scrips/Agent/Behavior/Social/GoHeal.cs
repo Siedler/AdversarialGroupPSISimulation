@@ -6,8 +6,15 @@ public class GoHeal : ActionPlan {
 
 	private Agent _agentToHeal;
 	
-	public GoHeal(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory, HippocampusSocial socialMemory,
-		Environment environment) : base(agent, hypothalamus, locationMemory, socialMemory, environment){
+	public GoHeal(
+		Agent agent,
+		Hypothalamus hypothalamus,
+		HippocampusLocation locationMemory,
+		HippocampusSocial socialMemory,
+		Environment environment,
+		Agent agentToHeal) : base(agent, hypothalamus, locationMemory, socialMemory, environment) {
+
+		_agentToHeal = agentToHeal;
 		
 		expectedPainAvoidance = 0;
 		expectedEnergyIntake = 0;
@@ -46,6 +53,6 @@ public class GoHeal : ActionPlan {
 
 	// TODO check if there are any hurt agents
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return nearbyAgents.Count > 0;
+		return nearbyAgents.Contains(_agentToHeal) && _agentToHeal.GetHealth() < 100;
 	}
 }

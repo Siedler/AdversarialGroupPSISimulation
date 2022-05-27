@@ -7,13 +7,15 @@ public class Engage : ActionPlan {
 
 	public Engage(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
-		Environment environment) : base(agent, hypothalamus, locationMemory, socialMemory, environment) {
+		Environment environment, Agent agentToAttack) : base(agent, hypothalamus, locationMemory, socialMemory, environment) {
+
+		_agentToAttack = agentToAttack;
 		
 		expectedPainAvoidance = -0.2;
 		expectedEnergyIntake = 0;
-		expectedAffiliation = -0.1;
-		expectedCertainty = 0.8;
-		expectedCompetence = 0.8;
+		expectedAffiliation = agent.GetTeam() == agentToAttack.GetTeam() ? -0.5 : -0.1;
+		expectedCertainty = agent.GetTeam() == agentToAttack.GetTeam() ? -0.3 : 0.8;
+		expectedCompetence = agent.GetTeam() == agentToAttack.GetTeam() ? 0.4 : 0.8;
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
@@ -75,6 +77,6 @@ public class Engage : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return nearbyAgents.Count > 0;
+		return nearbyAgents.Contains(_agentToAttack);
 	}
 }

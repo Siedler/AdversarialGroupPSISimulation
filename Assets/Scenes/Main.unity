@@ -543,7 +543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c139c31729dad4590f1d58cad72d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfAgents: 2
+  numberOfAgents: 3
   agentPrefab: {fileID: 7955802073501477745, guid: cb98f9643713078439b5f78c7bd9d2ce, type: 3}
 --- !u!1 &1460781927
 GameObject:
@@ -868,7 +868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c139c31729dad4590f1d58cad72d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfAgents: 2
+  numberOfAgents: 3
   agentPrefab: {fileID: 7955802073501477745, guid: cb98f9643713078439b5f78c7bd9d2ce, type: 3}
 --- !u!1 &2127489806
 GameObject:

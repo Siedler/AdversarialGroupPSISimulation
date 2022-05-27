@@ -19,8 +19,8 @@ public class Environment : MonoBehaviour {
     private AgentController _team2Controller;
     private FoodController _foodController;
 
-    private int _interval = 1; 
-    private float _nextTime = 0;
+    private double _interval = 0.1; 
+    private double _nextTime = 0;
 
     // Start is called before the first frame update
     void Start() {
