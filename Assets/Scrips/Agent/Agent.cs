@@ -7,8 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Agent : MonoBehaviour 
-{
+public class Agent : MonoBehaviour {
     
     // Sprite management
     public Sprite[] teamSprites = new Sprite[2];
@@ -113,8 +112,7 @@ public class Agent : MonoBehaviour
         Debug.Log(name + " Despawned");
     }
 
-    // Internal State regulatio functions
-
+    // Internal State regulation functions
     public void RegisterIncomingRequest(RequestInformation requestInformation) {
         _incomingRequests.Enqueue(requestInformation);
     }
@@ -122,9 +120,8 @@ public class Agent : MonoBehaviour
     public void TakeDamage(int damage) {
         _health -= damage;
 
-        // feel pain
-        // TODO variable on damage (better influence)
-        _hypothalamus.InfluencePainAvoidance(-0.1f);
+        // TODO variable on damage and on how inflicted damage (better influence)
+        Experience(-0.1, 0, -0.1, -0.3, -0.3);
         
         if (_health <= 0) {
             _health = 0;
@@ -171,6 +168,26 @@ public class Agent : MonoBehaviour
 
     public bool HasFood() {
         return _foodCount >= 0;
+    }
+
+    // Experience something, i.e. influence the need satisfaction values
+    public void Experience(double painAvoidance, double energyIntake, double affiliation, double certainty, double competence) {
+        // Influence the hypothalamus, i.e. the needs
+        _hypothalamus.Influence(
+            painAvoidance,
+            energyIntake,
+            affiliation,
+            certainty,
+            competence);
+        
+        // Associate the experience with current location
+        _locationMemory.UpdateNeedSatisfactionAssociations(
+            _currentEnvironmentWorldCell.cellCoordinates,
+            painAvoidance,
+            energyIntake,
+            affiliation,
+            certainty,
+            competence);
     }
 
     public AgentIndividualMemory GetIndividualMemory(Agent agent) {
@@ -317,6 +334,7 @@ public class Agent : MonoBehaviour
         clock++;
 
         _hypothalamus.Tick();
+        _locationMemory.Tick();
 
         // Sense the world and process it
         List<EnvironmentWorldCell> fieldOfView = SenseEnvironment();

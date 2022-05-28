@@ -5,12 +5,16 @@ using UnityEngine;
 public class AgentMemoryWorldCell : WorldCell {
 
 	private bool _explored;
-	private AgentMemoryWorldCell[] _neighbours;
+	private readonly AgentMemoryWorldCell[] _neighbours;
+
+	private double[] _needSatisfactionAssociations;
 
 	public AgentMemoryWorldCell(Vector3Int cellCoordinates, Vector3 worldCoordinates,
 		WorldCellType worldCellType = WorldCellType.Normal, bool explored = false) : base(cellCoordinates, worldCoordinates, worldCellType) {
 		this._neighbours = new AgentMemoryWorldCell[6];
 		this._explored = explored;
+
+		this._needSatisfactionAssociations = new double[5];
 	}
 
 	public void Explore() {
@@ -38,7 +42,46 @@ public class AgentMemoryWorldCell : WorldCell {
 	}
 
 
-	public new AgentMemoryWorldCell[]  GetNeighbours() {
+	public new AgentMemoryWorldCell[] GetNeighbours() {
 		return _neighbours;
+	}
+
+	public void UpdateNeedSatisfactionAssociations(
+		double painAvoidanceSatisfaction,
+		double energySatisfaction,
+		double affiliationSatisfaction,
+		double certaintySatisfaction,
+		double competenceSatisfaction) {
+
+		double[] satisfactionValues = new double[] {
+			painAvoidanceSatisfaction,
+			energySatisfaction,
+			affiliationSatisfaction,
+			certaintySatisfaction,
+			competenceSatisfaction,
+		};
+
+		for (int i = 0; i < _needSatisfactionAssociations.Length; i++) {
+			_needSatisfactionAssociations[i] += satisfactionValues[i];
+
+			if (_needSatisfactionAssociations[i] > 1) _needSatisfactionAssociations[i] = 1;
+			else if (_needSatisfactionAssociations[i] < -1) _needSatisfactionAssociations[i] = -1;
+		}
+	}
+
+	public double[] GetNeedSatisfactionAssociations() {
+		return _needSatisfactionAssociations;
+	}
+
+	private void Forget() {
+		// Update every value depending on if its a negative or positive association
+		for (int i = 0; i < _needSatisfactionAssociations.Length; i++) {
+			_needSatisfactionAssociations[i] *= SimulationSettings.LocationMemoryForgetRates[_needSatisfactionAssociations[i] >= 0 ? 0 : 1][i];
+		}
+	}
+	
+	// Forget values for this specific memory cell
+	public void Tick() {
+		Forget();
 	}
 }

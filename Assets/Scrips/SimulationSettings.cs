@@ -7,6 +7,54 @@ public class SimulationSettings {
 
     public static readonly double FoodPleasure = 0.4f;
 
+    // MEMORY SECTION
+    // Defining the radius of which the memory of the agent is affected if a new experience was made
+    public static readonly int MemoryWorldCellNeedSatisfactionAssociationRadius = 6;
+    
+    // Defining the values of how much each agent forgets values of the location memory.
+    // The values are split for positive and negative associations (negative values are forgotten quicker than positive
+    // ones).
+    // The values should be 0 < x <= 1 where 1 would mean that the agent would never forget anything and 0 would mean
+    // that the agent would forget in one time step everything he/she knew.
+    public static readonly double LocationMemoryPainAvoidancePositiveForgetRate = 0.95;
+    public static readonly double LocationMemoryPainAvoidanceNegativeForgetRate = 0.9;
+    
+    public static readonly double LocationMemoryEnergyPositiveForgetRate = 0.95;
+    public static readonly double LocationMemoryEnergyNegativeForgetRate = 0.9;
+
+    public static readonly double LocationMemoryAffiliationPositiveForgetRate = 0.95;
+    public static readonly double LocationMemoryAffiliationNegativeForgetRate = 0.9;
+
+    public static readonly double LocationMemoryCertaintyPositiveForgetRate = 0.95;
+    public static readonly double LocationMemoryCertaintyNegativeForgetRate = 0.9;
+
+    public static readonly double LocationMemoryCompetencePositiveForgetRate = 0.95;
+    public static readonly double LocationMemoryCompetenceNegativeForgetRate = 0.9;
+    
+    // Simple datastructure to hold the forget values
+    // The first value will define if the values are positive or negative and the second value corresponds to the
+    // need in question
+    public static readonly double[][] LocationMemoryForgetRates = new double[][] {
+        new double[] {
+            SimulationSettings.LocationMemoryPainAvoidancePositiveForgetRate,
+            SimulationSettings.LocationMemoryEnergyPositiveForgetRate,
+            SimulationSettings.LocationMemoryAffiliationPositiveForgetRate,
+            SimulationSettings.LocationMemoryCertaintyPositiveForgetRate,
+            SimulationSettings.LocationMemoryCompetencePositiveForgetRate
+        },
+        new double[] {
+            SimulationSettings.LocationMemoryPainAvoidanceNegativeForgetRate,
+            SimulationSettings.LocationMemoryEnergyNegativeForgetRate,
+            SimulationSettings.LocationMemoryAffiliationNegativeForgetRate,
+            SimulationSettings.LocationMemoryCertaintyNegativeForgetRate,
+            SimulationSettings.LocationMemoryCompetenceNegativeForgetRate
+        }
+    };
+
+    
+    // ACTION PLAN SECTION
+    public static readonly double ActionPlanRollingAverageAlpha = 0.1;
+    
     // TODO Check if these can be variable
     public static readonly double PainAvoidanceMultiplier = 3;
     public static readonly double EnergyMultiplier = 2;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Scrips;
 using Scrips.Agent;
+using Scrips.Helper.Math;
 using Unity.VisualScripting;
 using UnityEditor.Compilation;
 using UnityEngine;
@@ -21,8 +22,9 @@ public abstract class ActionPlan
 
 	private Vector3Int _prevDestination;
 	private List<Direction> _pathToWalk;
-
+	
 	protected double successProbability;
+	// TODO Maybe unite these values into a single array?
 	protected double expectedPainAvoidance;
 	protected double expectedEnergyIntake;
 	protected double expectedAffiliation;
@@ -202,23 +204,18 @@ public abstract class ActionPlan
 	}
 	
 	protected void OnSuccess(double painAvoidance, double energyIntake, double affiliation, double certainty, double competence) {
-		double alpha = 0.1f;
+		successProbability = MathHelper.RunningAverage(successProbability, 1, 0.3f);
 
-		successProbability = RollingAverage(successProbability, 1, 0.3f);
-
-		expectedPainAvoidance = RollingAverage(expectedPainAvoidance, painAvoidance, alpha);
-		expectedEnergyIntake = RollingAverage(expectedEnergyIntake, energyIntake, alpha);
-		expectedAffiliation = RollingAverage(expectedAffiliation, affiliation, alpha);
-		expectedCertainty = RollingAverage(expectedCertainty, certainty, alpha);
-		expectedCompetence = RollingAverage(expectedCompetence, competence, alpha);
+		expectedPainAvoidance = MathHelper.RunningAverage(expectedPainAvoidance, painAvoidance, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedEnergyIntake = MathHelper.RunningAverage(expectedEnergyIntake, energyIntake, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedAffiliation = MathHelper.RunningAverage(expectedAffiliation, affiliation, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedCertainty = MathHelper.RunningAverage(expectedCertainty, certainty, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedCompetence = MathHelper.RunningAverage(expectedCompetence, competence, SimulationSettings.ActionPlanRollingAverageAlpha);
 		
-		hypothalamus.Influence(painAvoidance, energyIntake, affiliation, certainty, competence);
+		agent.Experience(painAvoidance, energyIntake, affiliation, certainty, competence);
 	}
 
 	protected void OnFailure() {
-		successProbability = RollingAverage(successProbability, 0, 0.3f);
-	}
-	private static double RollingAverage(double avg, double newDataPoint, double alpha = .1f) {
-		return (alpha * newDataPoint) + (1.0 - alpha) * avg;
+		successProbability = MathHelper.RunningAverage(successProbability, 0, 0.3f);
 	}
 }
