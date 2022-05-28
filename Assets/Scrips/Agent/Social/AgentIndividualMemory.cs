@@ -13,6 +13,13 @@ public class AgentIndividualMemory {
 		else if (_socialScore < -1) _socialScore = -1;
 	}
 
+	public void SetSocialScore(double value) {
+		_socialScore = value;
+		
+		if (_socialScore > 1) _socialScore = 1;
+		else if (_socialScore < -1) _socialScore = -1;
+	}
+
 	public double GetSocialScore() {
 		return _socialScore;
 	}

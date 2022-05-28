@@ -53,7 +53,6 @@ public class GoHeal : ActionPlan {
 		return ActionResult.Success;
 	}
 
-	// TODO check if there are any hurt agents
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		return nearbyAgents.Contains(_agentToHeal) && _agentToHeal.GetHealth() < 100;
 	}

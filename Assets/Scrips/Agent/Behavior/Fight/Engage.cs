@@ -39,7 +39,7 @@ public class Engage : ActionPlan {
 			return ActionResult.Failure;
 		}
 
-		_agentToAttack.TakeDamage(10);
+		_agentToAttack.TakeDamage(10, agent);
 		agent.SetOrientation((Direction) i);
 		
 		return ActionResult.Success;

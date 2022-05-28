@@ -61,6 +61,19 @@ public class SimulationSettings {
         SocialMemoryPositiveForgetRate,
         SocialMemoryNegativeForgetRate
     };
+
+    // A factor of how much the agent takes in the information about the previously unknown agent
+    // Situation: An agent receives social information about another agent he/she does not know yet. The value of how
+    // much the agent is influenced by the previous agent received information is controlled by this factor.
+    // 0 < x <= 1
+    public static readonly double SocialMemoryReceiveNewUnknownAgentSoftenFactor = 0.8;
+
+    // A factor regulating how much the newly shared information about a known agent is taken into account.
+    // Example: I have a friend that I like by 0.8. Another friends tells me they like them only 0.5. I'll get influenced
+    // by a small factor by this saying. This factor regulated this here. So the new value would be:
+    // (0.5 * SocialMemoryReceiveNewKnownAgentAlphaFactor) + (0.8 * (1 - SocialMemoryReceiveNewKnownAgentAlphaFactor))
+    // 0 <= x <= 1
+    public static readonly double SocialMemoryReceiveNewKnownAgentAlphaFactor = 0.3;
     
     // ACTION PLAN SECTION
     public static readonly double ActionPlanRollingAverageAlpha = 0.1;

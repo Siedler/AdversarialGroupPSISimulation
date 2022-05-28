@@ -82,6 +82,13 @@ public class Agent : MonoBehaviour {
         _actionPlans.Add(new Explore(this, _hypothalamus, _locationMemory, _socialMemory, _environment));
         _actionPlans.Add(new EatCloseFood(this, _hypothalamus, _locationMemory, _socialMemory, _environment));
     }
+    
+    private void GenerateSocialActionPlans(Agent newlyMetAgent) {
+        // Add engagement and healing to the agents behavior
+        _actionPlans.Add(new Engage(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
+        _actionPlans.Add(new GoHeal(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
+        _actionPlans.Add(new ExchangeSocialInformation(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
+    }
 
     public void Spawn(EnvironmentWorldCell spawnCell, Direction startDirection) {
         SetOrientation(startDirection);
@@ -117,11 +124,12 @@ public class Agent : MonoBehaviour {
         _incomingRequests.Enqueue(requestInformation);
     }
     
-    public void TakeDamage(int damage) {
+    public void TakeDamage(int damage, Agent attackingAgent) {
         _health -= damage;
 
         // TODO variable on damage and on how inflicted damage (better influence)
         Experience(-0.1, 0, -0.1, -0.3, -0.3);
+        _socialMemory.SocialInfluence(attackingAgent, -0.5);
         
         if (_health <= 0) {
             _health = 0;
@@ -168,6 +176,16 @@ public class Agent : MonoBehaviour {
 
     public bool HasFood() {
         return _foodCount >= 0;
+    }
+
+    public void ReceiveAgentIndividualMemory(Agent correspondingAgent, double socialScore) {
+        if (_socialMemory.KnowsAgent(correspondingAgent)) {
+            _socialMemory.ReceiveSocialInfluence(correspondingAgent, socialScore);
+            return;
+        }
+        
+        // Agent is not know:
+        _socialMemory.AddNewlyMetAgent(correspondingAgent, socialScore*SimulationSettings.SocialMemoryReceiveNewUnknownAgentSoftenFactor);
     }
 
     // Experience something, i.e. influence the need satisfaction values
@@ -273,12 +291,6 @@ public class Agent : MonoBehaviour {
         }
 
         return certaintyLevel * 0.1f;
-    }
-
-    private void GenerateSocialActionPlans(Agent newlyMetAgent) {
-        // Add engagement and healing to the agents behavior
-        _actionPlans.Add(new Engage(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
-        _actionPlans.Add(new GoHeal(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
     }
     private ActionPlan GetStrongestMotive(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
         double[] indicator = new double[] {
