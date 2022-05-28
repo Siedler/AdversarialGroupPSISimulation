@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SimulationSettings {
@@ -51,6 +52,15 @@ public class SimulationSettings {
         }
     };
 
+    // SOCIAL MEMORY SECTION
+    // The forget rate is given 0 < x <= 1 where 1 means no forgetting and 0 means quick forgetting
+    public static readonly double SocialMemoryPositiveForgetRate = 0.95;
+    public static readonly double SocialMemoryNegativeForgetRate = 0.9;
+
+    public static readonly double[] SocialMemoryForgetRate = new double[] {
+        SocialMemoryPositiveForgetRate,
+        SocialMemoryNegativeForgetRate
+    };
     
     // ACTION PLAN SECTION
     public static readonly double ActionPlanRollingAverageAlpha = 0.1;

@@ -335,7 +335,8 @@ public class Agent : MonoBehaviour {
 
         _hypothalamus.Tick();
         _locationMemory.Tick();
-
+        _socialMemory.Tick();
+        
         // Sense the world and process it
         List<EnvironmentWorldCell> fieldOfView = SenseEnvironment();
         List<Agent> agentsInFieldOfView = SenseCloseAgents(fieldOfView);

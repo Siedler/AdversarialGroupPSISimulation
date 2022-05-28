@@ -16,4 +16,8 @@ public class AgentIndividualMemory {
 	public double GetSocialScore() {
 		return _socialScore;
 	}
+
+	public void Tick() {
+		_socialScore *= SimulationSettings.SocialMemoryForgetRate[_socialScore >= 0 ? 0 : 1];
+	}
 }

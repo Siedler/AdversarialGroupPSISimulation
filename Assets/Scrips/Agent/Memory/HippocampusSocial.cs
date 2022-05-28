@@ -23,4 +23,10 @@ public class HippocampusSocial {
 	public AgentIndividualMemory GetIndividualMemory(Agent agent) {
 		return _agentIndividualMemory[agent];
 	}
+	
+	public void Tick() {
+		foreach (AgentIndividualMemory agentIndividualMemory in _agentIndividualMemory.Values) {
+			agentIndividualMemory.Tick();
+		}	
+	}
 }
