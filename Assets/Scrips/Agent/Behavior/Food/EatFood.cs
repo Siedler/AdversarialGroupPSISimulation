@@ -15,8 +15,6 @@ public class EatFood : ActionPlanFoodRelated{
 		expectedCompetence = 0.5;
 	}
 
-	public override void InitiateActionPlan(Agent correspondingAgent = null) { }
-
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		if (!agent.HasFood()) {
 			OnFailure();

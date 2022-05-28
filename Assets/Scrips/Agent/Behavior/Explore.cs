@@ -20,6 +20,8 @@ public class Explore : ActionPlan {
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
+		base.InitiateActionPlan(correspondingAgent);
+		
 		_goalFound = false;
 	}
 
@@ -47,9 +49,11 @@ public class Explore : ActionPlan {
 		return unexploredWorldCells;
 	}
 
-	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+	public override ActionResult Execute(
+		EnvironmentWorldCell currentEnvironmentWorldCell,
+		List<EnvironmentWorldCell> agentsFieldOfView,
+		List<Agent> nearbyAgents) {
 		
-
 		if (!_goalFound) {
 			List<AgentMemoryWorldCell> unexploredWorldCells = GetUnexploredWorldCells();
 			

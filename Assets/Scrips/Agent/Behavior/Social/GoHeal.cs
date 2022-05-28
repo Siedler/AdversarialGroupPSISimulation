@@ -24,6 +24,8 @@ public class GoHeal : ActionPlan {
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
+		base.InitiateActionPlan(correspondingAgent);
+		
 		_agentToHeal = correspondingAgent;
 	}
 

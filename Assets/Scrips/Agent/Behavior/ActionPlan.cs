@@ -41,7 +41,10 @@ public abstract class ActionPlan
 		this.environment = environment;
 	}
 
-	public abstract void InitiateActionPlan(Agent correspondingAgent = null);
+	public virtual void InitiateActionPlan(Agent correspondingAgent = null) {
+		_pathToWalk = null;
+	}
+	
 	public abstract ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents);
 
 	public abstract bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents);
@@ -64,7 +67,7 @@ public abstract class ActionPlan
 	
 	// TODO 
 	protected ActionResult WalkTo(Vector3Int destinationCellCoordinate) {
-		if (_prevDestination != destinationCellCoordinate) {
+		if (_pathToWalk == null || _prevDestination != destinationCellCoordinate) {
 			_prevDestination = destinationCellCoordinate;
 
 			_pathToWalk = FindPath(destinationCellCoordinate);
@@ -79,10 +82,10 @@ public abstract class ActionPlan
 			HexagonGridUtility.GetCoordinatesOfNeighbouringCell(agent.GetCurrentWorldCell().cellCoordinates, nextDirection);
 
 		if (!environment.DoesCellWithCoordinateExist(newCoordinate)) {
-			Debug.Log(MyDebugging.ListToString(_pathToWalk));
-			Debug.Log(agent.GetCurrentWorldCell().cellCoordinates);
-			Debug.Log(newCoordinate);
-			Debug.Log(destinationCellCoordinate);
+			Debug.Log("Path to walk: "  + MyDebugging.ListToString(_pathToWalk));
+			Debug.Log("Current world cell coordinates: " + agent.GetCurrentWorldCell().cellCoordinates);
+			Debug.Log("New world cell coordinates: " + newCoordinate);
+			Debug.Log("Destination world cell coordinates: " + destinationCellCoordinate);
 			throw new InvalidOperationException("The cell with coordinate " + newCoordinate + " with direction " + nextDirection + " that the agent " + agent.name + " wanted to navigate to does not exist!");
 		}
 
@@ -95,8 +98,10 @@ public abstract class ActionPlan
 			bool shouldStartAversion = Random.Range(0f, 1f) > 0.5;
 			
 			if (!shouldStartAversion) return ActionResult.InProgress;
+			
 			Vector3Int[] neighbouringWorldCells = HexagonGridUtility.GetCoordinatesOfNeighbouringCells(agent.GetCurrentWorldCell().cellCoordinates);
 			List<Tuple<EnvironmentWorldCell, Direction>> emptyWorldCells = new List<Tuple<EnvironmentWorldCell, Direction>>();
+			
 			// Remove 
 			for (int i = 0; i < neighbouringWorldCells.Length; i++) {
 				EnvironmentWorldCell neighbouringWorldCell =

@@ -19,6 +19,8 @@ public class Engage : ActionPlan {
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
+		base.InitiateActionPlan(correspondingAgent);
+		
 		_agentToAttack = correspondingAgent;
 	}
 

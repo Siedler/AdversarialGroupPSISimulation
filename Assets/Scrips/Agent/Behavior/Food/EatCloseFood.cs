@@ -17,6 +17,8 @@ public class EatCloseFood : ActionPlanFoodRelated {
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
+		base.InitiateActionPlan(correspondingAgent);
+		
 		_foodLocation = null;
 	}
 
