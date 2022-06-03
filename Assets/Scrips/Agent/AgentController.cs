@@ -73,8 +73,20 @@ public class AgentController : MonoBehaviour {
 		_agentPersonality.SetValue("HypothalamusCompetenceLeakage", 0.02);
 		
 		// Set the positive and negative forget rate for the location memory of the agent
-		_agentPersonality.SetValue("HippocampusLocationForgetRatePositive", 0.95);
-		_agentPersonality.SetValue("HippocampusLocationForgetRateNegative", 0.9);
+		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRatePositive", 0.95);
+		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRateNegative", 0.9);
+		
+		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRatePositive", 0.95);
+		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRateNegative", 0.9);
+		
+		_agentPersonality.SetValue("HippocampusLocationAffiliationForgetRatePositive", 0.95);
+		_agentPersonality.SetValue("HippocampusLocationAffiliationForgetRateNegative", 0.9);
+		
+		_agentPersonality.SetValue("HippocampusLocationCertaintyForgetRatePositive", 0.95);
+		_agentPersonality.SetValue("HippocampusLocationCertaintyForgetRateNegative", 0.9);
+		
+		_agentPersonality.SetValue("HippocampusLocationCompetenceForgetRatePositive", 0.95);
+		_agentPersonality.SetValue("HippocampusLocationCompetenceForgetRateNegative", 0.9);
 		
 		// Set the positive and negative forget rate for social memory of the agent
 		_agentPersonality.SetValue("HippocampusSocialForgetRatePositive", 0.95);

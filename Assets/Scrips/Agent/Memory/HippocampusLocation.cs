@@ -10,12 +10,25 @@ public class HippocampusLocation {
 	private Dictionary<Vector3Int, AgentMemoryWorldCell> _agentLocationMemory;
 
 	// Array that saves the forget rate for the location memory seperate for positive and negative values (double[2])
-	private double[] _locationForgetRatePositiveNegative;
+	private double[][] _locationForgetRatePositiveNegative;
 
 	public HippocampusLocation(AgentPersonality agentPersonality) {
-		_locationForgetRatePositiveNegative = new double[] {
-			agentPersonality.GetValue("HippocampusLocationForgetRatePositive"),
-			agentPersonality.GetValue("HippocampusLocationForgetRateNegative")
+		_locationForgetRatePositiveNegative = new double[][] {
+			new double[] {
+				agentPersonality.GetValue("HippocampusLocationPainAvoidanceForgetRatePositive"),
+				agentPersonality.GetValue("HippocampusLocationEnergyForgetRatePositive"),
+				agentPersonality.GetValue("HippocampusLocationAffiliationForgetRatePositive"),
+				agentPersonality.GetValue("HippocampusLocationCertaintyForgetRatePositive"),
+				agentPersonality.GetValue("HippocampusLocationCompetenceForgetRatePositive"),
+				
+			},
+			new double[] {
+				agentPersonality.GetValue("HippocampusLocationPainAvoidanceForgetRateNegative"),
+				agentPersonality.GetValue("HippocampusLocationEnergyForgetRateNegative"),
+				agentPersonality.GetValue("HippocampusLocationAffiliationForgetRateNegative"),
+				agentPersonality.GetValue("HippocampusLocationCertaintyForgetRateNegative"),
+				agentPersonality.GetValue("HippocampusLocationCompetenceForgetRateNegative")
+			},
 		};
 		
 		_agentLocationMemory = new Dictionary<Vector3Int, AgentMemoryWorldCell>();
