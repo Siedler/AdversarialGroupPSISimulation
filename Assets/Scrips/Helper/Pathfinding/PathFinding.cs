@@ -58,7 +58,6 @@ public class PathFinding {
 				directions.Reverse();
 				worldCells.Reverse();
 				
-				Debug.Log("Path found: " + MyDebugging.ListToString(directions));
 				return (directions, worldCells);
 			}
 

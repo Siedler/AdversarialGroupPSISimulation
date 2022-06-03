@@ -63,7 +63,7 @@ public class Engage : ActionPlan {
 				Debug.Log(agent.name + " attacks " + _agentToAttack.name);
 
 				if (!environmentWorldCell.IsOccupied()) {
-					OnSuccess(0, 0, 0, 0.3, 0.5);
+					OnSuccess();
 					return ActionResult.Success;
 				}
 
@@ -80,5 +80,45 @@ public class Engage : ActionPlan {
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		return nearbyAgents.Contains(_agentToAttack);
+	}
+	
+	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
+		return 0;
+	}
+
+	protected override double GetOnSuccessEnergySatisfaction() {
+		return 0;
+	}
+
+	protected override double GetOnSuccessAffiliationSatisfaction() {
+		return 0;
+	}
+
+	protected override double GetOnSuccessCertaintySatisfaction() {
+		return 0.5;
+	}
+
+	protected override double GetOnSuccessCompetenceSatisfaction() {
+		return 0.8;
+	}
+
+	protected override double GetOnFailurePainAvoidanceSatisfaction() {
+		return 0;
+	}
+
+	protected override double GetOnFailureEnergySatisfaction() {
+		return 0;
+	}
+
+	protected override double GetOnFailureAffiliationSatisfaction() {
+		return 0;
+	}
+
+	protected override double GetOnFailureCertaintySatisfaction() {
+		return -0.5;
+	}
+
+	protected override double GetOnFailureCompetenceSatisfaction() {
+		return -0.5;
 	}
 }

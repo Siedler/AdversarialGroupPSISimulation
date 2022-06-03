@@ -4,6 +4,7 @@ using System.Linq;
 using Scrips;
 using Scrips.Agent;
 using Scrips.Helper.Math;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor.Compilation;
 using UnityEngine;
@@ -15,10 +16,10 @@ public abstract class ActionPlan
 
 	protected Hypothalamus hypothalamus;
 	
-	protected HippocampusLocation locationMemory;
-	protected HippocampusSocial socialMemory;
+	protected readonly HippocampusLocation locationMemory;
+	protected readonly HippocampusSocial socialMemory;
 	
-	protected Environment environment;
+	protected readonly Environment environment;
 
 	private Vector3Int _prevDestination;
 	private List<Direction> _pathToWalk;
@@ -203,19 +204,51 @@ public abstract class ActionPlan
 		return expectedSatisfaction;
 	}
 	
-	protected void OnSuccess(double painAvoidance, double energyIntake, double affiliation, double certainty, double competence) {
+	protected void OnSuccess() {
 		successProbability = MathHelper.RunningAverage(successProbability, 1, 0.3f);
 
-		expectedPainAvoidance = MathHelper.RunningAverage(expectedPainAvoidance, painAvoidance, SimulationSettings.ActionPlanRollingAverageAlpha);
-		expectedEnergyIntake = MathHelper.RunningAverage(expectedEnergyIntake, energyIntake, SimulationSettings.ActionPlanRollingAverageAlpha);
-		expectedAffiliation = MathHelper.RunningAverage(expectedAffiliation, affiliation, SimulationSettings.ActionPlanRollingAverageAlpha);
-		expectedCertainty = MathHelper.RunningAverage(expectedCertainty, certainty, SimulationSettings.ActionPlanRollingAverageAlpha);
-		expectedCompetence = MathHelper.RunningAverage(expectedCompetence, competence, SimulationSettings.ActionPlanRollingAverageAlpha);
+		double painAvoidanceSatisfaction = GetOnSuccessPainAvoidanceSatisfaction();
+		double energySatisfaction = GetOnSuccessEnergySatisfaction();
+		double affiliationSatisfaction = GetOnSuccessAffiliationSatisfaction();
+		double certaintySatisfaction = GetOnSuccessCertaintySatisfaction();
+		double competenceSatisfaction = GetOnSuccessCompetenceSatisfaction();
 		
-		agent.Experience(painAvoidance, energyIntake, affiliation, certainty, competence);
+		expectedPainAvoidance = MathHelper.RunningAverage(expectedPainAvoidance, painAvoidanceSatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedEnergyIntake = MathHelper.RunningAverage(expectedEnergyIntake, energySatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedAffiliation = MathHelper.RunningAverage(expectedAffiliation, affiliationSatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedCertainty = MathHelper.RunningAverage(expectedCertainty, certaintySatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedCompetence = MathHelper.RunningAverage(expectedCompetence, competenceSatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		
+		agent.Experience(painAvoidanceSatisfaction, energySatisfaction, affiliationSatisfaction, certaintySatisfaction, competenceSatisfaction);
 	}
 
 	protected void OnFailure() {
 		successProbability = MathHelper.RunningAverage(successProbability, 0, 0.3f);
+		
+		double painAvoidanceSatisfaction = GetOnFailurePainAvoidanceSatisfaction();
+		double energySatisfaction = GetOnFailureEnergySatisfaction();
+		double affiliationSatisfaction = GetOnFailureAffiliationSatisfaction();
+		double certaintySatisfaction = GetOnFailureCertaintySatisfaction();
+		double competenceSatisfaction = GetOnFailureCompetenceSatisfaction();
+		
+		expectedPainAvoidance = MathHelper.RunningAverage(expectedPainAvoidance, painAvoidanceSatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedEnergyIntake = MathHelper.RunningAverage(expectedEnergyIntake, energySatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedAffiliation = MathHelper.RunningAverage(expectedAffiliation, affiliationSatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedCertainty = MathHelper.RunningAverage(expectedCertainty, certaintySatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		expectedCompetence = MathHelper.RunningAverage(expectedCompetence, competenceSatisfaction, SimulationSettings.ActionPlanRollingAverageAlpha);
+		
+		agent.Experience(painAvoidanceSatisfaction, energySatisfaction, affiliationSatisfaction, certaintySatisfaction, competenceSatisfaction);
 	}
+
+	protected abstract double GetOnSuccessPainAvoidanceSatisfaction();
+	protected abstract double GetOnSuccessEnergySatisfaction();
+	protected abstract double GetOnSuccessAffiliationSatisfaction();
+	protected abstract double GetOnSuccessCertaintySatisfaction();
+	protected abstract double GetOnSuccessCompetenceSatisfaction();
+
+	protected abstract double GetOnFailurePainAvoidanceSatisfaction();
+	protected abstract double GetOnFailureEnergySatisfaction();
+	protected abstract double GetOnFailureAffiliationSatisfaction();
+	protected abstract double GetOnFailureCertaintySatisfaction();
+	protected abstract double GetOnFailureCompetenceSatisfaction();
 }

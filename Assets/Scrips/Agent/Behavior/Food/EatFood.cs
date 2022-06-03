@@ -23,7 +23,7 @@ public class EatFood : ActionPlanFoodRelated{
 
 		agent.EatFoodFromStorage();
 		
-		OnSuccess(0, 0.1, 0, 0, 0.5);
+		OnSuccess();
 		return ActionResult.Success;
 	}
 
