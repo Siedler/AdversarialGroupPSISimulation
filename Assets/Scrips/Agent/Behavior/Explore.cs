@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using Priority_Queue;
+using Scrips.Agent;
 using UnityEngine;
 
 public class Explore : ActionPlan {
@@ -10,7 +11,8 @@ public class Explore : ActionPlan {
 
 	public Explore(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
-		Environment environment) : base(agent, hypothalamus, locationMemory, socialMemory, environment) {
+		AgentEventHistoryManager eventHistoryManager,
+		Environment environment) : base(agent, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 		
 		expectedPainAvoidance = 0;
 		expectedEnergyIntake = 0;
@@ -61,7 +63,7 @@ public class Explore : ActionPlan {
 			_goalCoordinate = unexploredWorldCells[randomIndex].cellCoordinates;
 			_goalFound = true;
 			
-			Debug.Log(agent.name + ": I want to explore the cell with coordinates " + _goalCoordinate);
+			_eventHistoryManager.AddHistoryEvent(agent.name + ": I want to explore the cell with coordinates " + _goalCoordinate);
 		}
 
 		ActionResult actionResult = WalkTo(_goalCoordinate);

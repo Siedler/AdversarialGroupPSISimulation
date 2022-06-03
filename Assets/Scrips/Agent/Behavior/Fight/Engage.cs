@@ -7,7 +7,8 @@ public class Engage : ActionPlan {
 
 	public Engage(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
-		Environment environment, Agent agentToAttack) : base(agent, hypothalamus, locationMemory, socialMemory, environment) {
+		AgentEventHistoryManager eventHistoryManager,
+		Environment environment, Agent agentToAttack) : base(agent, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 
 		_agentToAttack = agentToAttack;
 		
@@ -60,7 +61,7 @@ public class Engage : ActionPlan {
 			if (i < 6) {
 				Hit(agentsFieldOfView);
 				
-				Debug.Log(agent.name + " attacks " + _agentToAttack.name);
+				_eventHistoryManager.AddHistoryEvent("Agent " + agent.name + ": Attacking " + _agentToAttack.name + "!");
 
 				if (!environmentWorldCell.IsOccupied()) {
 					OnSuccess();

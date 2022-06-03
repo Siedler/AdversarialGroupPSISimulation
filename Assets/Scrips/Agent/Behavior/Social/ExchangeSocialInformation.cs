@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Scrips.Agent;
 
 public class ExchangeSocialInformation : ActionPlan {
 
@@ -10,8 +11,9 @@ public class ExchangeSocialInformation : ActionPlan {
 		Hypothalamus hypothalamus,
 		HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
+		AgentEventHistoryManager eventHistoryManager,
 		Environment environment,
-		Agent correspondingAgent) : base(agent, hypothalamus, locationMemory, socialMemory, environment) {
+		Agent correspondingAgent) : base(agent, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 
 		_correspondingAgent = correspondingAgent;
 		

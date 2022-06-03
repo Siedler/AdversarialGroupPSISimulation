@@ -92,7 +92,6 @@ public class HippocampusLocation {
 				);
 			}
 		}
-		Debug.Log("");
 	}
 
 	public void Tick() {

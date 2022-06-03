@@ -14,8 +14,10 @@ public abstract class ActionPlan
 {
 	protected Agent agent;
 
-	protected Hypothalamus hypothalamus;
+	protected AgentEventHistoryManager _eventHistoryManager;
 	
+	protected Hypothalamus hypothalamus;
+
 	protected readonly HippocampusLocation locationMemory;
 	protected readonly HippocampusSocial socialMemory;
 	
@@ -33,8 +35,10 @@ public abstract class ActionPlan
 	protected double expectedCompetence;
 	
 	public ActionPlan(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory, HippocampusSocial socialMemory,
-		Environment environment) {
+		AgentEventHistoryManager eventHistoryManager, Environment environment) {
 		this.agent = agent;
+
+		this._eventHistoryManager = eventHistoryManager;
 
 		this.hypothalamus = hypothalamus;
 		
@@ -84,12 +88,8 @@ public abstract class ActionPlan
 		Vector3Int newCoordinate =
 			HexagonGridUtility.GetCoordinatesOfNeighbouringCell(agent.GetCurrentWorldCell().cellCoordinates, nextDirection);
 
-		if (!environment.DoesCellWithCoordinateExist(newCoordinate)) {
-			Debug.Log("Path to walk: "  + MyDebugging.ListToString(_pathToWalk));
-			Debug.Log("Current world cell coordinates: " + agent.GetCurrentWorldCell().cellCoordinates);
-			Debug.Log("New world cell coordinates: " + newCoordinate);
-			Debug.Log("Destination world cell coordinates: " + destinationCellCoordinate);
-			throw new InvalidOperationException("The cell with coordinate " + newCoordinate + " with direction " + nextDirection + " that the agent " + agent.name + " wanted to navigate to does not exist!");
+		if (!environment.DoesCellWithCoordinateExist(newCoordinate)) { 
+			new InvalidOperationException("The cell with coordinate " + newCoordinate + " with direction " + nextDirection + " that the agent " + agent.name + " wanted to navigate to does not exist!");
 		}
 
 		EnvironmentWorldCell newEnvironmentWorldCell = environment.GetWorldCellByCoordinates(newCoordinate);

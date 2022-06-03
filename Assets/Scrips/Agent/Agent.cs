@@ -33,7 +33,9 @@ public class Agent : MonoBehaviour {
     
     // Need System
     private Hypothalamus _hypothalamus;
-    
+
+    private AgentEventHistoryManager _eventHistoryManager;
+
     // Internal State
     [Range(0,100)]
     private int _health;
@@ -69,6 +71,8 @@ public class Agent : MonoBehaviour {
         nameTag.text = this.name;
 
         _agentPersonality = agentPersonality;
+
+        _eventHistoryManager = new AgentEventHistoryManager();
         
         // Setup Agent
         _hypothalamus = new Hypothalamus(_agentPersonality);
@@ -85,15 +89,15 @@ public class Agent : MonoBehaviour {
         _currentMotives = new SimplePriorityQueue<ActionPlan>();
         _actionPlans = new List<ActionPlan>();
         
-        _actionPlans.Add(new Explore(this, _hypothalamus, _locationMemory, _socialMemory, _environment));
-        _actionPlans.Add(new EatCloseFood(this, _hypothalamus, _locationMemory, _socialMemory, _environment));
+        _actionPlans.Add(new Explore(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
+        _actionPlans.Add(new EatCloseFood(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
     }
     
     private void GenerateSocialActionPlans(Agent newlyMetAgent) {
         // Add engagement and healing to the agents behavior
-        _actionPlans.Add(new Engage(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
-        _actionPlans.Add(new GoHeal(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
-        _actionPlans.Add(new ExchangeSocialInformation(this, _hypothalamus, _locationMemory, _socialMemory, _environment, newlyMetAgent));
+        _actionPlans.Add(new Engage(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
+        _actionPlans.Add(new GoHeal(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
+        _actionPlans.Add(new ExchangeSocialInformation(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
     }
 
     public void Spawn(EnvironmentWorldCell spawnCell, Direction startDirection) {
@@ -366,7 +370,8 @@ public class Agent : MonoBehaviour {
         _incomingRequests.Clear();
 
         if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
-            Debug.Log("Agent " + name + " reevaluates the current motive!");
+            _eventHistoryManager.AddHistoryEvent("Agent " + name + ": reevaluating the current motive!");
+            
             clock = 0;
 
             // The agents certainty is effected by the types of agents that are around him. If the agent is close to
@@ -382,7 +387,7 @@ public class Agent : MonoBehaviour {
 
                 _currentActionPlan = strongestActionPlan;
                 
-                Debug.Log("Agent " + name + ": Changed its action plan!");
+                _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Changed my current action plan!");
             }
         }
 
@@ -437,5 +442,10 @@ public class Agent : MonoBehaviour {
         if (_spriteRenderer != null) {
             UpdateSpriteOrientation();
         }
+    }
+    
+    // UNITY METHODS
+    private void OnMouseDown() {
+        Debug.Log("Agent " + name + " was clicked!!!!!");
     }
 }
