@@ -24,7 +24,10 @@ public class AgentIndividualMemory {
 		return _socialScore;
 	}
 
-	public void Tick() {
-		_socialScore *= SimulationSettings.SocialMemoryForgetRate[_socialScore >= 0 ? 0 : 1];
+	// This method handles that forget rate for social associations
+	// Input:
+	// socialForgetRatePositiveNegative: double[2] social forget rate [forget_p, forget_n] where 0 <= forget_x <= 1
+	public void Forget(double[] socialForgetRatePositiveNegative) {
+		_socialScore *= socialForgetRatePositiveNegative[_socialScore >= 0 ? 0 : 1];
 	}
 }

@@ -1,18 +1,25 @@
 ﻿
-public class Hypothalamus {
+using Scrips.Agent.Personality;
 
+public class Hypothalamus {
 	private NeedTank _painAvoidance;
 	private NeedTank _energy;
 	private NeedTank _affiliation;
 	private NeedTank _certainty;
 	private NeedTank _competence;
 	
-	public Hypothalamus() {
-		_painAvoidance = new NeedTank(1, 0.8, 0);
-		_energy = new NeedTank(0.8, 0.8, 0.02);
-		_affiliation = new NeedTank(1, 0.7, 0.02);
-		_certainty = new NeedTank(0.1, 0.5, 0.02);
-		_competence = new NeedTank(1, 1, 0);
+	public Hypothalamus(AgentPersonality _agentPersonality) {
+		double painAvoidanceLeakage = _agentPersonality.GetValue("HypothalamusPainAvoidanceLeakage");
+		double energyLeakage = _agentPersonality.GetValue("HypothalamusEnergyLeakage");
+		double affiliationLeakage = _agentPersonality.GetValue("HypothalamusAffiliationLeakage");
+		double certaintyLeakage = _agentPersonality.GetValue("HypothalamusCertaintyLeakage");
+		double competenceLeakage = _agentPersonality.GetValue("HypothalamusCompetenceLeakage");
+
+		_painAvoidance = new NeedTank(1, 0.8, painAvoidanceLeakage);
+		_energy = new NeedTank(0.8, 0.8, energyLeakage);
+		_affiliation = new NeedTank(1, 0.7, affiliationLeakage);
+		_certainty = new NeedTank(0.1, 0.5, certaintyLeakage);
+		_competence = new NeedTank(1, 1, competenceLeakage);
 	}
 
 	public void Tick() {

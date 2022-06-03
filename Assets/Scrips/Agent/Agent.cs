@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Priority_Queue;
 using Scrips.Agent;
+using Scrips.Agent.Personality;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -22,6 +23,9 @@ public class Agent : MonoBehaviour {
     private EnvironmentWorldCell _currentEnvironmentWorldCell;
 
     private AgentController _agentController;
+    
+    // Agent Personality
+    private AgentPersonality _agentPersonality;
 
     // Agent Memory
     private HippocampusLocation _locationMemory;
@@ -34,7 +38,7 @@ public class Agent : MonoBehaviour {
     [Range(0,100)]
     private int _health;
     private int _foodCount;
-    
+
     private Queue<RequestInformation> _incomingRequests;
 
     private List<ActionPlan> _actionPlans;
@@ -45,7 +49,7 @@ public class Agent : MonoBehaviour {
     private int clock = 0;
 
     // Needed for the spawn of a new agent. This sets the team so that the sprite can be updated onSpawn
-    public void InitiateAgent(int team, AgentController agentController) {
+    public void InitiateAgent(int team, AgentPersonality agentPersonality, AgentController agentController) {
         this._team = team;
         this._agentController = agentController;
             
@@ -63,14 +67,16 @@ public class Agent : MonoBehaviour {
         // Set name of agent
         TextMesh nameTag = this.transform.GetChild(1).GetComponent<TextMesh>();
         nameTag.text = this.name;
+
+        _agentPersonality = agentPersonality;
         
         // Setup Agent
-        _hypothalamus = new Hypothalamus();
+        _hypothalamus = new Hypothalamus(_agentPersonality);
 
         _incomingRequests = new Queue<RequestInformation>();
 
-        _locationMemory = new HippocampusLocation();
-        _socialMemory = new HippocampusSocial();
+        _locationMemory = new HippocampusLocation(agentPersonality);
+        _socialMemory = new HippocampusSocial(agentPersonality);
 
         SetupActionPlans();
     }

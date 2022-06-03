@@ -73,15 +73,13 @@ public class AgentMemoryWorldCell : WorldCell {
 		return _needSatisfactionAssociations;
 	}
 
-	private void Forget() {
+	// Apply forget rate to all need satisfaction associations
+	// Input:
+	// forgetRatePositiveNegative: double[2] of forget values [forget_p, forget_n] where 0 <= forget_x <= 1
+	public void Forget(double[] forgetRatePositiveNegative) {
 		// Update every value depending on if its a negative or positive association
 		for (int i = 0; i < _needSatisfactionAssociations.Length; i++) {
 			_needSatisfactionAssociations[i] *= SimulationSettings.LocationMemoryForgetRates[_needSatisfactionAssociations[i] >= 0 ? 0 : 1][i];
 		}
-	}
-	
-	// Forget values for this specific memory cell
-	public void Tick() {
-		Forget();
 	}
 }

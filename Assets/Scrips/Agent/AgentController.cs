@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using Scrips.Agent;
+using Scrips.Agent.Personality;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -38,7 +39,10 @@ public class AgentController : MonoBehaviour {
 				GameObject.Instantiate(agentPrefab, Vector3.zero, Quaternion.identity, this.transform);
 			newAgentObject.SetActive(false);
 			Agent newAgent = newAgentObject.GetComponent<Agent>();
-			newAgent.InitiateAgent(teamNumber, this);
+			
+			AgentPersonality _agentPersonality = GenerateAgentPersonality();
+			
+			newAgent.InitiateAgent(teamNumber, _agentPersonality, this);
 			
 			_agents.Add(newAgentObject);
 			_agentsToRespawn.Enqueue(newAgentObject);
@@ -52,6 +56,29 @@ public class AgentController : MonoBehaviour {
 		foreach (GameObject agent in _agents) {
 			agent.GetComponent<Agent>().Tick();
 		}
+	}
+
+	// Generate the per
+	private AgentPersonality GenerateAgentPersonality() {
+		// Set all values for the agent personality!
+		AgentPersonality _agentPersonality = new AgentPersonality();
+		
+		// Set the leakage values for the hypothalamus
+		_agentPersonality.SetValue("HypothalamusPainAvoidanceLeakage", 0);
+		_agentPersonality.SetValue("HypothalamusEnergyLeakage", 0.02);
+		_agentPersonality.SetValue("HypothalamusAffiliationLeakage", 0.02);
+		_agentPersonality.SetValue("HypothalamusCertaintyLeakage", 0.02);
+		_agentPersonality.SetValue("HypothalamusCompetenceLeakage", 0.02);
+		
+		// Set the positive and negative forget rate for the location memory of the agent
+		_agentPersonality.SetValue("HippocampusLocationForgetRatePositive", 0.95);
+		_agentPersonality.SetValue("HippocampusLocationForgetRateNegative", 0.9);
+		
+		// Set the positive and negative forget rate for social memory of the agent
+		_agentPersonality.SetValue("HippocampusSocialForgetRatePositive", 0.95);
+		_agentPersonality.SetValue("HippocampusSocialForgetRateNegative", 0.9);
+
+		return _agentPersonality;
 	}
 
 	public void RegisterToRespawn(GameObject agentObject) {

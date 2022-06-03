@@ -1,13 +1,22 @@
 ﻿
 using System.Collections.Generic;
+using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
 using UnityEngine;
 
 public class HippocampusSocial {
 	private Dictionary<Agent, AgentIndividualMemory> _agentIndividualMemory;
 
-	public HippocampusSocial() {
+	// Saves the forget rate for the agents separated for positive and negative associations
+	private double[] socialForgetRatePositiveNegative;
+
+	public HippocampusSocial(AgentPersonality agentPersonality) {
 		_agentIndividualMemory = new Dictionary<Agent, AgentIndividualMemory>();
+
+		socialForgetRatePositiveNegative = new double[] {
+			agentPersonality.GetValue("HippocampusSocialForgetRatePositive"),
+			agentPersonality.GetValue("HippocampusSocialForgetRateNegative")
+		};
 	}
 
 	public void SocialInfluence(Agent agent, double amount) {
@@ -53,7 +62,7 @@ public class HippocampusSocial {
 
 	public void Tick() {
 		foreach (AgentIndividualMemory agentIndividualMemory in _agentIndividualMemory.Values) {
-			agentIndividualMemory.Tick();
+			agentIndividualMemory.Forget(socialForgetRatePositiveNegative);
 		}	
 	}
 }

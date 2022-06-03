@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
 using Unity.Mathematics;
 using UnityEngine;
@@ -8,7 +9,15 @@ using UnityEngine;
 public class HippocampusLocation {
 	private Dictionary<Vector3Int, AgentMemoryWorldCell> _agentLocationMemory;
 
-	public HippocampusLocation() {
+	// Array that saves the forget rate for the location memory seperate for positive and negative values (double[2])
+	private double[] _locationForgetRatePositiveNegative;
+
+	public HippocampusLocation(AgentPersonality agentPersonality) {
+		_locationForgetRatePositiveNegative = new double[] {
+			agentPersonality.GetValue("HippocampusLocationForgetRatePositive"),
+			agentPersonality.GetValue("HippocampusLocationForgetRateNegative")
+		};
+		
 		_agentLocationMemory = new Dictionary<Vector3Int, AgentMemoryWorldCell>();
 	}
 
@@ -75,7 +84,7 @@ public class HippocampusLocation {
 
 	public void Tick() {
 		foreach (AgentMemoryWorldCell agentMemoryWorldCell in _agentLocationMemory.Values) {
-			agentMemoryWorldCell.Tick();
+			agentMemoryWorldCell.Forget(_locationForgetRatePositiveNegative);
 		}
 	}
 }
