@@ -15,6 +15,8 @@ public class Agent : MonoBehaviour {
     private Transform _spriteObject;
     private SpriteRenderer _spriteRenderer;
 
+    private SimpleCamera _simpleCamera;
+
     private int _team;
     public Direction agentDirection = Direction.E;
 
@@ -61,6 +63,8 @@ public class Agent : MonoBehaviour {
         _spriteObject = this.transform.GetChild(0);
         _spriteRenderer = _spriteObject.GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = teamSprites[team];
+
+        _simpleCamera = Camera.main.GetComponent<SimpleCamera>();
         
         // Get random name
         NameGenerator nameGenerator = new NameGenerator();
@@ -116,6 +120,8 @@ public class Agent : MonoBehaviour {
     }
 
     public void Despawn() {
+        _simpleCamera.UnselectAgent();
+        
         _currentActionPlan = null;
         _incomingRequests = new Queue<RequestInformation>();
 
@@ -125,7 +131,7 @@ public class Agent : MonoBehaviour {
         this.transform.position = Vector3.zero;
 
         _agentController.RegisterToRespawn(this.gameObject);
-        
+
         Debug.Log(name + " Despawned");
     }
 
@@ -446,6 +452,7 @@ public class Agent : MonoBehaviour {
     
     // UNITY METHODS
     private void OnMouseDown() {
+        _simpleCamera.SelectAgent(this);
         Debug.Log("Agent " + name + " was clicked!!!!!");
     }
 }
