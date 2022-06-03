@@ -63,6 +63,8 @@ public class AgentController : MonoBehaviour {
 		// Set all values for the agent personality!
 		AgentPersonality _agentPersonality = new AgentPersonality();
 		
+		// TODO Introduce some variance
+		
 		// Set the leakage values for the hypothalamus
 		_agentPersonality.SetValue("HypothalamusPainAvoidanceLeakage", 0);
 		_agentPersonality.SetValue("HypothalamusEnergyLeakage", 0.02);
@@ -77,6 +79,19 @@ public class AgentController : MonoBehaviour {
 		// Set the positive and negative forget rate for social memory of the agent
 		_agentPersonality.SetValue("HippocampusSocialForgetRatePositive", 0.95);
 		_agentPersonality.SetValue("HippocampusSocialForgetRateNegative", 0.9);
+		
+		// Set values for receiving agent information
+		// A factor of how much the agent takes in the information about the previously unknown agent
+		// Situation: An agent receives social information about another agent he/she does not know yet. The value of how
+		// much the agent is influenced by the previous agent received information is controlled by this factor.
+		// 0 < x <= 1
+		_agentPersonality.SetValue("SocialMemoryReceiveNewUnknownAgentSoftenFactor", 0.8);
+		// A factor regulating how much the newly shared information about a known agent is taken into account.
+		// Example: I have a friend that I like by 0.8. Another friends tells me they like them only 0.5. I'll get influenced
+		// by a small factor by this saying. This factor regulated this here. So the new value would be:
+		// (0.5 * SocialMemoryReceiveNewKnownAgentAlphaFactor) + (0.8 * (1 - SocialMemoryReceiveNewKnownAgentAlphaFactor))
+		// 0 <= x <= 1
+		_agentPersonality.SetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor", 0.3);
 
 		return _agentPersonality;
 	}

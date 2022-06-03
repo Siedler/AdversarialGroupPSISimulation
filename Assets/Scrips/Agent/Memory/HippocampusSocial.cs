@@ -23,11 +23,14 @@ public class HippocampusSocial {
 		_agentIndividualMemory[agent].UpdateSocialScore(amount);
 	}
 
-	public void ReceiveSocialInfluence(Agent agent, double amount) {
+	// Updating the social score of another agent based on the opinion of the other agent of the agent in question (amount)
+	// and tacking it into account by the a value of socialMemoryReceiveNewKnownAgentAlphaFactor
+	// new score = (socialMemoryReceiveNewKnownAgentAlphaFactor * amount) + (1 - socialMemoryReceiveNewKnownAgentAlphaFactor) * _agentIndividualMemory[agent].GetSocialScore()
+	public void ReceiveSocialInfluence(Agent agent, double amount, double socialMemoryReceiveNewKnownAgentAlphaFactor) {
 		double newSocialScore = MathHelper.RunningAverage(
 			_agentIndividualMemory[agent].GetSocialScore(), 
 			amount,
-			SimulationSettings.SocialMemoryReceiveNewKnownAgentAlphaFactor);
+			socialMemoryReceiveNewKnownAgentAlphaFactor);
 		
 		_agentIndividualMemory[agent].SetSocialScore(newSocialScore);
 	}

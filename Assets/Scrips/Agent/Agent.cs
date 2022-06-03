@@ -186,12 +186,15 @@ public class Agent : MonoBehaviour {
 
     public void ReceiveAgentIndividualMemory(Agent correspondingAgent, double socialScore) {
         if (_socialMemory.KnowsAgent(correspondingAgent)) {
-            _socialMemory.ReceiveSocialInfluence(correspondingAgent, socialScore);
+            _socialMemory.ReceiveSocialInfluence(correspondingAgent, socialScore, _agentPersonality.GetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor"));
             return;
         }
+
+        double initialSocialScore =
+            socialScore * _agentPersonality.GetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor");
         
         // Agent is not know:
-        _socialMemory.AddNewlyMetAgent(correspondingAgent, socialScore*SimulationSettings.SocialMemoryReceiveNewUnknownAgentSoftenFactor);
+        _socialMemory.AddNewlyMetAgent(correspondingAgent, initialSocialScore);
     }
 
     // Experience something, i.e. influence the need satisfaction values
