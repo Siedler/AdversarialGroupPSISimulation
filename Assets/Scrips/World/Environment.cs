@@ -19,11 +19,8 @@ public class Environment : MonoBehaviour {
     private AgentController _team2Controller;
     private FoodController _foodController;
 
-    private double _interval = 1; 
-    private double _nextTime = 0;
-
     // Start is called before the first frame update
-    void Start() {
+    public void Initialize() {
         _grid = this.transform.GetChild(0).GetComponent<Grid>();
 
         _worldGenerator = GetComponent<WorldGenerator>();
@@ -39,16 +36,8 @@ public class Environment : MonoBehaviour {
         _foodController.InitiateFood(_spawnFood);
     }
 
-    // Update is called once per frame
-    void Update () {
-        if (Time.time < _nextTime) return;
-        
-        Tick();
-        _nextTime += _interval;
-    }
-
     // Execute actions of one time-step
-    void Tick() {
+    public void Tick() {
         Debug.Log("Tick");
         _foodController.Tick();
         
