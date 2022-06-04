@@ -18,12 +18,13 @@ public class TimeManager : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
-        if (_autoPlayMode) {
-            if (Time.time < _nextTime) return;
+        if (!_autoPlayMode) return;
         
-            _environment.Tick();
-            _nextTime += _interval;
-        }
+        // If autoplay is on:
+        if (Time.time < _nextTime) return;
+    
+        Tick();
+        _nextTime += _interval;
     }
 
     public void Tick() {
