@@ -311,7 +311,10 @@ public class Agent : MonoBehaviour {
 
         return certaintyLevel * 0.1f;
     }
-    private ActionPlan GetStrongestMotive(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+    private ActionPlan GetStrongestMotive(
+        EnvironmentWorldCell currentEnvironmentWorldCell,
+        List<EnvironmentWorldCell> agentsFieldOfView,
+        List<Agent> nearbyAgents) {
         double[] indicator = new double[] {
             _hypothalamus.GetPainAvoidanceDifference(),
             _hypothalamus.GetEnergyDifference(),
@@ -342,10 +345,16 @@ public class Agent : MonoBehaviour {
             _currentMotives.Enqueue(actionPlan, Single.MaxValue);
         }
 
+        double selectionThreshold = _agentPersonality.GetValue("SelectionThreshold");
+        
         foreach (ActionPlan actionPlan in _currentMotives) {
             double[] expectedSatisfaction = actionPlan.GetExpectedSatisfaction();
 
-            double newMotiveStrength = 0;
+            // Set the start motivation strength to 0 if the action that is being reviewed is the current action
+            // and to the negative selectionThreshold (so subtract it from the final sum) if its another action plan.
+            // That way the current action plan "protects" itself from the new action.
+            double newMotiveStrength = (_currentActionPlan == null || actionPlan == _currentActionPlan) ? 0 : -selectionThreshold;
+            // Create the weighted sum of the need-indicators
             for (int i = 0; i < indicator.Length; i++) {
                 newMotiveStrength += indicator[i] * multiplier[i] * expectedSatisfaction[i];
             }

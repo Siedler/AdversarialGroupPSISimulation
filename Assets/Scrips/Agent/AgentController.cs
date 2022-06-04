@@ -105,6 +105,10 @@ public class AgentController : MonoBehaviour {
 		// 0 <= x <= 1
 		_agentPersonality.SetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor", 0.3);
 
+		// Selection bias value, i.e. a value that is subtracted from every motive that is currently not being followed
+		// TODO how to use this value? Just subtract it form every other motive?
+		_agentPersonality.SetValue("SelectionThreshold", 0.02);
+		
 		return _agentPersonality;
 	}
 
