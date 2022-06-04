@@ -8,6 +8,18 @@ public class SimulationSettings {
 
     public static readonly double FoodPleasure = 0.4f;
 
+    public static readonly double LeakageValueEnergyMean = 0.02;
+    public static readonly double LeakageValueEnergySigma = 0.002;
+
+    public static readonly double LeakageValueAffiliationMean = 0.02;
+    public static readonly double LeakageValueAffiliationSigma = 0.002;
+    
+    public static readonly double LeakageValueCertaintyMean = 0.02;
+    public static readonly double LeakageValueCertaintySigma = 0.002;
+    
+    public static readonly double LeakageValueCompetenceMean = 0.02;
+    public static readonly double LeakageValueCompetenceSigma = 0.002;
+    
     // MEMORY SECTION
     // Defining the radius of which the memory of the agent is affected if a new experience was made
     public static readonly int MemoryWorldCellNeedSatisfactionAssociationRadius = 6;

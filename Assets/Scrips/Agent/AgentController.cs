@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
+using Scrips.Helper.Math;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -67,10 +68,28 @@ public class AgentController : MonoBehaviour {
 		
 		// Set the leakage values for the hypothalamus
 		_agentPersonality.SetValue("HypothalamusPainAvoidanceLeakage", 0);
-		_agentPersonality.SetValue("HypothalamusEnergyLeakage", 0.02);
-		_agentPersonality.SetValue("HypothalamusAffiliationLeakage", 0.02);
-		_agentPersonality.SetValue("HypothalamusCertaintyLeakage", 0.02);
-		_agentPersonality.SetValue("HypothalamusCompetenceLeakage", 0.02);
+		_agentPersonality.SetValue("HypothalamusEnergyLeakage",
+			MathHelper.NextGaussian(
+				SimulationSettings.LeakageValueEnergyMean,
+				SimulationSettings.LeakageValueEnergySigma, 
+				0, 
+				1));
+		_agentPersonality.SetValue("HypothalamusAffiliationLeakage",
+			MathHelper.NextGaussian(
+				SimulationSettings.LeakageValueAffiliationMean,
+				SimulationSettings.LeakageValueAffiliationSigma, 
+				0, 
+				1));
+		_agentPersonality.SetValue("HypothalamusCertaintyLeakage",MathHelper.NextGaussian(
+			SimulationSettings.LeakageValueCertaintyMean,
+			SimulationSettings.LeakageValueAffiliationSigma, 
+			0, 
+			1));
+		_agentPersonality.SetValue("HypothalamusCompetenceLeakage",MathHelper.NextGaussian(
+			SimulationSettings.LeakageValueCompetenceMean,
+			SimulationSettings.LeakageValueCompetenceSigma, 
+			0, 
+			1));
 		
 		// Set the positive and negative forget rate for the location memory of the agent
 		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRatePositive", 0.95);

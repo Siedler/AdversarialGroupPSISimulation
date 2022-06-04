@@ -17,8 +17,8 @@ namespace Scrips.Helper.Math {
 			double v1, v2, s;
 			
 			do {
-				v1 = 2.0 * Random.Range(0,1) - 1.0;
-				v2 = 2.0 * Random.Range(0,1) - 1.0;
+				v1 = 2.0 * Random.Range(0.0f, 1.0f) - 1.0;
+				v2 = 2.0 * Random.Range(0.0f, 1.0f) - 1.0;
 				s = v1 * v1 + v2 * v2;
 			} while (s >= 1.0f || s == 0f);
 			
