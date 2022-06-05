@@ -360,6 +360,9 @@ public class Agent : MonoBehaviour {
             for (int i = 0; i < indicator.Length; i++) {
                 newMotiveStrength += indicator[i] * multiplier[i] * expectedSatisfaction[i];
             }
+            
+            // TODO Adapt general competence
+            newMotiveStrength *= (_hypothalamus.GetCurrentCompetenceValue() + actionPlan.GetSuccessProbability());
 
             // As the priority queue works using a min approach we negate the motive strength. That way we keep the 
             // motive with the highest motive strength at the top of the queue
