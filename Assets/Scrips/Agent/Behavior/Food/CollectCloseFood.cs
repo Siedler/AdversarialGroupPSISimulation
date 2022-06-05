@@ -2,16 +2,21 @@
 using System;
 using System.Collections.Generic;
 using Scrips.Agent;
+using Scrips.Agent.Personality;
 using TMPro;
 using UnityEngine;
 
 public class CollectCloseFood : ActionPlanFoodRelated {
 	private EnvironmentWorldCell _foodLocation;
 
-	public CollectCloseFood(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory,
+	public CollectCloseFood(
+		Agent agent,
+		AgentPersonality agentPersonality,
+		Hypothalamus hypothalamus,
+		HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager,
-		Environment environment) : base(agent, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
+		Environment environment) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 		
 		expectedPainAvoidance = 0;
 		expectedEnergyIntake = 0.5;

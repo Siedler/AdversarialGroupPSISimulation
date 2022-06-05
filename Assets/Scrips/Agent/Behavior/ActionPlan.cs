@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Scrips;
 using Scrips.Agent;
+using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,6 +12,8 @@ public abstract class ActionPlan
 {
 	protected Agent agent;
 
+	protected AgentPersonality agentPersonality;
+	
 	protected AgentEventHistoryManager _eventHistoryManager;
 	
 	protected Hypothalamus hypothalamus;
@@ -31,9 +34,11 @@ public abstract class ActionPlan
 	protected double expectedCertainty;
 	protected double expectedCompetence;
 	
-	public ActionPlan(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory, HippocampusSocial socialMemory,
+	public ActionPlan(Agent agent, AgentPersonality agentPersonality, Hypothalamus hypothalamus, HippocampusLocation locationMemory, HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager, Environment environment) {
 		this.agent = agent;
+
+		this.agentPersonality = agentPersonality;
 
 		this._eventHistoryManager = eventHistoryManager;
 
@@ -202,7 +207,7 @@ public abstract class ActionPlan
 	}
 	
 	protected void OnSuccess() {
-		successProbability = MathHelper.RunningAverage(successProbability, 1, 0.3f);
+		successProbability = MathHelper.RunningAverage(successProbability, 1, agentPersonality.GetValue("ActionPlanSuccessProbabilityFactor"));
 
 		double painAvoidanceSatisfaction = GetOnSuccessPainAvoidanceSatisfaction();
 		double energySatisfaction = GetOnSuccessEnergySatisfaction();
@@ -220,7 +225,7 @@ public abstract class ActionPlan
 	}
 
 	protected void OnFailure() {
-		successProbability = MathHelper.RunningAverage(successProbability, 0, 0.3f);
+		successProbability = MathHelper.RunningAverage(successProbability, 0, agentPersonality.GetValue("ActionPlanSuccessProbabilityFactor"));
 		
 		double painAvoidanceSatisfaction = GetOnFailurePainAvoidanceSatisfaction();
 		double energySatisfaction = GetOnFailureEnergySatisfaction();

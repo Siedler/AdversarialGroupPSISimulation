@@ -2,13 +2,18 @@
 
 using System.Collections.Generic;
 using Scrips.Agent;
+using Scrips.Agent.Personality;
 using UnityEngine;
 
 public class SelfHeal : ActionPlan {
-	public SelfHeal(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory,
+	public SelfHeal(
+		Agent agent,
+		AgentPersonality agentPersonality,
+		Hypothalamus hypothalamus,
+		HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager,
-		Environment environment) : base(agent, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
+		Environment environment) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 		expectedPainAvoidance = 0.5;
 		expectedEnergyIntake = 0;
 		expectedAffiliation = 0;

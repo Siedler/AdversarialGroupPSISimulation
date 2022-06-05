@@ -1,14 +1,19 @@
 ﻿	
 using System.Collections.Generic;
 using Scrips.Agent;
+using Scrips.Agent.Personality;
 using UnityEngine;
 
 public class EatFood : ActionPlanFoodRelated{
 
-	public EatFood(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory,
+	public EatFood(
+		Agent agent,
+		AgentPersonality agentPersonality,
+		Hypothalamus hypothalamus,
+		HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager,
-		Environment environment) : base(agent, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
+		Environment environment) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 		
 		expectedPainAvoidance = 0;
 		expectedEnergyIntake = 0.5;

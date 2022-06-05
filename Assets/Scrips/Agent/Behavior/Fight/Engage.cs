@@ -1,14 +1,19 @@
 ﻿using System.Collections.Generic;
 using Scrips.Agent;
+using Scrips.Agent.Personality;
 using UnityEngine;
 
 public class Engage : ActionPlan {
 	private Agent _agentToAttack;
 
-	public Engage(Agent agent, Hypothalamus hypothalamus, HippocampusLocation locationMemory,
+	public Engage(
+		Agent agent,
+		AgentPersonality agentPersonality,
+		Hypothalamus hypothalamus,
+		HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager,
-		Environment environment, Agent agentToAttack) : base(agent, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
+		Environment environment, Agent agentToAttack) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 
 		_agentToAttack = agentToAttack;
 		

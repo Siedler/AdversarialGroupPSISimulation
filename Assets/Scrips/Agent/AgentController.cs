@@ -159,6 +159,18 @@ public class AgentController : MonoBehaviour {
 		// (0.5 * SocialMemoryReceiveNewKnownAgentAlphaFactor) + (0.8 * (1 - SocialMemoryReceiveNewKnownAgentAlphaFactor))
 		// 0 <= x <= 1
 		_agentPersonality.SetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor", 0.3);
+		
+		// This factor regulates how much a new experience is taken into account for the running average
+		// in the success probability calculation.
+		// If the value is close to 0 then the agent needs a lot of tries to feel confident that the outcome of an
+		// action has changed. If it is close to 1 it quickly takes failures / successes into account as a whole change
+		// of probability for that specific action plan
+		_agentPersonality.SetValue("ActionPlanSuccessProbabilityFactor", 
+			MathHelper.NextGaussian(
+				SimulationSettings.ActionPlanSuccessProbabilityAlphaMean,
+				SimulationSettings.ActionPlanSuccessProbabilityAlphaSigma,
+				0.001,
+				1));
 
 		// Selection bias value, i.e. a value that is subtracted from every motive that is currently not being followed
 		// TODO how to use this value? Just subtract it form every other motive?

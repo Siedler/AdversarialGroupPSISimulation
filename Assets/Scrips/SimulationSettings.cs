@@ -106,6 +106,9 @@ public class SimulationSettings {
     
     // ACTION PLAN SECTION
     public static readonly double ActionPlanRollingAverageAlpha = 0.1;
+
+    public static readonly double ActionPlanSuccessProbabilityAlphaMean = 0.3;
+    public static readonly double ActionPlanSuccessProbabilityAlphaSigma = 0.05;
     
     // TODO Check if these can be variable
     public static readonly double PainAvoidanceMultiplier = 3;

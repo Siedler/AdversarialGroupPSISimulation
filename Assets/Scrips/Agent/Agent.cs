@@ -93,15 +93,15 @@ public class Agent : MonoBehaviour {
         _currentMotives = new SimplePriorityQueue<ActionPlan>();
         _actionPlans = new List<ActionPlan>();
         
-        _actionPlans.Add(new Explore(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
-        _actionPlans.Add(new EatCloseFood(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
+        _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
+        _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
     }
     
     private void GenerateSocialActionPlans(Agent newlyMetAgent) {
         // Add engagement and healing to the agents behavior
-        _actionPlans.Add(new Engage(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
-        _actionPlans.Add(new GoHeal(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
-        _actionPlans.Add(new ExchangeSocialInformation(this, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
+        _actionPlans.Add(new Engage(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
+        _actionPlans.Add(new GoHeal(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
+        _actionPlans.Add(new ExchangeSocialInformation(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
     }
 
     public void Spawn(EnvironmentWorldCell spawnCell, Direction startDirection) {

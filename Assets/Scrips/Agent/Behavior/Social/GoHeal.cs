@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Scrips.Agent;
+using Scrips.Agent.Personality;
 using UnityEngine;
 
 public class GoHeal : ActionPlan {
@@ -8,12 +9,13 @@ public class GoHeal : ActionPlan {
 	
 	public GoHeal(
 		Agent agent,
-		Hypothalamus hypothalamus,
+		AgentPersonality agentPersonality,
+	Hypothalamus hypothalamus,
 		HippocampusLocation locationMemory,
 		HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager,
 		Environment environment,
-		Agent agentToHeal) : base(agent, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
+		Agent agentToHeal) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 
 		_agentToHeal = agentToHeal;
 		
