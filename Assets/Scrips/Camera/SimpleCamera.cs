@@ -23,6 +23,9 @@ public class SimpleCamera : MonoBehaviour {
         targetOrtho = mainCamera.orthographicSize;
 
         _selectedAgent = null;
+
+        AgentEventManager.current.OnAgentSelected += OnAgentSelected;
+        AgentEventManager.current.OnAgentDespawn += OnAgentDespawn;
     }
 
     // Update is called once per frame
@@ -49,14 +52,22 @@ public class SimpleCamera : MonoBehaviour {
 
     }
 
-    public void SelectAgent(Agent agent) {
-        _selectedAgent = agent;
+    public void OnAgentSelected(Agent agent) {
+        _selectedAgent = agent; 
+    }
+    
+    
+    private void OnAgentDespawn(Agent agent) {
+        if (_selectedAgent != null && _selectedAgent == agent) {
+            UnselectAgent();
+        }
     }
 
     public void UnselectAgent() {
         _selectedAgent = null;
+        AgentEventManager.current.DeselectAgent();
     }
-    
+
     private bool IsAnAgentSelected() {
         return _selectedAgent != null;
     }

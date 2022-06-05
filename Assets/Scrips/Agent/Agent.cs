@@ -71,7 +71,7 @@ public class Agent : MonoBehaviour {
         this.name = nameGenerator.GetRandomName();
         
         // Set name of agent
-        TextMesh nameTag = this.transform.GetChild(1).GetComponent<TextMesh>();
+        TextMesh nameTag = this.transform.Find("NameTag").GetComponent<TextMesh>();
         nameTag.text = this.name;
 
         _agentPersonality = agentPersonality;
@@ -116,12 +116,12 @@ public class Agent : MonoBehaviour {
 
         UpdateSpriteOrientation();
         
+        AgentEventManager.current.AgentSpawned(this);
+        
         Debug.Log(name + " Spawned");
     }
 
     public void Despawn() {
-        _simpleCamera.UnselectAgent();
-        
         _currentActionPlan = null;
         _incomingRequests = new Queue<RequestInformation>();
 
@@ -132,6 +132,8 @@ public class Agent : MonoBehaviour {
 
         _agentController.RegisterToRespawn(this.gameObject);
 
+        AgentEventManager.current.AgentDespawned(this);
+        
         Debug.Log(name + " Despawned");
     }
 
@@ -461,7 +463,7 @@ public class Agent : MonoBehaviour {
     
     // UNITY METHODS
     private void OnMouseDown() {
-        _simpleCamera.SelectAgent(this);
+        AgentEventManager.current.SelectAgent(this);
         Debug.Log("Agent " + name + " was clicked!!!!!");
     }
 }

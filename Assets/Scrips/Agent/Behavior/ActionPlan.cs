@@ -4,9 +4,6 @@ using System.Linq;
 using Scrips;
 using Scrips.Agent;
 using Scrips.Helper.Math;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Compilation;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
