@@ -33,7 +33,7 @@ public class SelfHeal : ActionPlan {
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return 0;
+		return 4*(1-hypothalamus.GetPainAvoidanceDifference());
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {

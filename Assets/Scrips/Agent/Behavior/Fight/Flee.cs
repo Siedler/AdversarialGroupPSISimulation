@@ -8,8 +8,6 @@ public class Flee : ActionPlan {
 	private Agent _agentToFleeFrom;
 	private AgentMemoryWorldCell _worldCellAgentFeelsMostCertain;
 
-	private bool seenAgentLastTurn;
-
 	public Flee(
 		Agent agent,
 		AgentPersonality agentPersonality,
@@ -49,8 +47,6 @@ public class Flee : ActionPlan {
 			return ActionResult.Success;
 		}
 
-		seenAgentLastTurn = true;
-
 		if (_worldCellAgentFeelsMostCertain == null) {
 			_worldCellAgentFeelsMostCertain = GetAgentMemoryWorldCellToFleeTo(currentEnvironmentWorldCell);
 
@@ -72,7 +68,6 @@ public class Flee : ActionPlan {
 		base.InitiateActionPlan(correspondingAgent);
 
 		_worldCellAgentFeelsMostCertain = null;
-		seenAgentLastTurn = true;
 	}
 
 	public override bool CanBeExecuted(
@@ -83,7 +78,10 @@ public class Flee : ActionPlan {
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return 0;
+		double painAvoidanceValue = 1-hypothalamus.GetCurrentPainAvoidanceValue();
+		
+		double competenceCancellation = (hypothalamus.GetCurrentCompetenceValue() + GetSuccessProbability());
+		return (painAvoidanceValue) / competenceCancellation;
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
