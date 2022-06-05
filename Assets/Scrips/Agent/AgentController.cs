@@ -66,6 +66,42 @@ public class AgentController : MonoBehaviour {
 		
 		// TODO Introduce some variance
 		
+		// Set the set values for the hypothalamus
+		_agentPersonality.SetValue("HypothalamusPainAvoidanceSetValue", 
+			MathHelper.NextGaussian(
+				SimulationSettings.SetValuePainAvoidanceMean,
+				SimulationSettings.SetValuePainAvoidanceSigma,
+				0,
+				1));
+		
+		_agentPersonality.SetValue("HypothalamusEnergySetValue", 
+			MathHelper.NextGaussian(
+				SimulationSettings.SetValueEnergyMean,
+				SimulationSettings.SetValueEnergySigma,
+				0,
+				1));
+		
+		_agentPersonality.SetValue("HypothalamusAffiliationSetValue", 
+			MathHelper.NextGaussian(
+				SimulationSettings.SetValueAffiliationMean,
+				SimulationSettings.SetValueAffiliationSigma,
+				0,
+				1));
+		
+		_agentPersonality.SetValue("HypothalamusCertaintySetValue", 
+			MathHelper.NextGaussian(
+				SimulationSettings.SetValueCertaintyMean,
+				SimulationSettings.SetValueCertaintySigma,
+				0,
+				1));
+		
+		_agentPersonality.SetValue("HypothalamusCompetenceSetValue", 
+			MathHelper.NextGaussian(
+				SimulationSettings.SetValueCompetenceMean,
+				SimulationSettings.SetValueCompetenceSigma,
+				0,
+				1));
+
 		// Set the leakage values for the hypothalamus
 		_agentPersonality.SetValue("HypothalamusPainAvoidanceLeakage", 0);
 		_agentPersonality.SetValue("HypothalamusEnergyLeakage",

@@ -466,4 +466,31 @@ public class Agent : MonoBehaviour {
         AgentEventManager.current.SelectAgent(this);
         Debug.Log("Agent " + name + " was clicked!!!!!");
     }
+
+    public double[][] GetNeedTankSummary() {
+        return new double[][] {
+            new double[] {
+                _hypothalamus.GetCurrentPainAvoidanceValue(),
+                _agentPersonality.GetValue("HypothalamusPainAvoidanceSetValue"),
+                _agentPersonality.GetValue("HypothalamusPainAvoidanceLeakage")
+            },
+            new double[] {
+                _hypothalamus.GetCurrentEnergyValue(), _agentPersonality.GetValue("HypothalamusEnergySetValue"),
+                _agentPersonality.GetValue("HypothalamusEnergyLeakage")
+            },
+            new double[] {
+                _hypothalamus.GetCurrentAffiliationValue(),
+                _agentPersonality.GetValue("HypothalamusAffiliationSetValue"),
+                _agentPersonality.GetValue("HypothalamusAffiliationLeakage")
+            },
+            new double[] {
+                _hypothalamus.GetCurrentCertaintyValue(), _agentPersonality.GetValue("HypothalamusCertaintySetValue"),
+                _agentPersonality.GetValue("HypothalamusCertaintyLeakage")
+            },
+            new double[] {
+                _hypothalamus.GetCurrentCompetenceValue(), _agentPersonality.GetValue("HypothalamusCompetenceSetValue"),
+                _agentPersonality.GetValue("HypothalamusCompetenceLeakage")
+            },
+        };
+    }
 }

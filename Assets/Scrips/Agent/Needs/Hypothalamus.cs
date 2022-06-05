@@ -9,17 +9,23 @@ public class Hypothalamus {
 	private NeedTank _competence;
 	
 	public Hypothalamus(AgentPersonality _agentPersonality) {
+		double painAvoidanceSetValue = _agentPersonality.GetValue("HypothalamusPainAvoidanceSetValue");
+		double energySetValue = _agentPersonality.GetValue("HypothalamusEnergySetValue");
+		double affiliationSetValue = _agentPersonality.GetValue("HypothalamusAffiliationSetValue");
+		double certaintySetValue = _agentPersonality.GetValue("HypothalamusCertaintySetValue");
+		double competenceSetValue = _agentPersonality.GetValue("HypothalamusCompetenceSetValue");
+		
 		double painAvoidanceLeakage = _agentPersonality.GetValue("HypothalamusPainAvoidanceLeakage");
 		double energyLeakage = _agentPersonality.GetValue("HypothalamusEnergyLeakage");
 		double affiliationLeakage = _agentPersonality.GetValue("HypothalamusAffiliationLeakage");
 		double certaintyLeakage = _agentPersonality.GetValue("HypothalamusCertaintyLeakage");
 		double competenceLeakage = _agentPersonality.GetValue("HypothalamusCompetenceLeakage");
 
-		_painAvoidance = new NeedTank(1, 0.8, painAvoidanceLeakage);
-		_energy = new NeedTank(0.8, 0.8, energyLeakage);
-		_affiliation = new NeedTank(1, 0.7, affiliationLeakage);
-		_certainty = new NeedTank(0.1, 0.5, certaintyLeakage);
-		_competence = new NeedTank(1, 1, competenceLeakage);
+		_painAvoidance = new NeedTank(1, painAvoidanceSetValue, painAvoidanceLeakage);
+		_energy = new NeedTank(0.8, energySetValue, energyLeakage);
+		_affiliation = new NeedTank(1, affiliationSetValue, affiliationLeakage);
+		_certainty = new NeedTank(0.1, certaintySetValue, certaintyLeakage);
+		_competence = new NeedTank(1, competenceSetValue, competenceLeakage);
 	}
 
 	public void Tick() {

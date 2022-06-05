@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Scrips.EventManager;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class TimeManager : MonoBehaviour {
     private bool _autoPlayMode;
@@ -29,6 +31,8 @@ public class TimeManager : MonoBehaviour {
 
     public void Tick() {
         _environment.Tick();
+        
+        TimeEventManager.current.Tick();
     }
 
     public void SetAutoplayMode(bool mode) {
