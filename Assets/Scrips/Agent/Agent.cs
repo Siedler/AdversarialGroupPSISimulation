@@ -361,6 +361,7 @@ public class Agent : MonoBehaviour {
             for (int i = 0; i < indicator.Length; i++) {
                 newMotiveStrength += indicator[i] * multiplier[i] * expectedSatisfaction[i];
             }
+            newMotiveStrength += actionPlan.GetUrgency(currentEnvironmentWorldCell, agentsFieldOfView, nearbyAgents);
             
             // TODO Adapt general competence
             newMotiveStrength *= (_hypothalamus.GetCurrentCompetenceValue() + actionPlan.GetSuccessProbability());

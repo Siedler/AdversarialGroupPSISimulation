@@ -242,6 +242,8 @@ public abstract class ActionPlan
 		agent.Experience(painAvoidanceSatisfaction, energySatisfaction, affiliationSatisfaction, certaintySatisfaction, competenceSatisfaction);
 	}
 
+	public abstract double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents);
+	
 	protected abstract double GetOnSuccessPainAvoidanceSatisfaction();
 	protected abstract double GetOnSuccessEnergySatisfaction();
 	protected abstract double GetOnSuccessAffiliationSatisfaction();

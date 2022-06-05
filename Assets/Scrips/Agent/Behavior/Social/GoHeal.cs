@@ -59,7 +59,11 @@ public class GoHeal : ActionPlan {
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		return nearbyAgents.Contains(_agentToHeal) && _agentToHeal.GetHealth() < 100;
 	}
-	
+
+	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+		return 0;
+	}
+
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
 		return 0;
 	}

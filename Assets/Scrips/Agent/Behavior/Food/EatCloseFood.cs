@@ -60,4 +60,8 @@ public class EatCloseFood : ActionPlanFoodRelated {
 
 		return false;
 	}
+
+	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+		return 0;
+	}
 }
