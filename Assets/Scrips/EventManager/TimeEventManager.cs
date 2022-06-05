@@ -10,10 +10,10 @@ namespace Scrips.EventManager {
 			current = this;
 		}
 		
-		public event Action OnTick;
+		public event Action<int> OnTick;
 
-		public void Tick() {
-			OnTick?.Invoke();
+		public void Tick(int timeStep) {
+			OnTick?.Invoke(timeStep);
 		}
 	}
 }

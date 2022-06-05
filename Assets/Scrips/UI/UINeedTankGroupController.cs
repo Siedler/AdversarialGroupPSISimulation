@@ -30,7 +30,7 @@ public class UINeedTankGroupController : MonoBehaviour {
 
     private bool IsAgentSelected() { return _selectedAgent != null; }
 
-    private void OnTick() {
+    private void OnTick(int timeStep) {
         UpdateUI();
     }
 

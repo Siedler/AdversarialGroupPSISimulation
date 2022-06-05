@@ -1,9 +1,12 @@
+using Scrips.EventManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
+    private static readonly int MAXLENGTHTIMESTEPSTRING = 6;
+    
     public Button autoTimerButton;
     public Slider speedSlider;
     public TMP_InputField speedInputField;
@@ -11,6 +14,8 @@ public class UIManager : MonoBehaviour {
     
     public Button nextTimeStepButton;
 
+    public TMP_Text timeStepCounterText;
+    
     private TimeManager _timeManager;
     
 // Start is called before the first frame update
@@ -20,14 +25,13 @@ public class UIManager : MonoBehaviour {
         autoTimerButton.onClick.AddListener(OnAutoTimerButtonClick);
         speedSlider.onValueChanged.AddListener(OnSpeedSliderValueChange);
         speedSlider.minValue = 1;
-        speedSlider.maxValue = 10;
+        speedSlider.maxValue = 20;
         
         nextTimeStepButton.onClick.AddListener(OnNextTimeStepButtonClick);
-    }
 
-    // Update is called once per frame
-    void Update() {
+        TimeEventManager.current.OnTick += OnTick;
         
+        timeStepCounterText.text = GetTimeStepString(0);
     }
 
     private void OnAutoTimerButtonClick() { 
@@ -51,5 +55,23 @@ public class UIManager : MonoBehaviour {
 
     private void OnNextTimeStepButtonClick() {
         _timeManager.Tick();
+    }
+
+    private void OnTick(int timeStep) {
+        timeStepCounterText.text = GetTimeStepString(timeStep);
+    }
+
+    private string GetTimeStepString(int timeStep) {
+        string timeStepAsString = timeStep.ToString();
+        string timeStepCounterString = "Time-Step: ";
+
+        if (timeStepAsString.Length < MAXLENGTHTIMESTEPSTRING) {
+            for (int i = 0; i < MAXLENGTHTIMESTEPSTRING-timeStepAsString.Length; i++) {
+                timeStepCounterString += " ";
+            }   
+        }
+
+        timeStepCounterString += timeStepAsString;
+        return timeStepCounterString;
     }
 }

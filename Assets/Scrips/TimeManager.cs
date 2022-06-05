@@ -6,6 +6,8 @@ using UnityEngine.Video;
 
 public class TimeManager : MonoBehaviour {
     private bool _autoPlayMode;
+
+    private int timeStep;
     
     private double _interval = 1; 
     private double _nextTime = 0;
@@ -16,6 +18,8 @@ public class TimeManager : MonoBehaviour {
     void Start() {
         _environment = GameObject.Find("World").GetComponent<Environment>();
         _environment.Initialize();
+
+        timeStep = 0;
     }
     
     // Update is called once per frame
@@ -30,9 +34,11 @@ public class TimeManager : MonoBehaviour {
     }
 
     public void Tick() {
+        timeStep++;
+        
         _environment.Tick();
         
-        TimeEventManager.current.Tick();
+        TimeEventManager.current.Tick(timeStep);
     }
 
     public void SetAutoplayMode(bool mode) {
