@@ -102,6 +102,7 @@ public class Agent : MonoBehaviour {
         _actionPlans.Add(new Engage(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
         _actionPlans.Add(new GoHeal(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
         _actionPlans.Add(new ExchangeSocialInformation(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
+        _actionPlans.Add(new Flee(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
     }
 
     public void Spawn(EnvironmentWorldCell spawnCell, Direction startDirection) {
