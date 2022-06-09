@@ -13,7 +13,7 @@ public class SimpleCamera : MonoBehaviour {
     public float minOrtho = 2.0f;
     public float maxOrtho = 20.0f;
 
-    public float camerMovementFactor = 10f;
+    public float cameraMovementFactor = 10f;
 
     private Agent _selectedAgent;
 
@@ -31,8 +31,8 @@ public class SimpleCamera : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (!IsAnAgentSelected()) {
-            float axisX = Input.GetAxis ("Horizontal") * camerMovementFactor * Time.deltaTime;
-            float axisY = Input.GetAxis ("Vertical") * camerMovementFactor * Time.deltaTime;
+            float axisX = Input.GetAxis ("Horizontal") * cameraMovementFactor * Time.deltaTime;
+            float axisY = Input.GetAxis ("Vertical") * cameraMovementFactor * Time.deltaTime;
 
             transform.position += new Vector3(axisX, axisY, 0);
         } else {
