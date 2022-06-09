@@ -1,5 +1,6 @@
 ﻿
 using Scrips.Agent.Personality;
+using Scrips.Helper.Math;
 
 public class Hypothalamus {
 	private NeedTank _painAvoidance;
@@ -7,6 +8,9 @@ public class Hypothalamus {
 	private NeedTank _affiliation;
 	private NeedTank _certainty;
 	private NeedTank _competence;
+
+	private static double GeneralCompetenceUpdateAlpha;
+	private double generalCompetence;
 	
 	public Hypothalamus(AgentPersonality _agentPersonality) {
 		double painAvoidanceSetValue = _agentPersonality.GetValue("HypothalamusPainAvoidanceSetValue");
@@ -26,6 +30,9 @@ public class Hypothalamus {
 		_affiliation = new NeedTank(1, affiliationSetValue, affiliationLeakage);
 		_certainty = new NeedTank(0.1, certaintySetValue, certaintyLeakage);
 		_competence = new NeedTank(1, competenceSetValue, competenceLeakage);
+
+		GeneralCompetenceUpdateAlpha = _agentPersonality.GetValue("HypothalamusGeneralCompetenceInfluence");
+		generalCompetence = competenceSetValue;
 	}
 
 	public void Tick() {
@@ -60,15 +67,17 @@ public class Hypothalamus {
 	
 	public void InfluenceCompetence(double value) {
 		_competence.UpdateTankValue(value);
+
+		generalCompetence = MathHelper.RunningAverage(generalCompetence, value, GeneralCompetenceUpdateAlpha);
 	}
 
 	public void Influence(double painAvoidanceValue = 0.0, double energyIntakeValue = 0.0,
 		double affiliationValue = 0.0, double certaintyValue = 0.0, double competenceValue = 0.0) {
-		_painAvoidance.UpdateTankValue(painAvoidanceValue);
-		_energy.UpdateTankValue(energyIntakeValue);
-		_affiliation.UpdateTankValue(affiliationValue);
-		_certainty.UpdateTankValue(certaintyValue);
-		_competence.UpdateTankValue(competenceValue);
+		InfluencePainAvoidance(painAvoidanceValue);
+		InfluenceEnergy(energyIntakeValue);
+		InfluenceAffiliation(affiliationValue);
+		InfluenceCertainty(certaintyValue);
+		InfluenceCompetence(competenceValue);
 	}
 
 	public double GetCurrentPainAvoidanceValue() {

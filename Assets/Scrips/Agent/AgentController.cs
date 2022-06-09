@@ -127,6 +127,10 @@ public class AgentController : MonoBehaviour {
 			0, 
 			1));
 		
+		// Set the value of how much the general competence is influenced by a new competence signal:
+		// (alpha * new_signal) + ((1-alpha) * general_competence)
+		_agentPersonality.SetValue("HypothalamusGeneralCompetenceInfluence", 0.1);
+		
 		// Set the positive and negative forget rate for the location memory of the agent
 		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRatePositive", 0.95);
 		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRateNegative", 0.9);
@@ -170,6 +174,17 @@ public class AgentController : MonoBehaviour {
 				SimulationSettings.ActionPlanSuccessProbabilityAlphaMean,
 				SimulationSettings.ActionPlanSuccessProbabilityAlphaSigma,
 				0.001,
+				1));
+		
+		// This factor regulates how much the agent pays attention to the general vs specific competence.
+		// Is this value closer to 1 then the agents pays more attention to the general competence and vice versa.
+		// If the value is 0.5 then the influence of the general competence and the specific competence are weight in
+		// equally.
+		_agentPersonality.SetValue("ActionPlanGeneralVsSpecificCompetenceWeight", 
+			MathHelper.NextGaussian(
+				SimulationSettings.ActionPlanGeneralVsSpecificCompetenceWeightMean,
+				SimulationSettings.ActionPlanGeneralVsSpecificCompetenceWeightSigma,
+				0,
 				1));
 
 		// Selection bias value, i.e. a value that is subtracted from every motive that is currently not being followed

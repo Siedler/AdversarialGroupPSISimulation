@@ -349,6 +349,8 @@ public class Agent : MonoBehaviour {
         }
 
         double selectionThreshold = _agentPersonality.GetValue("SelectionThreshold");
+        double generalVsSpecificCompetenceWeight =
+            _agentPersonality.GetValue("ActionPlanGeneralVsSpecificCompetenceWeight");
         
         foreach (ActionPlan actionPlan in _currentMotives) {
             double[] expectedSatisfaction = actionPlan.GetExpectedSatisfaction();
@@ -361,11 +363,16 @@ public class Agent : MonoBehaviour {
             for (int i = 0; i < indicator.Length; i++) {
                 newMotiveStrength += indicator[i] * multiplier[i] * expectedSatisfaction[i];
             }
+            
             newMotiveStrength += actionPlan.GetUrgency(currentEnvironmentWorldCell, agentsFieldOfView, nearbyAgents);
             
-            // TODO Adapt general competence
-            newMotiveStrength *= (_hypothalamus.GetCurrentCompetenceValue() + actionPlan.GetSuccessProbability());
-
+            // Weigh in the general and specific competence.
+            // As the general competence is a running average over competence signals it value is always 0 <= x <= 1
+            // As the specific competence is a running average over the success probability of an action plan its also 0 <= x <= 1
+            // Therefore the weighted sum is also 0 <= x <= 1
+            newMotiveStrength *= (generalVsSpecificCompetenceWeight * _hypothalamus.GetCurrentCompetenceValue() +
+                                  ((1 - generalVsSpecificCompetenceWeight) * actionPlan.GetSuccessProbability()));
+            
             // As the priority queue works using a min approach we negate the motive strength. That way we keep the 
             // motive with the highest motive strength at the top of the queue
             _currentMotives.UpdatePriority(actionPlan, (float) -newMotiveStrength);
