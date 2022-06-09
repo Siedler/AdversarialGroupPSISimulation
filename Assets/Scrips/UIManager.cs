@@ -1,4 +1,6 @@
+using System;
 using Scrips.EventManager;
+using Scrips.TimeManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,18 +12,21 @@ public class UIManager : MonoBehaviour {
     public Button autoTimerButton;
     public Slider speedSlider;
     public TMP_InputField speedInputField;
-    private bool _autoPlayMode;
-    
+
     public Button nextTimeStepButton;
 
     public TMP_Text timeStepCounterText;
-    
-    private TimeManager _timeManager;
-    
+
+    private bool _showDialogue;
+    public GameObject skipToDialogue;
+    private Button _skipToDialogueButton;
+    private TMP_InputField _skipToDialogueInputField;
+
 // Start is called before the first frame update
     void Start() {
-        _timeManager = GameObject.Find("Simulation Time Manager").GetComponent<TimeManager>();
-        
+        TimeManager.current.OnTimeManagerStateChange += OnTimeManagerStateChange;
+        TimeEventManager.current.OnTick += OnTick;
+
         autoTimerButton.onClick.AddListener(OnAutoTimerButtonClick);
         speedSlider.onValueChanged.AddListener(OnSpeedSliderValueChange);
         speedSlider.minValue = 1;
@@ -29,20 +34,31 @@ public class UIManager : MonoBehaviour {
         
         nextTimeStepButton.onClick.AddListener(OnNextTimeStepButtonClick);
 
-        TimeEventManager.current.OnTick += OnTick;
-        
         timeStepCounterText.text = GetTimeStepString(0);
+
+        _skipToDialogueButton = skipToDialogue.transform.Find("Skip To Button").GetComponent<Button>();
+        _skipToDialogueButton.onClick.AddListener(OnSkipToButtonClick);
+        
+        _skipToDialogueInputField = skipToDialogue.transform.Find("Skip To Input").GetComponent<TMP_InputField>();
     }
 
-    private void OnAutoTimerButtonClick() { 
-        TextMeshProUGUI autoTimerButtonText = autoTimerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        
-        _autoPlayMode = !_autoPlayMode;
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Z)) {
+            if (TimeManager.current.GetState() == TimeManagerStates.Manual) {
+                _showDialogue = !_showDialogue;
+                skipToDialogue.SetActive(_showDialogue);   
+            }
+        }
+    }
 
-        autoTimerButtonText.text = _autoPlayMode ? "Stop" : "Start";
-        nextTimeStepButton.interactable = !_autoPlayMode;
+    private void OnAutoTimerButtonClick() {
+        TimeManagerStates currentState = TimeManager.current.GetState();
+        if (currentState == TimeManagerStates.Manual) {
+            TimeManager.current.SetAutoplayMode(TimeManagerStates.AutomaticTimeBased);
+            return;
+        }
         
-        _timeManager.SetAutoplayMode(_autoPlayMode);
+        TimeManager.current.SetAutoplayMode(TimeManagerStates.Manual);
     }
 
     private void OnSpeedSliderValueChange(float value) {
@@ -50,13 +66,23 @@ public class UIManager : MonoBehaviour {
         
         // Set the timing between two ticks to 1/value (the value is given as 1 to 10 steps per seconds so to
         // account for that we have to passe the ivners to the time manager)
-        _timeManager.SetInterval((1/value));
+        TimeManager.current.SetInterval(1/value);
     }
 
     private void OnNextTimeStepButtonClick() {
-        _timeManager.Tick();
+        TimeManager.current.Tick();
     }
 
+    private void OnSkipToButtonClick() {
+        int timeStepToSkipTo = Int32.Parse(_skipToDialogueInputField.text);
+
+        if (timeStepToSkipTo < TimeManager.current.GetCurrentTimeStep()) return;
+        
+        _showDialogue = !_showDialogue;
+        skipToDialogue.SetActive(_showDialogue);
+        TimeManager.current.SetAutoplayMode(TimeManagerStates.AutomaticToTimeStep, timeStepToSkipTo);
+    }
+    
     private void OnTick(int timeStep) {
         timeStepCounterText.text = GetTimeStepString(timeStep);
     }
@@ -73,5 +99,22 @@ public class UIManager : MonoBehaviour {
 
         timeStepCounterString += timeStepAsString;
         return timeStepCounterString;
+    }
+
+    private void OnTimeManagerStateChange(TimeManagerStates state) {
+        TextMeshProUGUI autoTimerButtonText = autoTimerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
+        Debug.Log("STATECHANGE" + state);
+        switch (state) {
+            case TimeManagerStates.Manual:
+                autoTimerButtonText.text = "Start";
+                nextTimeStepButton.interactable = true;
+                break;
+            case TimeManagerStates.AutomaticTimeBased:
+            case TimeManagerStates.AutomaticToTimeStep:
+                autoTimerButtonText.text = "Stop";
+                nextTimeStepButton.interactable = false;
+                break;
+        }
     }
 }
