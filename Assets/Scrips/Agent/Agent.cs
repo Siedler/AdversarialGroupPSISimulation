@@ -119,7 +119,7 @@ public class Agent : MonoBehaviour {
         
         AgentEventManager.current.AgentSpawned(this);
         
-        Debug.Log(name + " Spawned");
+        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Spawned!");
     }
 
     public void Despawn() {
@@ -135,7 +135,7 @@ public class Agent : MonoBehaviour {
 
         AgentEventManager.current.AgentDespawned(this);
         
-        Debug.Log(name + " Despawned");
+        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Despawned");
     }
 
     // Internal State regulation functions
@@ -150,6 +150,8 @@ public class Agent : MonoBehaviour {
         Experience(-0.1, 0, -0.1, -0.3, -0.3);
         _socialMemory.SocialInfluence(attackingAgent, -0.5);
         
+        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got hit by " + attackingAgent.name + " with " + damage + " points of damage.");
+        
         if (_health <= 0) {
             _health = 0;
             Despawn();
@@ -158,15 +160,20 @@ public class Agent : MonoBehaviour {
 
     public void Heal(int amount, Agent healingAgent = null) {
         if (amount <= 0) throw new ArgumentException("The amount to heal is not positive!");
-        
+
         _health += amount;
 
-        if(healingAgent == null) return;
+        if (healingAgent == null) return;
         
         // Another agent healed me!
         // Give social credit
         // TODO implement social credit!
-        _socialMemory.SocialInfluence(healingAgent, 0.1f);
+        double socialEffect = 0.1;
+        _socialMemory.SocialInfluence(healingAgent, socialEffect);
+
+        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got healed by " + healingAgent.name + " with " +
+                                                             amount + " and credited " + socialEffect +
+                                                             " social score points.");
     }
 
     public int GetTeam() {
@@ -200,11 +207,17 @@ public class Agent : MonoBehaviour {
     public void ReceiveAgentIndividualMemory(Agent correspondingAgent, double socialScore) {
         if (_socialMemory.KnowsAgent(correspondingAgent)) {
             _socialMemory.ReceiveSocialInfluence(correspondingAgent, socialScore, _agentPersonality.GetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor"));
+
+            _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got new information about " +
+                                                 correspondingAgent.name + " (social score " + socialScore + ").");
             return;
         }
 
         double initialSocialScore =
             socialScore * _agentPersonality.GetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor");
+
+        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Met new agent with social score " + socialScore +
+                                             ". Setting own initial social score to " + initialSocialScore + ".");
         
         // Agent is not know:
         _socialMemory.AddNewlyMetAgent(correspondingAgent, initialSocialScore);
@@ -473,12 +486,6 @@ public class Agent : MonoBehaviour {
         }
     }
     
-    // UNITY METHODS
-    private void OnMouseDown() {
-        AgentEventManager.current.SelectAgent(this);
-        Debug.Log("Agent " + name + " was clicked!!!!!");
-    }
-
     public double[][] GetNeedTankSummary() {
         return new double[][] {
             new double[] {
@@ -504,5 +511,11 @@ public class Agent : MonoBehaviour {
                 _agentPersonality.GetValue("HypothalamusCompetenceLeakage")
             },
         };
+    }
+    
+    // UNITY METHODS
+    private void OnMouseDown() {
+        AgentEventManager.current.SelectAgent(this);
+        Debug.Log("Agent " + name + " was clicked!!!!!");
     }
 }
