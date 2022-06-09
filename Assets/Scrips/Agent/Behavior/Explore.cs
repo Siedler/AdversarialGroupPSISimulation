@@ -1,9 +1,12 @@
 ﻿
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Priority_Queue;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Explore : ActionPlan {
 
@@ -52,6 +55,14 @@ public class Explore : ActionPlan {
 		return unexploredWorldCells;
 	}
 
+	private List<AgentMemoryWorldCell> GetExploredWorldCellsSortedByCertainty() {
+		Dictionary<Vector3Int, AgentMemoryWorldCell> agentWorldMemory = locationMemory.GetAgentsLocationMemory();
+
+		List<AgentMemoryWorldCell> allWorldCellsAsList =
+			agentWorldMemory.Values.OrderBy(o => o.GetNeedSatisfactionAssociations()[3]).ToList();
+		return allWorldCellsAsList;
+	}
+	
 	public override ActionResult Execute(
 		EnvironmentWorldCell currentEnvironmentWorldCell,
 		List<EnvironmentWorldCell> agentsFieldOfView,
@@ -59,11 +70,26 @@ public class Explore : ActionPlan {
 		
 		if (!_goalFound) {
 			List<AgentMemoryWorldCell> unexploredWorldCells = GetUnexploredWorldCells();
+
+			// If there are no more unexplored world cells:
+			// Take a random world cell weighted by their certainty score
+			if (unexploredWorldCells.Count > 0) {
+				int randomIndex = Random.Range(0, unexploredWorldCells.Count - 1);
+				_goalCoordinate = unexploredWorldCells[randomIndex].cellCoordinates;
+				
+			} else {
+				List<AgentMemoryWorldCell> allAgentMemoryWorldCellsSortedByCertainty = GetExploredWorldCellsSortedByCertainty();
+				float randomNum = Random.Range(0.0f, 1.0f);
+				int n = (int) Math.Floor(-Math.Log(-randomNum + 1, 2));
+				
+				if (n > allAgentMemoryWorldCellsSortedByCertainty.Count)
+					n = allAgentMemoryWorldCellsSortedByCertainty.Count;
+
+				_goalCoordinate = allAgentMemoryWorldCellsSortedByCertainty[n].cellCoordinates;
+			}
 			
-			int randomIndex = Random.Range(0, unexploredWorldCells.Count - 1);
-			_goalCoordinate = unexploredWorldCells[randomIndex].cellCoordinates;
 			_goalFound = true;
-			
+
 			_eventHistoryManager.AddHistoryEvent(agent.name + ": I want to explore the cell with coordinates " + _goalCoordinate);
 		}
 
@@ -79,7 +105,7 @@ public class Explore : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return AreThereUnexploredWorldCells();
+		return true;
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
