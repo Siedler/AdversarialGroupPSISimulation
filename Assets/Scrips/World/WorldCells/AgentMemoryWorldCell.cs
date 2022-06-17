@@ -1,8 +1,8 @@
-﻿using Scrips.Agent;
-using Unity.VisualScripting;
+﻿using System.Collections.Generic;
+using Scrips.Agent;
 using UnityEngine;
 
-public class AgentMemoryWorldCell : WorldCell {
+public class AgentMemoryWorldCell : WorldCell, IEqualityComparer<AgentMemoryWorldCell> {
 
 	private bool _explored;
 	private readonly AgentMemoryWorldCell[] _neighbours;
@@ -81,5 +81,17 @@ public class AgentMemoryWorldCell : WorldCell {
 		for (int i = 0; i < _needSatisfactionAssociations.Length; i++) {
 			_needSatisfactionAssociations[i] *= forgetRatePositiveNegative[_needSatisfactionAssociations[i] >= 0 ? 0 : 1][i];
 		}
+	}
+
+	public bool Equals(AgentMemoryWorldCell x, AgentMemoryWorldCell y) {
+		if (x == null && y == null) return true;
+		if (x == null || y == null) return false;
+		return x.cellCoordinates == y.cellCoordinates && x.worldCoordinates == y.worldCoordinates && x._explored == y._explored;
+	}
+
+	// TODO Test if this is correct...
+	public int GetHashCode(AgentMemoryWorldCell obj) {
+		int hashCodeInt = obj.cellCoordinates.GetHashCode() ^ obj.worldCoordinates.GetHashCode();
+		return hashCodeInt.GetHashCode();
 	}
 }

@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
+using UnionFind;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class HippocampusLocation {
+	private Environment _environment;
 	private Dictionary<Vector3Int, AgentMemoryWorldCell> _agentLocationMemory;
 
 	// Array that saves the forget rate for the location memory seperate for positive and negative values (double[2])
 	private double[][] _locationForgetRatePositiveNegative;
 
-	public HippocampusLocation(AgentPersonality agentPersonality) {
+	public HippocampusLocation(Environment environment, AgentPersonality agentPersonality) {
+		this._environment = environment;
+
 		_locationForgetRatePositiveNegative = new double[][] {
 			new double[] {
 				agentPersonality.GetValue("HippocampusLocationPainAvoidanceForgetRatePositive"),
@@ -48,6 +53,52 @@ public class HippocampusLocation {
 
 	public Dictionary<Vector3Int, AgentMemoryWorldCell> GetAgentsLocationMemory() {
 		return _agentLocationMemory;
+	}
+	
+	public Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> FindFoodCluster(double minFoodScoreForCluster = 0.3) {
+		DisjointSet<AgentMemoryWorldCell> disjointFoodClusters = new DisjointSet<AgentMemoryWorldCell>();
+
+		// Itterate over every AgentMemoryWorldCell and search for clusters
+		foreach (AgentMemoryWorldCell agentMemoryWorldCell in _agentLocationMemory.Values) {
+			double foodAssociation = agentMemoryWorldCell.GetNeedSatisfactionAssociations()[1];
+
+			if (foodAssociation >= minFoodScoreForCluster) {
+				// Part of a cluster!
+				disjointFoodClusters.MakeSet(agentMemoryWorldCell);
+				
+				AgentMemoryWorldCell[] neighbours = agentMemoryWorldCell.GetNeighbours();
+				foreach (AgentMemoryWorldCell neighbour in neighbours) {
+					if(neighbour == null) continue;
+					
+					// If neighbour is also part of a cluster -> Join them!
+					if (disjointFoodClusters.ContainsData(neighbour)) {
+						AgentMemoryWorldCell neighbourClusterRepresentative = disjointFoodClusters.FindSet(neighbour);
+						AgentMemoryWorldCell ownClusterRepresentative = disjointFoodClusters.FindSet(agentMemoryWorldCell);
+						disjointFoodClusters.Union(ownClusterRepresentative, neighbourClusterRepresentative);
+					}
+				}
+			}
+		}
+
+		// Calculate the list of cluster centers
+		Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> foodClusters =
+			disjointFoodClusters.GetClusters();
+		Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> clustersByCenter =
+			new Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>>();
+		
+		foreach ((AgentMemoryWorldCell _, HashSet<AgentMemoryWorldCell> clusterMembers) in foodClusters) {
+			Vector3 coordinateAverage = new Vector3();
+			
+			foreach (AgentMemoryWorldCell clusterMember in clusterMembers) {
+				coordinateAverage += clusterMember.worldCoordinates;
+			}
+			coordinateAverage /= clusterMembers.Count;
+			
+			AgentMemoryWorldCell centerWorldCell = _agentLocationMemory[_environment.GetCellCoordinateFromWorldCoordinate(coordinateAverage)];
+			clustersByCenter.Add(centerWorldCell, clusterMembers);
+		}
+
+		return clustersByCenter;
 	}
 
 	public void UpdateNeedSatisfactionAssociations(

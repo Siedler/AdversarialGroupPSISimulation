@@ -51,6 +51,10 @@ public class Agent : MonoBehaviour {
     
     private int _motiveCheckInterval = 5;
     private int clock = 0;
+    
+    // DEBUG
+    public GameObject debugObject;
+    private Queue<GameObject> toDespawn = new Queue<GameObject>();
 
     // Needed for the spawn of a new agent. This sets the team so that the sprite can be updated onSpawn
     public void InitiateAgent(int team, AgentPersonality agentPersonality, AgentController agentController) {
@@ -83,7 +87,7 @@ public class Agent : MonoBehaviour {
 
         _incomingRequests = new Queue<RequestInformation>();
 
-        _locationMemory = new HippocampusLocation(agentPersonality);
+        _locationMemory = new HippocampusLocation(_environment, agentPersonality);
         _socialMemory = new HippocampusSocial(agentPersonality);
 
         SetupActionPlans();
@@ -438,6 +442,16 @@ public class Agent : MonoBehaviour {
             _currentActionPlan = null;
 
             if (actionResult == ActionResult.Success) _currentMotives.Dequeue();
+        }
+
+        // Despawn
+        while (toDespawn.Count > 0) {
+            Destroy(toDespawn.Dequeue());
+        }
+
+        foreach (AgentMemoryWorldCell memoryWorldCell in _locationMemory.FindFoodCluster().Keys) {
+            GameObject g = Instantiate(debugObject, memoryWorldCell.worldCoordinates, Quaternion.identity);
+            toDespawn.Enqueue(g);
         }
     }
 

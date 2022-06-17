@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 // TODO Look if WorldCellType is needed
 public enum WorldCellType {

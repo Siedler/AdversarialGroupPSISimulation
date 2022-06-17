@@ -132,11 +132,11 @@ public class AgentController : MonoBehaviour {
 		_agentPersonality.SetValue("HypothalamusGeneralCompetenceInfluence", 0.1);
 		
 		// Set the positive and negative forget rate for the location memory of the agent
-		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRatePositive", 0.95);
-		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRateNegative", 0.9);
+		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRatePositive", 0.99);
+		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRateNegative", 0.98);
 		
-		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRatePositive", 0.95);
-		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRateNegative", 0.9);
+		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRatePositive", 0.99);
+		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRateNegative", 0.98);
 		
 		_agentPersonality.SetValue("HippocampusLocationAffiliationForgetRatePositive", 0.95);
 		_agentPersonality.SetValue("HippocampusLocationAffiliationForgetRateNegative", 0.9);

@@ -45,7 +45,7 @@ public class HexagonGridUtility {
 
         return gridCoordinate + neighbourOffsets[Math.Abs(gridCoordinate.y) % 2][(int) direction];
     }
-
+    
     public static List<Vector3Int> GetGridCellCircleCoordinates(Vector3Int center, int radius) {
         List<Vector3Int> circleCoordinates = new List<Vector3Int>();
 
