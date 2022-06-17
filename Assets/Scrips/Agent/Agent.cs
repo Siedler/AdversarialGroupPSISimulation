@@ -16,8 +16,6 @@ public class Agent : MonoBehaviour {
     private Transform _spriteObject;
     private SpriteRenderer _spriteRenderer;
 
-    private SimpleCamera _simpleCamera;
-
     private int _team;
     public Direction agentDirection = Direction.E;
 
@@ -70,8 +68,6 @@ public class Agent : MonoBehaviour {
         _spriteRenderer = _spriteObject.GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = teamSprites[team];
 
-        _simpleCamera = Camera.main.GetComponent<SimpleCamera>();
-        
         // Get random name
         NameGenerator nameGenerator = new NameGenerator();
         this.name = nameGenerator.GetRandomName();
@@ -543,6 +539,10 @@ public class Agent : MonoBehaviour {
                 _agentPersonality.GetValue("HypothalamusCompetenceLeakage")
             },
         };
+    }
+
+    public string GetEventHistoryString() {
+        return _eventHistoryManager.GetListOfEventsAsString();
     }
     
     // UNITY METHODS

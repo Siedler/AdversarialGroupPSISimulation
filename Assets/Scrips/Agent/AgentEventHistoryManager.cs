@@ -4,12 +4,17 @@ namespace Scrips.Agent {
 	public class AgentEventHistoryManager {
 		private List<string> _listOfEvents;
 
+		private string _totalStringOfEvents;
+
 		public AgentEventHistoryManager() {
 			_listOfEvents = new List<string>();
+
+			_totalStringOfEvents = "";
 		}
 
 		public void AddHistoryEvent(string historyEvent) {
 			_listOfEvents.Add(historyEvent);
+			_totalStringOfEvents += historyEvent + "\n\n";
 		}
 
 		public List<string> GetListOfEvents() {
@@ -17,13 +22,7 @@ namespace Scrips.Agent {
 		}
 
 		public string GetListOfEventsAsString() {
-			string s = "";
-
-			foreach (string historyEvent in _listOfEvents) {
-				s += historyEvent + "\n";
-			}
-
-			return s;
+			return _totalStringOfEvents;
 		}
 	}
 }
