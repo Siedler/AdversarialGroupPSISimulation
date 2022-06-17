@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Priority_Queue;
 using Scrips.Agent;
+using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -46,6 +47,7 @@ public class Agent : MonoBehaviour {
     private Queue<RequestInformation> _incomingRequests;
 
     private List<ActionPlan> _actionPlans;
+    private Dictionary<FoodCluster, ActionPlan> _foodClusterActionPlan;
     private SimplePriorityQueue<ActionPlan> _currentMotives;
     private ActionPlan _currentActionPlan;
     
@@ -87,7 +89,7 @@ public class Agent : MonoBehaviour {
 
         _incomingRequests = new Queue<RequestInformation>();
 
-        _locationMemory = new HippocampusLocation(_environment, agentPersonality);
+        _locationMemory = new HippocampusLocation(this, _environment, agentPersonality);
         _socialMemory = new HippocampusSocial(agentPersonality);
 
         SetupActionPlans();
@@ -96,6 +98,7 @@ public class Agent : MonoBehaviour {
     private void SetupActionPlans() {
         _currentMotives = new SimplePriorityQueue<ActionPlan>();
         _actionPlans = new List<ActionPlan>();
+        _foodClusterActionPlan = new Dictionary<FoodCluster, ActionPlan>();
         
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
         _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
@@ -107,6 +110,21 @@ public class Agent : MonoBehaviour {
         _actionPlans.Add(new GoHeal(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
         _actionPlans.Add(new ExchangeSocialInformation(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
         _actionPlans.Add(new Flee(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
+    }
+
+    public void AddNewFoodCluster(FoodCluster foodCluster) {
+        ActionPlan foodClusterActionPlan = new CollectCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment);
+        _foodClusterActionPlan.Add(foodCluster, foodClusterActionPlan);
+        _actionPlans.Add(foodClusterActionPlan);
+    }
+
+    public void RemoveFoodCluster(FoodCluster foodCluster) {
+        ActionPlan foodClusterActionPlan = _foodClusterActionPlan[foodCluster];
+        _actionPlans.Remove(foodClusterActionPlan);
+        _foodClusterActionPlan.Remove(foodCluster);
+        
+        if(_currentMotives.Contains(foodClusterActionPlan)) _currentMotives.Remove(foodClusterActionPlan);
+        if (_currentActionPlan == foodClusterActionPlan) _currentActionPlan = null;
     }
 
     public void Spawn(EnvironmentWorldCell spawnCell, Direction startDirection) {

@@ -2,20 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
 using UnionFind;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class HippocampusLocation {
+	private Agent _agent;
+	
 	private Environment _environment;
 	private Dictionary<Vector3Int, AgentMemoryWorldCell> _agentLocationMemory;
 
 	// Array that saves the forget rate for the location memory seperate for positive and negative values (double[2])
 	private double[][] _locationForgetRatePositiveNegative;
 
-	public HippocampusLocation(Environment environment, AgentPersonality agentPersonality) {
+	private List<FoodCluster> _foodClusters;
+
+	public HippocampusLocation(Agent agent, Environment environment, AgentPersonality agentPersonality) {
+		this._agent = agent;
+
 		this._environment = environment;
 
 		_locationForgetRatePositiveNegative = new double[][] {
@@ -37,6 +43,8 @@ public class HippocampusLocation {
 		};
 		
 		_agentLocationMemory = new Dictionary<Vector3Int, AgentMemoryWorldCell>();
+
+		_foodClusters = new List<FoodCluster>();
 	}
 
 	public bool KnowsLocation(Vector3Int gridCoordinates) {
@@ -54,8 +62,8 @@ public class HippocampusLocation {
 	public Dictionary<Vector3Int, AgentMemoryWorldCell> GetAgentsLocationMemory() {
 		return _agentLocationMemory;
 	}
-	
-	public Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> FindFoodCluster(double minFoodScoreForCluster = 0.3) {
+
+	private DisjointSet<AgentMemoryWorldCell> FindClusters(double minFoodScoreForCluster) {
 		DisjointSet<AgentMemoryWorldCell> disjointFoodClusters = new DisjointSet<AgentMemoryWorldCell>();
 
 		// Itterate over every AgentMemoryWorldCell and search for clusters
@@ -80,9 +88,13 @@ public class HippocampusLocation {
 			}
 		}
 
+		return disjointFoodClusters;
+	}
+
+	private Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>>
+		CreateClusterDictionaryWithCenterRepresentative(Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> foodClusters) {
+		
 		// Calculate the list of cluster centers
-		Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> foodClusters =
-			disjointFoodClusters.GetClusters();
 		Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> clustersByCenter =
 			new Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>>();
 		
@@ -99,6 +111,64 @@ public class HippocampusLocation {
 		}
 
 		return clustersByCenter;
+	}
+	
+	public Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> FindFoodCluster(double minFoodScoreForCluster = 0.3, double matchingDistanceThreshold = 4) {
+		DisjointSet<AgentMemoryWorldCell> disjointFoodClusters = FindClusters(minFoodScoreForCluster);
+		
+		// Find new food clusters
+		Dictionary<AgentMemoryWorldCell, HashSet<AgentMemoryWorldCell>> newFoodClusters =
+			CreateClusterDictionaryWithCenterRepresentative(disjointFoodClusters.GetClusters());
+		
+		// Assign Food Clusters
+		List<FoodCluster> currentFoodClusterCopy = new List<FoodCluster>(_foodClusters);
+		List<AgentMemoryWorldCell> unassignedNewFoodClusters = new List<AgentMemoryWorldCell>(newFoodClusters.Keys);
+		
+		foreach (AgentMemoryWorldCell unassignedFoodClusterCenter in unassignedNewFoodClusters.ToArray()) {
+			FoodCluster potentialMatch = null;
+			double potentialMatchDistance = Double.PositiveInfinity;
+
+			foreach (FoodCluster foodCluster in currentFoodClusterCopy) {
+				if (foodCluster.GetCenter() == unassignedFoodClusterCenter) {
+					potentialMatch = foodCluster;
+					break;
+				}
+				
+				double distance = HexagonGridUtility.GetHexGridDistance(foodCluster.GetCenter().cellCoordinates,
+					unassignedFoodClusterCenter.cellCoordinates);
+				
+				if(distance > matchingDistanceThreshold || distance > potentialMatchDistance) continue;
+
+				potentialMatch = foodCluster;
+				potentialMatchDistance = distance;
+			}
+			
+			if(potentialMatch == null) continue;
+			
+			if (potentialMatch.GetCenter() != unassignedFoodClusterCenter) {
+				potentialMatch.SetCenter(unassignedFoodClusterCenter);
+				currentFoodClusterCopy.Remove(potentialMatch);
+			}
+
+			unassignedNewFoodClusters.Remove(unassignedFoodClusterCenter);
+		}
+
+		// Add new food clusters
+		foreach (AgentMemoryWorldCell unassignedNewFoodCluster in unassignedNewFoodClusters) {
+			// Create new food cluster
+			FoodCluster newFoodCluster = new FoodCluster(unassignedNewFoodCluster, newFoodClusters[unassignedNewFoodCluster]);
+			_agent.AddNewFoodCluster(newFoodCluster);
+			_foodClusters.Add(newFoodCluster);
+		}
+
+		// Remove food clusters
+		foreach (FoodCluster foodCluster in currentFoodClusterCopy) {
+			// Delete food cluster
+			_foodClusters.Remove(foodCluster);
+			_agent.RemoveFoodCluster(foodCluster);
+		}
+		
+		return newFoodClusters;
 	}
 
 	public void UpdateNeedSatisfactionAssociations(

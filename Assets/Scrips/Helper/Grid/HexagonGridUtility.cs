@@ -62,4 +62,32 @@ public class HexagonGridUtility {
 
         return circleCoordinates;
     }
+
+    // Source: https://answers.unity.com/questions/960064/hexagon-grid-distance.html
+    public static double GetHexGridDistance(Vector3Int a, Vector3Int b) {
+        int dx = b.x - a.x;     // signed deltas
+        int dy = b.y - a.y;
+        int x = Mathf.Abs(dx);  // absolute deltas
+        int y = Mathf.Abs(dy);
+        // special case if we start on an odd row or if we move into negative x direction
+        if ((dx < 0)^((a.y&1)==1))
+            x = Mathf.Max(0, x - (y + 1) / 2);
+        else
+            x = Mathf.Max(0, x - (y) / 2);
+        return x + y;
+    }
+    
+    // Source: https://www.redblobgames.com/grids/hexagons/#distances
+    public static double GetHexGridWidthDistance(Vector3Int a, Vector3Int b) {
+        double dcol = Math.Abs(a.y - b.y);
+        double drow = Math.Abs(a.x - b.x);
+        return drow + Math.Max(0, (dcol - drow) / 2);
+    }
+    
+    // Source: https://www.redblobgames.com/grids/hexagons/#distances
+    public static double GetHexGridHeightDistance(Vector3Int a, Vector3Int b) {
+        double dcol = Math.Abs(a.y - b.y);
+        double drow = Math.Abs(a.x - b.x);
+        return dcol + Math.Max(0, (drow - dcol) / 2);
+    }
 }
