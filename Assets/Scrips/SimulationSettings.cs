@@ -6,9 +6,6 @@ using UnityEngine;
 public class SimulationSettings {
     public static readonly int AgentViewDistance = 4;
 
-    public static readonly double FoodPleasure = 0.4f;
-
-    
     // Agent Personality values
     public static readonly double SetValuePainAvoidanceMean = 0.8;
     public static readonly double SetValuePainAvoidanceSigma = 0.03;
@@ -39,7 +36,7 @@ public class SimulationSettings {
     
     // MEMORY SECTION
     // Defining the radius of which the memory of the agent is affected if a new experience was made
-    public static readonly int MemoryWorldCellNeedSatisfactionAssociationRadius = 6;
+    public static readonly int MemoryWorldCellNeedSatisfactionAssociationRadius = 4;
     
     // Defining the values of how much each agent forgets values of the location memory.
     // The values are split for positive and negative associations (negative values are forgotten quicker than positive

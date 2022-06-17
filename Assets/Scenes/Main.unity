@@ -3327,7 +3327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c139c31729dad4590f1d58cad72d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfAgents: 0
+  numberOfAgents: 10
   agentPrefab: {fileID: 7955802073501477745, guid: cb98f9643713078439b5f78c7bd9d2ce, type: 3}
 --- !u!1 &1381174654
 GameObject:
@@ -4488,7 +4488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   foodPrefab: {fileID: 623844235218281919, guid: 7af595a5bea7f9e4dba36ed0f632c824, type: 3}
-  chanceToRespawnFood: 0.1
+  chanceToRespawnFood: 0.01
 --- !u!4 &1891078203
 Transform:
   m_ObjectHideFlags: 0
@@ -4548,7 +4548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c139c31729dad4590f1d58cad72d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfAgents: 1
+  numberOfAgents: 10
   agentPrefab: {fileID: 7955802073501477745, guid: cb98f9643713078439b5f78c7bd9d2ce, type: 3}
 --- !u!1 &1909531798
 GameObject:
