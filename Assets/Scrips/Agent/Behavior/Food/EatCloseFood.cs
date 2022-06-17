@@ -51,14 +51,7 @@ public class EatCloseFood : ActionPlanFoodRelated {
 	}
 	
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		if (currentEnvironmentWorldCell.ContainsFood()) return true;
-		
-		foreach (EnvironmentWorldCell environmentWorldCell in agentsFieldOfView) {
-			if(environmentWorldCell == null) continue;
-			if (environmentWorldCell.ContainsFood()) return true;
-		}
-
-		return false;
+		return IsFoodInRange(currentEnvironmentWorldCell, agentsFieldOfView);
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {

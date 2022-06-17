@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 
@@ -12,7 +13,7 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 		HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager,
 		Environment environment) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) { }
-
+	
 	protected ActionResult CollectAndEatFood(EnvironmentWorldCell currentEnvironmentWorldCell) {
 		if (!currentEnvironmentWorldCell.ContainsFood()) throw new InvalidOperationException("Tried to collect food even though the world cell has no food");
 
@@ -20,6 +21,17 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 
 		OnSuccess();
 		return ActionResult.Success;
+	}
+
+	protected bool IsFoodInRange(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView) {
+		if (currentEnvironmentWorldCell.ContainsFood()) return true;
+		
+		foreach (EnvironmentWorldCell environmentWorldCell in agentsFieldOfView) {
+			if(environmentWorldCell == null) continue;
+			if (environmentWorldCell.ContainsFood()) return true;
+		}
+
+		return false;
 	}
 	
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {

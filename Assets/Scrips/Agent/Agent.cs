@@ -113,7 +113,7 @@ public class Agent : MonoBehaviour {
     }
 
     public void AddNewFoodCluster(FoodCluster foodCluster) {
-        ActionPlan foodClusterActionPlan = new CollectCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment);
+        ActionPlan foodClusterActionPlan = new FoodClusterActionPlan(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, foodCluster);
         _foodClusterActionPlan.Add(foodCluster, foodClusterActionPlan);
         _actionPlans.Add(foodClusterActionPlan);
     }

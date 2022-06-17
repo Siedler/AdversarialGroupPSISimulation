@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Priority_Queue;
 using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
@@ -63,6 +64,26 @@ public class HippocampusLocation {
 		return _agentLocationMemory;
 	}
 
+	private AgentMemoryWorldCell GetClosetAgentMemoryWorldCell(Vector3Int coordinate) {
+		// If the center coordinate is inside the map return it
+		if (_agentLocationMemory.ContainsKey(coordinate)) return _agentLocationMemory[coordinate];
+		
+		// If its not part of the map: search closest memory world cell
+		AgentMemoryWorldCell closestSoFar = null;
+		double closestDistanceSoFar = Double.PositiveInfinity;
+
+		foreach ((Vector3Int agentMemoryWorldCellCoordiantes, AgentMemoryWorldCell agentMemoryWorldCell) in _agentLocationMemory) {
+			double distance = HexagonGridUtility.GetHexGridDistance(coordinate, agentMemoryWorldCellCoordiantes);
+
+			if (closestSoFar == null || distance < closestDistanceSoFar) {
+				closestSoFar = agentMemoryWorldCell;
+				closestDistanceSoFar = distance;
+			}
+		}
+
+		return closestSoFar;
+	}
+
 	private DisjointSet<AgentMemoryWorldCell> FindClusters(double minFoodScoreForCluster) {
 		DisjointSet<AgentMemoryWorldCell> disjointFoodClusters = new DisjointSet<AgentMemoryWorldCell>();
 
@@ -105,8 +126,9 @@ public class HippocampusLocation {
 				coordinateAverage += clusterMember.worldCoordinates;
 			}
 			coordinateAverage /= clusterMembers.Count;
-			
-			AgentMemoryWorldCell centerWorldCell = _agentLocationMemory[_environment.GetCellCoordinateFromWorldCoordinate(coordinateAverage)];
+
+			Vector3Int centerWorldCellCoordinate = _environment.GetCellCoordinateFromWorldCoordinate(coordinateAverage);
+			AgentMemoryWorldCell centerWorldCell = GetClosetAgentMemoryWorldCell(centerWorldCellCoordinate);
 			clustersByCenter.Add(centerWorldCell, clusterMembers);
 		}
 

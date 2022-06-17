@@ -46,7 +46,7 @@ public class CollectCloseFood : ActionPlanFoodRelated {
 		// Current cell contains food -> Collect it
 		if (currentEnvironmentWorldCell.ContainsFood()) return CollectFood(currentEnvironmentWorldCell);
 
-			// Food was already eaten!
+		// Food was already eaten!
 		if (_foodLocation != null && !_foodLocation.ContainsFood()) _foodLocation = null;
 
 		// Search for food location
@@ -63,14 +63,7 @@ public class CollectCloseFood : ActionPlanFoodRelated {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		if (currentEnvironmentWorldCell.ContainsFood()) return true;
-		
-		foreach (EnvironmentWorldCell environmentWorldCell in agentsFieldOfView) {
-			if(environmentWorldCell == null) continue;
-			if (environmentWorldCell.ContainsFood()) return true;
-		}
-
-		return false;
+		return IsFoodInRange(currentEnvironmentWorldCell, agentsFieldOfView);
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
