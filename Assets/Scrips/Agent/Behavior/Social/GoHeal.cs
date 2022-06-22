@@ -6,6 +6,8 @@ using UnityEngine;
 public class GoHeal : ActionPlan {
 
 	private Agent _agentToHeal;
+
+	private bool _requestedHealing;
 	
 	public GoHeal(
 		Agent agent,
@@ -57,11 +59,18 @@ public class GoHeal : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+		_requestedHealing &= nearbyAgents.Contains(_agentToHeal) && _agentToHeal.GetHealth() < 100;
 		return nearbyAgents.Contains(_agentToHeal) && _agentToHeal.GetHealth() < 100;
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return 0;
+		_requestedHealing &= nearbyAgents.Contains(_agentToHeal);
+		double socialScore = socialMemory.GetIndividualMemory(_agentToHeal).GetSocialScore();
+		
+		// TODO maybe change socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore() < 0 to individual limit
+		if (!_requestedHealing || socialScore < 0) return 0;
+
+		return 0.1 * socialScore;
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
@@ -102,5 +111,9 @@ public class GoHeal : ActionPlan {
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
 		return -0.5;
+	}
+
+	public void RequestHealing() {
+		_requestedHealing = true;
 	}
 }

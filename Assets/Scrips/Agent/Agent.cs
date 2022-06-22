@@ -44,6 +44,7 @@ public class Agent : MonoBehaviour {
 
     private List<ActionPlan> _actionPlans;
     private Dictionary<Agent, Engage> _engagingActionPlans;
+    private Dictionary<Agent, GoHeal> _healingActionPlans;
     private Dictionary<Agent, ExchangeLocationInformation> _locationMemoryExchangeActionPlans;
     private Dictionary<Agent, ExchangeSocialInformation> _socialMemoryExchangeActionPlans;
     private Dictionary<FoodCluster, ActionPlan> _foodClusterActionPlans;
@@ -98,12 +99,15 @@ public class Agent : MonoBehaviour {
         _currentMotives = new SimplePriorityQueue<ActionPlan>();
         _actionPlans = new List<ActionPlan>();
         _engagingActionPlans = new Dictionary<Agent, Engage>();
+        _healingActionPlans = new Dictionary<Agent, GoHeal>();
         _locationMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeLocationInformation>();
         _socialMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeSocialInformation>();
         _foodClusterActionPlans = new Dictionary<FoodCluster, ActionPlan>();
         
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
         _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
+        _actionPlans.Add(new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment));
     }
     
     private void GenerateSocialActionPlans(Agent newlyMetAgent) {
@@ -112,10 +116,12 @@ public class Agent : MonoBehaviour {
             _eventHistoryManager, _environment, newlyMetAgent);
         _actionPlans.Add(engage);
         _engagingActionPlans.Add(newlyMetAgent, engage);
-        
-        _actionPlans.Add(new GoHeal(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment, newlyMetAgent));
-        
+
+        GoHeal goHeal = new GoHeal(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment, newlyMetAgent);
+        _actionPlans.Add(goHeal);
+        _healingActionPlans.Add(newlyMetAgent, goHeal);
+
         ExchangeLocationInformation exchangeLocationInformation = new ExchangeLocationInformation(this,
             _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment,
             newlyMetAgent);
@@ -388,6 +394,8 @@ public class Agent : MonoBehaviour {
                 if(!_socialMemory.KnowsAgent(incomingRequestInformation.GetRegardingAgent())) continue;
                 
                 _engagingActionPlans[incomingRequestInformation.GetRegardingAgent()].RequestHelpToAttackThisAgent(incomingRequestInformation.GetCallingAgent());
+            } else if (incomingRequestInformation.GetRequestType() == RequestType.Healing) {
+                _healingActionPlans[incomingRequestInformation.GetCallingAgent()].RequestHealing();
             }
         }
     }
