@@ -10,13 +10,14 @@ using UnionFind;
 using UnityEngine;
 
 public class HippocampusLocation {
-	private Agent _agent;
+	private readonly Agent _agent;
 	
-	private Environment _environment;
-	private Dictionary<Vector3Int, AgentMemoryWorldCell> _agentLocationMemory;
+	private readonly Environment _environment;
+	private readonly Dictionary<Vector3Int, AgentMemoryWorldCell> _agentLocationMemory;
 
 	// Array that saves the forget rate for the location memory seperate for positive and negative values (double[2])
-	private double[][] _locationForgetRatePositiveNegative;
+	private readonly double[][] _locationForgetRatePositiveNegative;
+	private readonly double[] _locationMemoryAlphaFactor;
 
 	private List<FoodCluster> _foodClusters;
 
@@ -42,6 +43,14 @@ public class HippocampusLocation {
 				agentPersonality.GetValue("HippocampusLocationCompetenceForgetRateNegative")
 			},
 		};
+
+		_locationMemoryAlphaFactor = new double[] {
+			agentPersonality.GetValue("LocationMemoryReceiveLocationPainAvoidanceInformationFactor"),
+			agentPersonality.GetValue("LocationMemoryReceiveLocationEnergyInformationFactor"),
+			agentPersonality.GetValue("LocationMemoryReceiveLocationAffiliationInformationFactor"),
+			agentPersonality.GetValue("LocationMemoryReceiveLocationCertaintyInformationFactor"),
+			agentPersonality.GetValue("LocationMemoryReceiveLocationCompetenceInformationFactor"),
+		};
 		
 		_agentLocationMemory = new Dictionary<Vector3Int, AgentMemoryWorldCell>();
 
@@ -54,6 +63,19 @@ public class HippocampusLocation {
 
 	public void AddNewWorldCellToMemory(Vector3Int gridCoordinates, AgentMemoryWorldCell agentMemoryWorldCell) {
 		_agentLocationMemory.Add(gridCoordinates, agentMemoryWorldCell);
+	}
+
+	// This method is called if an agents receives new location information from another agent
+	// The _locationMemoryAlphaFactor regulated by how much the new information is taken into account.
+	// This factor is depended on the personality of the agent.
+	public void ReceiveLocationInformation(Vector3Int gridCoordinates, double[] needSatisfactionAssociations) {
+		_agentLocationMemory[gridCoordinates].UpdateNeedSatisfactionAssociations(
+			needSatisfactionAssociations[0] * _locationMemoryAlphaFactor[0],
+			needSatisfactionAssociations[1] * _locationMemoryAlphaFactor[1],
+			needSatisfactionAssociations[2] * _locationMemoryAlphaFactor[2],
+			needSatisfactionAssociations[3] * _locationMemoryAlphaFactor[3],
+			needSatisfactionAssociations[4] * _locationMemoryAlphaFactor[4]
+			);
 	}
 	
 	public AgentMemoryWorldCell GetAgentMemoryWorldCell(Vector3Int gridCoordinates) {

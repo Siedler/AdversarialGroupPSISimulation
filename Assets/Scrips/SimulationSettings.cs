@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SimulationSettings {
     public static readonly int AgentViewDistance = 4;
+    
+    public static readonly int NumberOfWorldCellsToExchange = 10;
 
     // Agent Personality values
     public static readonly double SetValuePainAvoidanceMean = 0.8;
