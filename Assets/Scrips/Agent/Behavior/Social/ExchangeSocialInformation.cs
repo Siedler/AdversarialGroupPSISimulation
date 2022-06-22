@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
+using UnityEngine;
 
 public class ExchangeSocialInformation : ActionPlan {
 
 	private readonly Agent _correspondingAgent;
+
+	private bool _wasRequested = false;
 
 	public ExchangeSocialInformation(
 		Agent agent,
@@ -15,10 +18,11 @@ public class ExchangeSocialInformation : ActionPlan {
 		HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager,
 		Environment environment,
-		Agent correspondingAgent) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
+		Agent correspondingAgent) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory,
+		eventHistoryManager, environment) {
 
 		_correspondingAgent = correspondingAgent;
-		
+
 		expectedPainAvoidance = 0;
 		expectedEnergyIntake = 0;
 		expectedAffiliation = 0.5;
@@ -26,15 +30,21 @@ public class ExchangeSocialInformation : ActionPlan {
 		expectedCompetence = 0.5;
 	}
 
+	public override void InitiateActionPlan(Agent correspondingAgent = null) {
+		base.InitiateActionPlan(correspondingAgent);
+	}
+
 	private void GiveSocialInformation() {
-		(Agent, AgentIndividualMemory) agentIndividualMemoryPair = socialMemory.GetRandomAgentMemory(_correspondingAgent);
+		(Agent, AgentIndividualMemory) agentIndividualMemoryPair =
+			socialMemory.GetRandomAgentMemory(_correspondingAgent);
 		_correspondingAgent.ReceiveAgentIndividualMemory(agentIndividualMemoryPair.Item1,
 			agentIndividualMemoryPair.Item2.GetSocialScore());
 	}
-	
-	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+
+	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell,
+		List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		int agentInRange = IsAgentInRange(agentsFieldOfView, _correspondingAgent);
-		
+
 		if (agentInRange == -1) {
 			EnvironmentWorldCell environmentWorldCellOfAgentToExchangeInformation =
 				IsAgentInFieldOfView(agentsFieldOfView, _correspondingAgent);
@@ -43,9 +53,9 @@ public class ExchangeSocialInformation : ActionPlan {
 				OnFailure();
 				return ActionResult.Failure;
 			}
-			
+
 			WalkTo(environmentWorldCellOfAgentToExchangeInformation.cellCoordinates);
-			
+
 			// Recheck if agent is now in range. If so -> give information
 			agentInRange = IsAgentInRange(agentsFieldOfView, _correspondingAgent);
 			if (agentInRange != -1) {
@@ -53,22 +63,28 @@ public class ExchangeSocialInformation : ActionPlan {
 				OnSuccess();
 				return ActionResult.Success;
 			}
-			
+
 			return ActionResult.InProgress;
 		}
-		
+
 		// Agent is in range -> Exchange Social Information
 		GiveSocialInformation();
 		OnSuccess();
 		return ActionResult.Success;
 	}
 
-	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell,
+		List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+		_wasRequested &= nearbyAgents.Contains(_correspondingAgent);
 		return nearbyAgents.Contains(_correspondingAgent);
 	}
 
-	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return 0;
+	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell,
+		List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+		// Give the urgency by the land of _wasRequested, i.e. if the other agent asked for the informational exchange,
+		// and if the other agent is still in the field of view.
+		// If the agent goes out of the field of view then the _wasRequested is set to false
+		return (_wasRequested = (_wasRequested & nearbyAgents.Contains(_correspondingAgent))) ? 0.1 : 0;
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
@@ -109,5 +125,9 @@ public class ExchangeSocialInformation : ActionPlan {
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
 		return -0.5;
+	}
+
+	public void RegisterRequest() {
+		_wasRequested = true;
 	}
 }

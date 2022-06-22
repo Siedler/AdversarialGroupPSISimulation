@@ -1,4 +1,4 @@
 ﻿
 public enum RequestType {
-	Help, Food, Healing, InformationGeneral, InformationPeople, InformationMap, Wait, RequestAccepted
+	Help, Food, Healing, InformationGeneral, InformationSocial, InformationLocation, Wait, RequestAccepted
 }

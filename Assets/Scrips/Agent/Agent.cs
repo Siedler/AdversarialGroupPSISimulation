@@ -45,7 +45,10 @@ public class Agent : MonoBehaviour {
     private Queue<RequestInformation> _incomingRequests;
 
     private List<ActionPlan> _actionPlans;
-    private Dictionary<FoodCluster, ActionPlan> _foodClusterActionPlan;
+    private Dictionary<FoodCluster, ActionPlan> _foodClusterActionPlans;
+    private Dictionary<Agent, ActionPlan> _locationMemoryExchangeActionPlans;
+    private Dictionary<Agent, ExchangeSocialInformation> _socialMemoryExchangeActionPlans;
+    
     private SimplePriorityQueue<ActionPlan> _currentMotives;
     private ActionPlan _currentActionPlan;
     
@@ -94,8 +97,10 @@ public class Agent : MonoBehaviour {
     private void SetupActionPlans() {
         _currentMotives = new SimplePriorityQueue<ActionPlan>();
         _actionPlans = new List<ActionPlan>();
-        _foodClusterActionPlan = new Dictionary<FoodCluster, ActionPlan>();
-        
+        _foodClusterActionPlans = new Dictionary<FoodCluster, ActionPlan>();
+        _locationMemoryExchangeActionPlans = new Dictionary<Agent, ActionPlan>();
+        _socialMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeSocialInformation>();
+
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
         _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
     }
@@ -104,20 +109,24 @@ public class Agent : MonoBehaviour {
         // Add engagement and healing to the agents behavior
         _actionPlans.Add(new Engage(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
         _actionPlans.Add(new GoHeal(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
-        _actionPlans.Add(new ExchangeSocialInformation(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
+        
+        ExchangeSocialInformation exchangeSocialInformation = new ExchangeSocialInformation(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent);
+        _actionPlans.Add(exchangeSocialInformation);
+        _socialMemoryExchangeActionPlans.Add(newlyMetAgent, exchangeSocialInformation);
+        
         _actionPlans.Add(new Flee(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent));
     }
 
     public void AddNewFoodCluster(FoodCluster foodCluster) {
         ActionPlan foodClusterActionPlan = new FoodClusterActionPlan(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, foodCluster);
-        _foodClusterActionPlan.Add(foodCluster, foodClusterActionPlan);
+        _foodClusterActionPlans.Add(foodCluster, foodClusterActionPlan);
         _actionPlans.Add(foodClusterActionPlan);
     }
 
     public void RemoveFoodCluster(FoodCluster foodCluster) {
-        ActionPlan foodClusterActionPlan = _foodClusterActionPlan[foodCluster];
+        ActionPlan foodClusterActionPlan = _foodClusterActionPlans[foodCluster];
         _actionPlans.Remove(foodClusterActionPlan);
-        _foodClusterActionPlan.Remove(foodCluster);
+        _foodClusterActionPlans.Remove(foodCluster);
         
         if(_currentMotives.Contains(foodClusterActionPlan)) _currentMotives.Remove(foodClusterActionPlan);
         if (_currentActionPlan == foodClusterActionPlan) _currentActionPlan = null;
@@ -335,6 +344,21 @@ public class Agent : MonoBehaviour {
         return agentsInFieldOfView;
     }
 
+    private void ProcessIncomingRequests() {
+        while (_incomingRequests.Count > 0) {
+            RequestInformation incomingRequestInformation = _incomingRequests.Dequeue();
+            if (incomingRequestInformation.GetRequestType() == RequestType.InformationLocation) {
+                if(incomingRequestInformation.GetRegardingAgent() != null && incomingRequestInformation.GetRegardingAgent() != this) continue;
+
+            } else if (incomingRequestInformation.GetRequestType() == RequestType.InformationSocial) {
+                if(incomingRequestInformation.GetRegardingAgent() != null && incomingRequestInformation.GetRegardingAgent() != this) continue;
+                _socialMemoryExchangeActionPlans[incomingRequestInformation.GetCallingAgent()].RegisterRequest();
+            } else if (incomingRequestInformation.GetRequestType() == RequestType.Help) {
+                
+            }
+        }
+    }
+    
     private double GetCertaintyInfluenceOfCloseUpAgents(List<Agent> agentsInFieldOfView) {
         // TODO Add more complex certainty update method
         double certaintyLevel = 0;
@@ -427,7 +451,7 @@ public class Agent : MonoBehaviour {
         List<Agent> agentsInFieldOfView = SenseCloseAgents(fieldOfView);
         
         // TODO handle incoming requests
-        _incomingRequests.Clear();
+        ProcessIncomingRequests();
 
         if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
             _eventHistoryManager.AddHistoryEvent("Agent " + name + ": reevaluating the current motive!");
