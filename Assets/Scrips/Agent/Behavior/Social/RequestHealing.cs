@@ -34,8 +34,6 @@ public class RequestHealing : ActionPlan {
 		_timeRemainingToWait = 7;
 
 		_initialHealth = agent.GetHealth();
-		
-		Debug.Log("!!!!!!!!!!!!!!!! REQUESTED HEALING");
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
