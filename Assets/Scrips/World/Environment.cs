@@ -19,6 +19,9 @@ public class Environment : MonoBehaviour {
     private AgentController _team2Controller;
     private FoodController _foodController;
 
+    public int _agentSeed;
+    public int _gameSeed;
+
     // Start is called before the first frame update
     public void Initialize() {
         _grid = this.transform.GetChild(0).GetComponent<Grid>();
@@ -31,8 +34,11 @@ public class Environment : MonoBehaviour {
         
         _worldGenerator.Initiate();
 
+        Random.InitState(_agentSeed);
         _team1Controller.InitiateAgents(_spawnTeam1, 0, Direction.E);
         _team2Controller.InitiateAgents(_spawnTeam2, 1, Direction.W);
+        Random.InitState(_gameSeed);
+        
         _foodController.InitiateFood(_spawnFood);
     }
 

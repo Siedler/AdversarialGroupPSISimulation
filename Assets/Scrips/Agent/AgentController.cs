@@ -33,7 +33,11 @@ public class AgentController : MonoBehaviour {
 		this._spawnDirection = spawnDirection;
 
 		this._agentsToRespawn = new Queue<GameObject>();
-		
+
+		GenerateAgentsToSpawn();
+	}
+
+	private void GenerateAgentsToSpawn() {
 		// Spawn all agents but set them as not active
 		for (int i = 0; i < numberOfAgents; i++) {
 			GameObject newAgentObject =
@@ -43,7 +47,7 @@ public class AgentController : MonoBehaviour {
 			
 			AgentPersonality _agentPersonality = GenerateAgentPersonality();
 			
-			newAgent.InitiateAgent(teamNumber, _agentPersonality, this);
+			newAgent.InitiateAgent(_teamNumber, _agentPersonality, this);
 			
 			_agents.Add(newAgentObject);
 			_agentsToRespawn.Enqueue(newAgentObject);
