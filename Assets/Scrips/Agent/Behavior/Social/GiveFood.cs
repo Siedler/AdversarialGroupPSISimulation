@@ -6,7 +6,7 @@ using Scrips.Agent.Personality;
 public class GiveFood : ActionPlan {
 	private readonly Agent _correspondingAgent;
 	
-	private bool wasRequested;
+	private bool _wasRequested;
 	
 	public GiveFood(Agent agent,
 		AgentPersonality agentPersonality,
@@ -64,12 +64,12 @@ public class GiveFood : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		wasRequested = wasRequested && nearbyAgents.Contains(_correspondingAgent) && agent.HasFood();
+		_wasRequested = _wasRequested && nearbyAgents.Contains(_correspondingAgent) && agent.HasFood();
 		return nearbyAgents.Contains(_correspondingAgent) && agent.HasFood();
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return (wasRequested = (wasRequested && nearbyAgents.Contains(_correspondingAgent) && agent.HasFood())) ? 0.1 : 0;
+		return (_wasRequested = (_wasRequested && nearbyAgents.Contains(_correspondingAgent) && agent.HasFood())) ? 0.1 : 0;
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
@@ -110,5 +110,9 @@ public class GiveFood : ActionPlan {
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
 		return -0.2;
+	}
+
+	public void RegisterRequest() {
+		_wasRequested = true;
 	}
 }

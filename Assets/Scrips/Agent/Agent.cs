@@ -105,10 +105,14 @@ public class Agent : MonoBehaviour {
         _socialMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeSocialInformation>();
         _foodClusterActionPlans = new Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>>();
         _giveFoodActionPlans = new Dictionary<Agent, GiveFood>();
-        
-        _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
-        _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
+
+        _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment));
+        _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment));
         _actionPlans.Add(new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment));
+        _actionPlans.Add(new CallForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
     }
     
@@ -419,6 +423,8 @@ public class Agent : MonoBehaviour {
                 _engagingActionPlans[incomingRequestInformation.GetRegardingAgent()].RequestHelpToAttackThisAgent(incomingRequestInformation.GetCallingAgent());
             } else if (incomingRequestInformation.GetRequestType() == RequestType.Healing) {
                 _healingActionPlans[incomingRequestInformation.GetCallingAgent()].RequestHealing();
+            } else if (incomingRequestInformation.GetRequestType() == RequestType.Food) {
+                _giveFoodActionPlans[incomingRequestInformation.GetCallingAgent()].RegisterRequest();
             }
         }
     }
