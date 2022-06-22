@@ -16,6 +16,12 @@ public class CollectFoodClusterActionPlan : ActionPlanFoodRelated {
 		base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 
 		_foodCluster = correspondingFoodCluster;
+		
+		expectedPainAvoidance = 0;
+		expectedEnergyIntake = 0;
+		expectedAffiliation = 0;
+		expectedCertainty = 0.4;
+		expectedCompetence = 0.5;
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
