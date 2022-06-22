@@ -23,6 +23,16 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 		return ActionResult.Success;
 	}
 
+	protected ActionResult CollectFood(EnvironmentWorldCell currentEnvironmentWorldCell) {
+		if (!currentEnvironmentWorldCell.ContainsFood()) throw new InvalidOperationException("Tried to collect food even though the world cell has no food");
+
+		agent.CollectFood();
+		currentEnvironmentWorldCell.ConsumeFood();
+		
+		OnSuccess();
+		return ActionResult.Success;
+	}
+
 	protected bool IsFoodInRange(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView) {
 		if (currentEnvironmentWorldCell.ContainsFood()) return true;
 		
@@ -47,7 +57,7 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.4;
+		return 0.2;
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
@@ -67,10 +77,10 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.3;
+		return -0.2;
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.5;
+		return -0.2;
 	}
 }

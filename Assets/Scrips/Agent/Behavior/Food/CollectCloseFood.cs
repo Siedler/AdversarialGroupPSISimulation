@@ -31,16 +31,6 @@ public class CollectCloseFood : ActionPlanFoodRelated {
 		_foodLocation = null;
 	}
 
-	private ActionResult CollectFood(EnvironmentWorldCell currentEnvironmentWorldCell) {
-		if (!currentEnvironmentWorldCell.ContainsFood()) throw new InvalidOperationException("Tried to collect food even though the world cell has no food");
-
-		agent.CollectFood();
-		currentEnvironmentWorldCell.ConsumeFood();
-		
-		OnSuccess();
-		return ActionResult.Success;
-	}
-	
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 
 		// Current cell contains food -> Collect it
@@ -63,7 +53,7 @@ public class CollectCloseFood : ActionPlanFoodRelated {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return IsFoodInRange(currentEnvironmentWorldCell, agentsFieldOfView);
+		return IsFoodInRange(currentEnvironmentWorldCell, agentsFieldOfView) && agent.GetFoodCount() < SimulationSettings.MaximumStoredFoodCount;;
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {

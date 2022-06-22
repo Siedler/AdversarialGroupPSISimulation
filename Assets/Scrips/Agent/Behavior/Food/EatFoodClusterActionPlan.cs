@@ -3,14 +3,14 @@ using Scrips.Agent;
 using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
 
-public class FoodClusterActionPlan : ActionPlanFoodRelated {
+public class EatFoodClusterActionPlan : ActionPlanFoodRelated {
 	private FoodCluster _foodCluster;
 	
 	private EnvironmentWorldCell _foodLocation;
 
 	private bool _reachedFoodCluster;
 	
-	public FoodClusterActionPlan(Agent agent, AgentPersonality agentPersonality, Hypothalamus hypothalamus,
+	public EatFoodClusterActionPlan(Agent agent, AgentPersonality agentPersonality, Hypothalamus hypothalamus,
 		HippocampusLocation locationMemory, HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager, Environment environment, FoodCluster correspondingFoodCluster) :
 		base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {

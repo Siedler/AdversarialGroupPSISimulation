@@ -47,7 +47,7 @@ public class Agent : MonoBehaviour {
     private Dictionary<Agent, GoHeal> _healingActionPlans;
     private Dictionary<Agent, ExchangeLocationInformation> _locationMemoryExchangeActionPlans;
     private Dictionary<Agent, ExchangeSocialInformation> _socialMemoryExchangeActionPlans;
-    private Dictionary<FoodCluster, ActionPlan> _foodClusterActionPlans;
+    private Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>> _foodClusterActionPlans;
 
     private SimplePriorityQueue<ActionPlan> _currentMotives;
     private ActionPlan _currentActionPlan;
@@ -102,7 +102,7 @@ public class Agent : MonoBehaviour {
         _healingActionPlans = new Dictionary<Agent, GoHeal>();
         _locationMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeLocationInformation>();
         _socialMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeSocialInformation>();
-        _foodClusterActionPlans = new Dictionary<FoodCluster, ActionPlan>();
+        _foodClusterActionPlans = new Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>>();
         
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
         _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
@@ -138,18 +138,24 @@ public class Agent : MonoBehaviour {
     }
 
     public void AddNewFoodCluster(FoodCluster foodCluster) {
-        ActionPlan foodClusterActionPlan = new FoodClusterActionPlan(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, foodCluster);
-        _foodClusterActionPlans.Add(foodCluster, foodClusterActionPlan);
-        _actionPlans.Add(foodClusterActionPlan);
+        ActionPlan eatFoodClusterActionPlan = new EatFoodClusterActionPlan(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, foodCluster);
+        ActionPlan collectFoodClusterActionPlan = new CollectFoodClusterActionPlan(this, _agentPersonality,
+            _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, foodCluster);
+        _foodClusterActionPlans.Add(foodCluster, new Tuple<ActionPlan, ActionPlan>(eatFoodClusterActionPlan, collectFoodClusterActionPlan));
+        _actionPlans.Add(eatFoodClusterActionPlan);
     }
 
     public void RemoveFoodCluster(FoodCluster foodCluster) {
-        ActionPlan foodClusterActionPlan = _foodClusterActionPlans[foodCluster];
-        _actionPlans.Remove(foodClusterActionPlan);
+        Tuple<ActionPlan, ActionPlan> foodClusterActionPlan = _foodClusterActionPlans[foodCluster];
+        _actionPlans.Remove(foodClusterActionPlan.Item1);
+        _actionPlans.Remove(foodClusterActionPlan.Item2);
         _foodClusterActionPlans.Remove(foodCluster);
         
-        if(_currentMotives.Contains(foodClusterActionPlan)) _currentMotives.Remove(foodClusterActionPlan);
-        if (_currentActionPlan == foodClusterActionPlan) _currentActionPlan = null;
+        if(_currentMotives.Contains(foodClusterActionPlan.Item1)) _currentMotives.Remove(foodClusterActionPlan.Item1);
+        if(_currentMotives.Contains(foodClusterActionPlan.Item2)) _currentMotives.Remove(foodClusterActionPlan.Item2);
+
+        if (_currentActionPlan == foodClusterActionPlan.Item1 || _currentActionPlan == foodClusterActionPlan.Item2)
+            _currentActionPlan = null;
     }
 
     public void Spawn(EnvironmentWorldCell spawnCell, Direction startDirection) {
@@ -249,6 +255,10 @@ public class Agent : MonoBehaviour {
 
     public bool HasFood() {
         return _foodCount >= 0;
+    }
+
+    public int GetFoodCount() {
+        return _foodCount;
     }
 
     public void ReceiveLocationMemory(Dictionary<Vector3Int, double[]> needSatisfactionAssociations) {

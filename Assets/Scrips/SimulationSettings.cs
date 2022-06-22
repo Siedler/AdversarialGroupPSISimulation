@@ -8,6 +8,8 @@ public class SimulationSettings {
     
     public static readonly int NumberOfWorldCellsToExchange = 10;
 
+    public static readonly int MaximumStoredFoodCount = 2;
+
     // Agent Personality values
     public static readonly double SetValuePainAvoidanceMean = 0.8;
     public static readonly double SetValuePainAvoidanceSigma = 0.03;
