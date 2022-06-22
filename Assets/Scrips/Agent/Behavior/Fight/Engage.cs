@@ -93,12 +93,12 @@ public class Engage : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		_requestedHelp &= nearbyAgents.Contains(_agentToAttack);
+		_requestedHelp = _requestedHelp && nearbyAgents.Contains(_agentToAttack);
 		return nearbyAgents.Contains(_agentToAttack);
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		_requestedHelp &= nearbyAgents.Contains(_agentToAttack);
+		_requestedHelp = _requestedHelp && nearbyAgents.Contains(_agentToAttack);
 		double socialScore = socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore();
 		
 		// TODO maybe change socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore() > 0 to individual limit

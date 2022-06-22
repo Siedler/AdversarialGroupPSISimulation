@@ -100,7 +100,7 @@ public class ExchangeLocationInformation : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		_wasRequested &= nearbyAgents.Contains(_correspondingAgent);
+		_wasRequested = _wasRequested && nearbyAgents.Contains(_correspondingAgent);
 		return nearbyAgents.Contains(_correspondingAgent);
 	}
 
@@ -108,7 +108,7 @@ public class ExchangeLocationInformation : ActionPlan {
 		// Give the urgency by the land of _wasRequested, i.e. if the other agent asked for the informational exchange,
 		// and if the other agent is still in the field of view.
 		// If the agent goes out of the field of view then the _wasRequested is set to false
-		return (_wasRequested = (_wasRequested & nearbyAgents.Contains(_correspondingAgent))) ? 0.1 : 0;
+		return (_wasRequested = (_wasRequested && nearbyAgents.Contains(_correspondingAgent))) ? 0.1 : 0;
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {

@@ -59,12 +59,12 @@ public class GoHeal : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		_requestedHealing &= nearbyAgents.Contains(_agentToHeal) && _agentToHeal.GetHealth() < 100;
+		_requestedHealing = _requestedHealing && nearbyAgents.Contains(_agentToHeal) && _agentToHeal.GetHealth() < 100;
 		return nearbyAgents.Contains(_agentToHeal) && _agentToHeal.GetHealth() < 100;
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		_requestedHealing &= nearbyAgents.Contains(_agentToHeal);
+		_requestedHealing = _requestedHealing && nearbyAgents.Contains(_agentToHeal);
 		double socialScore = socialMemory.GetIndividualMemory(_agentToHeal).GetSocialScore();
 		
 		// TODO maybe change socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore() < 0 to individual limit
