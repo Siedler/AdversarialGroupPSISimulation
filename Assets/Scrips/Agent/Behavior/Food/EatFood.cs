@@ -28,7 +28,7 @@ public class EatFood : ActionPlanFoodRelated{
 			return ActionResult.Failure;
 		}
 
-		agent.EatFoodFromStorage();
+		agent.ConsumeFoodFromStorage();
 		
 		OnSuccess();
 		return ActionResult.Success;

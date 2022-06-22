@@ -48,6 +48,7 @@ public class Agent : MonoBehaviour {
     private Dictionary<Agent, ExchangeLocationInformation> _locationMemoryExchangeActionPlans;
     private Dictionary<Agent, ExchangeSocialInformation> _socialMemoryExchangeActionPlans;
     private Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>> _foodClusterActionPlans;
+    private Dictionary<Agent, GiveFood> _giveFoodActionPlans;
 
     private SimplePriorityQueue<ActionPlan> _currentMotives;
     private ActionPlan _currentActionPlan;
@@ -103,6 +104,7 @@ public class Agent : MonoBehaviour {
         _locationMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeLocationInformation>();
         _socialMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeSocialInformation>();
         _foodClusterActionPlans = new Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>>();
+        _giveFoodActionPlans = new Dictionary<Agent, GiveFood>();
         
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
         _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
@@ -122,6 +124,11 @@ public class Agent : MonoBehaviour {
         _actionPlans.Add(goHeal);
         _healingActionPlans.Add(newlyMetAgent, goHeal);
 
+        GiveFood giveFood = new GiveFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment, newlyMetAgent);
+        _actionPlans.Add(giveFood);
+        _giveFoodActionPlans.Add(newlyMetAgent, giveFood);
+        
         ExchangeLocationInformation exchangeLocationInformation = new ExchangeLocationInformation(this,
             _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment,
             newlyMetAgent);
@@ -244,8 +251,14 @@ public class Agent : MonoBehaviour {
     public void CollectFood() {
         _foodCount++;
     }
+
+    public void ReceiveFood(Agent receiveFromAgent) {
+        _foodCount++;
+        
+        _socialMemory.SocialInfluence(receiveFromAgent, 0.2);
+    }
     
-    public void EatFoodFromStorage() {
+    public void ConsumeFoodFromStorage() {
         if (_foodCount == 0) throw new InvalidOperationException("Tried to eat food even though the agent has no food!");
 
         _foodCount--;

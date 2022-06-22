@@ -32,8 +32,6 @@ public class ExchangeLocationInformation : ActionPlan {
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
 		base.InitiateActionPlan(correspondingAgent);
 		_calledOutRequest = false;
-		
-		Debug.Log("!!! LOCATION MEMORY EXCHANGE STARTED");
 	}
 
 	private void GiveLocationInformation() {
