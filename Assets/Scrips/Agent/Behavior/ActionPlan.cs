@@ -70,6 +70,12 @@ public abstract class ActionPlan
 
 			environmentWorldCell.GetAgent().RegisterIncomingRequest(requestInformation);
 		}
+
+		if (regardingAgent != null) {
+			_eventHistoryManager.AddHistoryEvent("Agent " + agent.name + ": Called out for " + requestType + " for regarding agent " + regardingAgent.name + ".");
+		} else {
+			_eventHistoryManager.AddHistoryEvent("Agent " + agent.name + ": Called out for " + requestType + ".");
+		}
 		
 		return ActionResult.Success;
 	}

@@ -8,6 +8,8 @@ public class Flee : ActionPlan {
 	private Agent _agentToFleeFrom;
 	private AgentMemoryWorldCell _worldCellAgentFeelsMostCertain;
 
+	private bool _calledForHelp = false;
+	
 	public Flee(
 		Agent agent,
 		AgentPersonality agentPersonality,
@@ -20,6 +22,13 @@ public class Flee : ActionPlan {
 		eventHistoryManager, environment) {
 		
 		_agentToFleeFrom = agentToFleeFrom;
+	}
+
+	public override void InitiateActionPlan(Agent correspondingAgent) {
+		base.InitiateActionPlan(correspondingAgent);
+
+		_worldCellAgentFeelsMostCertain = null;
+		_calledForHelp = false;
 	}
 
 	private AgentMemoryWorldCell GetAgentMemoryWorldCellToFleeTo(EnvironmentWorldCell currentEnvironmentWorldCell) {
@@ -42,6 +51,11 @@ public class Flee : ActionPlan {
 	}
 	
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<global::Agent> nearbyAgents) {
+		if (!_calledForHelp) {
+			CallOutRequest(RequestType.Help, agentsFieldOfView, _agentToFleeFrom);
+			_calledForHelp = true;
+		}
+		
 		if (!nearbyAgents.Contains(_agentToFleeFrom)) {
 			OnSuccess();
 			return ActionResult.Success;
@@ -62,12 +76,6 @@ public class Flee : ActionPlan {
 
 		WalkTo(_worldCellAgentFeelsMostCertain.cellCoordinates);
 		return ActionResult.InProgress;
-	}
-	
-	public override void InitiateActionPlan(Agent correspondingAgent) {
-		base.InitiateActionPlan(correspondingAgent);
-
-		_worldCellAgentFeelsMostCertain = null;
 	}
 
 	public override bool CanBeExecuted(

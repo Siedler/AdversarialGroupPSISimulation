@@ -6,6 +6,9 @@ using UnityEngine;
 public class Engage : ActionPlan {
 	private Agent _agentToAttack;
 
+	private Agent _agentThatCalledForHelp;
+	private bool _requestedHelp;
+
 	public Engage(
 		Agent agent,
 		AgentPersonality agentPersonality,
@@ -28,6 +31,11 @@ public class Engage : ActionPlan {
 		base.InitiateActionPlan(correspondingAgent);
 		
 		_agentToAttack = correspondingAgent;
+
+		// If the action plan was enacted as the response to the request of another agent: reward socially
+		if (_requestedHelp) {
+			_agentThatCalledForHelp.ReceivedHelpAfterCalling(agent);
+		}
 	}
 
 	private ActionResult Hit(List<EnvironmentWorldCell> agentsFieldOfView) {
@@ -85,11 +93,18 @@ public class Engage : ActionPlan {
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
+		_requestedHelp &= nearbyAgents.Contains(_agentToAttack);
 		return nearbyAgents.Contains(_agentToAttack);
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return 0;
+		_requestedHelp &= nearbyAgents.Contains(_agentToAttack);
+		double socialScore = socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore();
+		
+		// TODO maybe change socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore() > 0 to individual limit
+		if (!_requestedHelp || socialScore > 0) return 0;
+
+		return 0.1 * (-socialScore);
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
@@ -130,5 +145,10 @@ public class Engage : ActionPlan {
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
 		return -0.5;
+	}
+
+	public void RequestHelpToAttackThisAgent(Agent agentThatCalledForHelp) {
+		_agentThatCalledForHelp = agentThatCalledForHelp;
+		_requestedHelp = true;
 	}
 }

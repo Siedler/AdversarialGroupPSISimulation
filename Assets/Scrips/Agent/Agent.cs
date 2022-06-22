@@ -43,12 +43,14 @@ public class Agent : MonoBehaviour {
     private Queue<RequestInformation> _incomingRequests;
 
     private List<ActionPlan> _actionPlans;
-    private Dictionary<FoodCluster, ActionPlan> _foodClusterActionPlans;
+    private Dictionary<Agent, Engage> _engagingActionPlans;
     private Dictionary<Agent, ExchangeLocationInformation> _locationMemoryExchangeActionPlans;
     private Dictionary<Agent, ExchangeSocialInformation> _socialMemoryExchangeActionPlans;
-    
+    private Dictionary<FoodCluster, ActionPlan> _foodClusterActionPlans;
+
     private SimplePriorityQueue<ActionPlan> _currentMotives;
     private ActionPlan _currentActionPlan;
+    
     
     private int _motiveCheckInterval = 5;
     private int clock = 0;
@@ -95,18 +97,22 @@ public class Agent : MonoBehaviour {
     private void SetupActionPlans() {
         _currentMotives = new SimplePriorityQueue<ActionPlan>();
         _actionPlans = new List<ActionPlan>();
-        _foodClusterActionPlans = new Dictionary<FoodCluster, ActionPlan>();
+        _engagingActionPlans = new Dictionary<Agent, Engage>();
         _locationMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeLocationInformation>();
         _socialMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeSocialInformation>();
-
+        _foodClusterActionPlans = new Dictionary<FoodCluster, ActionPlan>();
+        
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
         _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment));
     }
     
     private void GenerateSocialActionPlans(Agent newlyMetAgent) {
         // Add engagement and healing to the agents behavior
-        _actionPlans.Add(new Engage(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment, newlyMetAgent));
+        Engage engage = new Engage(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment, newlyMetAgent);
+        _actionPlans.Add(engage);
+        _engagingActionPlans.Add(newlyMetAgent, engage);
+        
         _actionPlans.Add(new GoHeal(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment, newlyMetAgent));
         
@@ -269,6 +275,10 @@ public class Agent : MonoBehaviour {
         GenerateSocialActionPlans(correspondingAgent);
     }
 
+    public void ReceivedHelpAfterCalling(Agent agentThatHelps) {
+        _socialMemory.SocialInfluence(agentThatHelps, 0.2);
+    }
+    
     // Experience something, i.e. influence the need satisfaction values
     public void Experience(double painAvoidance, double energyIntake, double affiliation, double certainty, double competence) {
         // Influence the hypothalamus, i.e. the needs
@@ -375,7 +385,9 @@ public class Agent : MonoBehaviour {
                 _socialMemoryExchangeActionPlans[incomingRequestInformation.GetCallingAgent()].RegisterRequest();
                 
             } else if (incomingRequestInformation.GetRequestType() == RequestType.Help) {
+                if(!_socialMemory.KnowsAgent(incomingRequestInformation.GetRegardingAgent())) continue;
                 
+                _engagingActionPlans[incomingRequestInformation.GetRegardingAgent()].RequestHelpToAttackThisAgent(incomingRequestInformation.GetCallingAgent());
             }
         }
     }
