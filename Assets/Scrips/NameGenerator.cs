@@ -3,25 +3,26 @@ using System.IO;
 using UnityEngine;
 
 public class NameGenerator {
-    private string[] names;
+    private List<string> names;
 
     public NameGenerator() {
-        List<string> namesList = new List<string>();
-
+        names = new List<string>();
+        
         StreamReader streamReader = new StreamReader("./Assets/names.txt");
 
         string line = "";
         while((line = streamReader.ReadLine()) != null) {
-            namesList.Add(line);
+            names.Add(line);
         }
 
         streamReader.Close();
-
-        names = namesList.ToArray();
     }
 
     public string GetRandomName() {
-        int rnd = Random.Range(0, names.Length);
-        return names[rnd];
+        int rnd = Random.Range(0, names.Count);
+        string name = names[rnd];
+        
+        names.RemoveAt(rnd);
+        return name;
     }
 }
