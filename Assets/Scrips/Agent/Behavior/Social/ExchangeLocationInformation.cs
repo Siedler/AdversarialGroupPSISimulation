@@ -59,7 +59,6 @@ public class ExchangeLocationInformation : ActionPlan {
 		
 		// Give information
 		_correspondingAgent.ReceiveLocationMemory(needSatisfactionAssociations);
-		Debug.Log("!!! LOCATION MEMORY EXCHANGE COMPLETED");
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {

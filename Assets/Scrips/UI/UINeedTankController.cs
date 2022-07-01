@@ -25,7 +25,6 @@ public class UINeedTankController : MonoBehaviour, UINeedTankInterface {
         SetIsValue(isValue);
         SetSetValue(setValue);
         SetLeakage(leakageValue);
-        Debug.Log("HELLO WORLD");
     }
 
     public void SetIsValue(double isValue) {

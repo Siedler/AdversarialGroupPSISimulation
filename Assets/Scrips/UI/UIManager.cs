@@ -104,7 +104,7 @@ public class UIManager : MonoBehaviour {
     private void OnTimeManagerStateChange(TimeManagerStates state) {
         TextMeshProUGUI autoTimerButtonText = autoTimerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
-        Debug.Log("STATECHANGE" + state);
+        Debug.Log("STATECHANGE " + state);
         switch (state) {
             case TimeManagerStates.Manual:
                 autoTimerButtonText.text = "Start";
