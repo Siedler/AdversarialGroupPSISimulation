@@ -22,6 +22,12 @@ public class Flee : ActionPlan {
 		eventHistoryManager, environment) {
 		
 		_agentToFleeFrom = agentToFleeFrom;
+		
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake =  GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent) {
@@ -93,42 +99,42 @@ public class Flee : ActionPlan {
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.FleeOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.FleeOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.FleeOnSuccess[2];
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.3;
+		return SimulationSettings.FleeOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.2;
+		return SimulationSettings.FleeOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.FleeOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.FleeOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.FleeOnFailure[2];
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return 0;
+		return SimulationSettings.FleeOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return 0;
+		return SimulationSettings.FleeOnFailure[4];
 	}
 }

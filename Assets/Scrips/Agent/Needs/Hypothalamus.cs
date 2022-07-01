@@ -26,10 +26,10 @@ public class Hypothalamus {
 		double competenceLeakage = _agentPersonality.GetValue("HypothalamusCompetenceLeakage");
 
 		_painAvoidance = new NeedTank(1, painAvoidanceSetValue, painAvoidanceLeakage);
-		_energy = new NeedTank(0.8, energySetValue, energyLeakage);
+		_energy = new NeedTank(1, energySetValue, energyLeakage);
 		_affiliation = new NeedTank(1, affiliationSetValue, affiliationLeakage);
-		_certainty = new NeedTank(0.1, certaintySetValue, certaintyLeakage);
-		_competence = new NeedTank(1, competenceSetValue, competenceLeakage);
+		_certainty = new NeedTank(0.05, certaintySetValue, certaintyLeakage);
+		_competence = new NeedTank(0.8, competenceSetValue, competenceLeakage);
 
 		GeneralCompetenceUpdateAlpha = _agentPersonality.GetValue("HypothalamusGeneralCompetenceInfluence");
 		generalCompetence = competenceSetValue;

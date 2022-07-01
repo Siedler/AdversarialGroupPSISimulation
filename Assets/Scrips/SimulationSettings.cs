@@ -77,4 +77,55 @@ public class SimulationSettings {
     public static readonly double CompetenceIndicatorWeightEnergy = 0.8;
     public static readonly double CompetenceIndicatorWeightAffiliation = 0.7;
     public static readonly double CompetenceIndicatorWeightCertainty = 0.7;
+    
+    // ACTION PLAN SECTION
+    // Structure double[] = {painAvoidance, energyIntake, affiliation, certainty, competence}
+    // EXPLORE
+    public static readonly double[] ExploreOnSuccess = new double[] {
+        0,
+        0,
+        0,
+        0.3,
+        0.2,
+    };
+    public static readonly double[] ExploreOnFailure = new double[] {
+        0,
+        0,
+        0,
+        0,
+        0,
+    };
+    
+    // Engage
+    // Both are set as base values and modified based on the social score of the specific agent
+    public static readonly double[] EngageOnSuccess = new double[] {
+        0,
+        0,
+        -0.2,
+        0.2,
+        0.2
+    };
+    public static readonly double[] EngageOnFailure = new double[] {
+        0,
+        0,
+        -0.2, 
+        -0.2,
+        -0.2
+    };
+    
+    // Flee
+    public static readonly double[] FleeOnSuccess = new double[] {
+        0.1,
+        0,
+        0,
+        0.2,
+        0.2,
+    };
+    public static readonly double[] FleeOnFailure = new double[] {
+        -0.1,
+        0,
+        0,
+        -0.2,
+        -0.2
+    };
 }

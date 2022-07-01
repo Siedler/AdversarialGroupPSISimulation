@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
@@ -20,11 +21,11 @@ public class Engage : ActionPlan {
 
 		_agentToAttack = agentToAttack;
 		
-		expectedPainAvoidance = -0.2;
-		expectedEnergyIntake = 0;
-		expectedAffiliation = agent.GetTeam() == agentToAttack.GetTeam() ? -0.5 : -0.1;
-		expectedCertainty = agent.GetTeam() == agentToAttack.GetTeam() ? -0.3 : 0.8;
-		expectedCompetence = agent.GetTeam() == agentToAttack.GetTeam() ? 0.4 : 0.8;
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake =  GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
@@ -117,43 +118,51 @@ public class Engage : ActionPlan {
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.EngageOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.EngageOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0;
+		// The friendly modifier is 2 if the agents get well along and therefore the punishment for asocial behaviour
+		// is high
+		double friendlyModifier = socialMemory.GetSocialScore(_agentToAttack) + 1;
+		return SimulationSettings.EngageOnSuccess[2] * friendlyModifier;
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.5;
+		// Calculate the modifier for the certainty increase/decrease based on the social score.
+		// This is modeled after a simple -x^3 equation to simulate, that the certainty increases for agents with
+		// low social scores and decreases for agents with a high social score
+		double friendlyModifier = -Math.Pow(socialMemory.GetSocialScore(_agentToAttack), 3);
+		return SimulationSettings.EngageOnSuccess[3] * friendlyModifier;
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.8;
+		return SimulationSettings.EngageOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.EngageOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.EngageOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return 0;
+		double friendlyModifier = socialMemory.GetSocialScore(_agentToAttack) + 1;
+		return SimulationSettings.EngageOnFailure[2] * friendlyModifier;
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.5;
+		return SimulationSettings.EngageOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.5;
+		return SimulationSettings.EngageOnFailure[4];
 	}
 
 	public void RequestHelpToAttackThisAgent(Agent agentThatCalledForHelp) {

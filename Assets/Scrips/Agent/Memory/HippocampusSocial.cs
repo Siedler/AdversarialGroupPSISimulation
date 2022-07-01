@@ -35,6 +35,10 @@ public class HippocampusSocial {
 		_agentIndividualMemory[agent].SetSocialScore(newSocialScore);
 	}
 
+	public double GetSocialScore(Agent agent) {
+		return _agentIndividualMemory[agent].GetSocialScore();
+	}
+
 	public bool KnowsAgent(Agent agent) {
 		return _agentIndividualMemory.ContainsKey(agent);
 	}

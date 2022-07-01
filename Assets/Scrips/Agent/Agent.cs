@@ -284,12 +284,18 @@ public class Agent : MonoBehaviour {
             
             _locationMemory.ReceiveLocationInformation(coordinates, associations);
         }
+
+        if (!_socialMemory.KnowsAgent(receiveFromAgent))
+            AddNewAgentToSocialScore(receiveFromAgent);
         
         _socialMemory.SocialInfluence(receiveFromAgent, 0.1);
         _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got new location information!");
     }
     
     public void ReceiveAgentIndividualMemory(Agent correspondingAgent, double socialScore, Agent receiveFromAgent) {
+        if (!_socialMemory.KnowsAgent(receiveFromAgent))
+            AddNewAgentToSocialScore(receiveFromAgent);
+        
         _socialMemory.SocialInfluence(receiveFromAgent, 0.1);
         
         if (_socialMemory.KnowsAgent(correspondingAgent)) {
@@ -307,8 +313,7 @@ public class Agent : MonoBehaviour {
                                              ". Setting own initial social score to " + initialSocialScore + ".");
         
         // Agent is not know:
-        _socialMemory.AddNewlyMetAgent(correspondingAgent, initialSocialScore);
-        GenerateSocialActionPlans(correspondingAgent);
+        AddNewAgentToSocialScore(correspondingAgent, initialSocialScore);
     }
 
     public void ReceivedHelpAfterCalling(Agent agentThatHelps) {
@@ -342,6 +347,14 @@ public class Agent : MonoBehaviour {
     private List<EnvironmentWorldCell> SenseEnvironment() {
         List<EnvironmentWorldCell> fieldOfView = _environment.SenseWorld(_currentEnvironmentWorldCell, agentDirection);
 
+        // Add current environment world cell if not known already
+        if (!_locationMemory.KnowsLocation(_currentEnvironmentWorldCell.cellCoordinates)) {
+            AgentMemoryWorldCell agentMemoryWorldCell = new AgentMemoryWorldCell(
+                _currentEnvironmentWorldCell.cellCoordinates,
+                _currentEnvironmentWorldCell.worldCoordinates, _currentEnvironmentWorldCell.GetWorldCellType());
+            _locationMemory.AddNewWorldCellToMemory(_currentEnvironmentWorldCell.cellCoordinates, agentMemoryWorldCell);
+        }
+        
         // Add 
         foreach (EnvironmentWorldCell environmentWorldCell in fieldOfView) {
             if(environmentWorldCell == null) continue; // World cell not existent / visible
@@ -381,6 +394,17 @@ public class Agent : MonoBehaviour {
         return fieldOfView;
     }
 
+    private void AddNewAgentToSocialScore(Agent newlyMetAgent, double initialSocialScore = Double.NaN) {
+        // If the agent is seen for the first time
+        // -> Assign social score depending on team
+        // -> Add to social memory
+        // -> Generate new Action Plans associated with the agent
+        if(double.IsNaN(initialSocialScore)) 
+            initialSocialScore = newlyMetAgent._team == _team ? Random.Range(0, 1) : Random.Range(-1, 0);
+        _socialMemory.AddNewlyMetAgent(newlyMetAgent, initialSocialScore);
+        GenerateSocialActionPlans(newlyMetAgent);
+    }
+
     private List<Agent> SenseCloseAgents(List<EnvironmentWorldCell> fieldOfView) {
         List<Agent> agentsInFieldOfView = new List<Agent>();
 
@@ -395,13 +419,7 @@ public class Agent : MonoBehaviour {
             // Check if the Agent already knows the 
             if (_socialMemory.KnowsAgent(agentOnWorldCell)) continue;
 
-            // If the agent is seen for the first time
-            // -> Assign social score depending on team
-            // -> Add to social memory
-            // -> Generate new Action Plans associated with the agent
-            double initialSocialScore = agentOnWorldCell._team == _team ? Random.Range(0, 1) : Random.Range(-1, 0);
-            _socialMemory.AddNewlyMetAgent(agentOnWorldCell, initialSocialScore);
-            GenerateSocialActionPlans(agentOnWorldCell);
+            AddNewAgentToSocialScore(agentOnWorldCell);
         }
 
         return agentsInFieldOfView;
