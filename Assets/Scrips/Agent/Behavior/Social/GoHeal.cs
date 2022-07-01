@@ -21,11 +21,11 @@ public class GoHeal : ActionPlan {
 
 		_agentToHeal = agentToHeal;
 		
-		expectedPainAvoidance = 0;
-		expectedEnergyIntake = 0;
-		expectedAffiliation = 0.5;
-		expectedCertainty = 0.5;
-		expectedCompetence = 0.5;
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
@@ -82,43 +82,47 @@ public class GoHeal : ActionPlan {
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.GoHealOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.GoHealOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0.5;
+		// the friendlyModifier adds an incentive to help friends more often than non-friends
+		double friendlyModifier = socialMemory.GetSocialScore(_agentToHeal) + 1;
+		return SimulationSettings.GoHealOnSuccess[2] * friendlyModifier;
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.3;
+		return SimulationSettings.GoHealOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.5;
+		return SimulationSettings.GoHealOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.GoHealOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.GoHealOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return -0.1;
+		// the friendlyModifier adds an incentive to help friends more often than non-friends
+		double friendlyModifier = socialMemory.GetSocialScore(_agentToHeal) + 1;
+		return SimulationSettings.GoHealOnFailure[2] * friendlyModifier;
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.3;
+		return SimulationSettings.GoHealOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.5;
+		return SimulationSettings.GoHealOnFailure[4];
 	}
 
 	public void RequestHealing() {

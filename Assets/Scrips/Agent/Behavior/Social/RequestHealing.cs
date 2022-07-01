@@ -19,11 +19,11 @@ public class RequestHealing : ActionPlan {
 		Environment environment) : base(agent, agentPersonality,
 		hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 		
-		expectedPainAvoidance = 0.2;
-		expectedEnergyIntake = 0;
-		expectedAffiliation = 0.3;
-		expectedCertainty = 0.3;
-		expectedCompetence = 0.2;
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
@@ -66,42 +66,42 @@ public class RequestHealing : ActionPlan {
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0.2;
+		return SimulationSettings.RequestHealingOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.RequestHealingOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0.3;
+		return SimulationSettings.RequestHealingOnSuccess[2];
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.3;
+		return SimulationSettings.RequestHealingOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.2;
+		return SimulationSettings.RequestHealingOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.RequestHealingOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.RequestHealingOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return -0.2;
+		return SimulationSettings.RequestHealingOnFailure[2];
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.2;
+		return SimulationSettings.RequestHealingOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.3;
+		return SimulationSettings.RequestHealingOnFailure[4];
 	}
 }

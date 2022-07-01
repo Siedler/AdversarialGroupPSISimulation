@@ -21,11 +21,11 @@ public class ExchangeSocialInformation : ActionPlan {
 
 		_correspondingAgent = correspondingAgent;
 
-		expectedPainAvoidance = 0;
-		expectedEnergyIntake = 0;
-		expectedAffiliation = 0.5;
-		expectedCertainty = 0.3;
-		expectedCompetence = 0.5;
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
@@ -93,43 +93,43 @@ public class ExchangeSocialInformation : ActionPlan {
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.ExchangeInformationOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.ExchangeInformationOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0.5;
+		return SimulationSettings.ExchangeInformationOnSuccess[2];
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.3;
+		return SimulationSettings.ExchangeInformationOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.5;
+		return SimulationSettings.ExchangeInformationOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.ExchangeInformationOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.ExchangeInformationOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return -0.1;
+		return SimulationSettings.ExchangeInformationOnFailure[2];
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return 0;
+		return SimulationSettings.ExchangeInformationOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.5;
+		return SimulationSettings.ExchangeInformationOnFailure[4];
 	}
 
 	public void RegisterRequest() {

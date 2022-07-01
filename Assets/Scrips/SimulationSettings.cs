@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -172,6 +174,87 @@ public class SimulationSettings {
         0.2,
     };
     public static readonly double[] CollectFoodOnFailure = new double[] {
+        0,
+        0,
+        0,
+        -0.2,
+        -0.2
+    };
+    
+    // Exchange Information
+    public static readonly double[] ExchangeInformationOnSuccess = new double[] {
+        0,
+        0,
+        0.3,
+        0.1,
+        0.2,
+    };
+    public static readonly double[] ExchangeInformationOnFailure = new double[] {
+        0,
+        0,
+        -0.2,
+        -0.15,
+        -0.2
+    };
+    
+    // Give Food
+    public static readonly double[] GiveFoodOnSuccess = new double[] {
+        0,
+        0,
+        0.2,
+        0.2,
+        0.2,
+    };
+    public static readonly double[] GiveFoodOnFailure = new double[] {
+        0,
+        0,
+        -0.2,
+        -0.2,
+        -0.2,
+    };
+    
+    // Go Heal
+    public static readonly double[] GoHealOnSuccess = new double[] {
+        0,
+        0,
+        0.2,
+        0.2,
+        0.2,
+    };
+    public static readonly double[] GoHealOnFailure = new double[] {
+        0,
+        0,
+        -0.2,
+        -0.2,
+        -0.2
+    };
+    
+    // Request Healing
+    // The painAvoidance feeling and the affiliation feeling is satisfied through the action of the other agent
+    public static readonly double[] RequestHealingOnSuccess = new double[] {
+        0,
+        0,
+        0,
+        0.2,
+        0.2,
+    };
+    public static readonly double[] RequestHealingOnFailure = new double[] {
+        0,
+        0,
+        -0.2,
+        -0.2,
+        -0.2,
+    };
+    
+    // Self Heal
+    public static readonly double[] SelfHealingOnSuccess = new double[] {
+        0,
+        0,
+        0,
+        0.2,
+        0.2
+    };
+    public static readonly double[] SelfHealingOnFailure = new double[] {
         0,
         0,
         0,

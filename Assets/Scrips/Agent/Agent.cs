@@ -111,10 +111,10 @@ public class Agent : MonoBehaviour {
             _eventHistoryManager, _environment));
         _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
-        /*_actionPlans.Add(new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+        _actionPlans.Add(new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
         _actionPlans.Add(new CallForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment));*/
+            _eventHistoryManager, _environment));
     }
     
     private void GenerateSocialActionPlans(Agent newlyMetAgent) {
@@ -134,7 +134,7 @@ public class Agent : MonoBehaviour {
         _actionPlans.Add(giveFood);
         _giveFoodActionPlans.Add(newlyMetAgent, giveFood);
         
-        /*ExchangeLocationInformation exchangeLocationInformation = new ExchangeLocationInformation(this,
+        ExchangeLocationInformation exchangeLocationInformation = new ExchangeLocationInformation(this,
             _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment,
             newlyMetAgent);
         _actionPlans.Add(exchangeLocationInformation);
@@ -146,7 +146,7 @@ public class Agent : MonoBehaviour {
         _socialMemoryExchangeActionPlans.Add(newlyMetAgent, exchangeSocialInformation);
 
         _actionPlans.Add(new Flee(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment, newlyMetAgent));*/
+            _eventHistoryManager, _environment, newlyMetAgent));
     }
 
     public void AddNewFoodCluster(FoodCluster foodCluster) {
@@ -232,7 +232,11 @@ public class Agent : MonoBehaviour {
 
         _health += amount;
 
-        if (healingAgent == null) return;
+        if (healingAgent == null) {
+            // Add the experience from healing
+            Experience(amount/100, 0, 0, 0, 0);
+            return;
+        }
         
         // Another agent healed me!
         // Give social credit
@@ -240,6 +244,9 @@ public class Agent : MonoBehaviour {
         double socialEffect = 0.1;
         _socialMemory.SocialInfluence(healingAgent, socialEffect);
 
+        // Add the experience from healing
+        Experience(amount/100, 0, socialEffect, 0, 0);
+        
         _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got healed by " + healingAgent.name + " with " +
                                                              amount + " and credited " + socialEffect +
                                                              " social score points.");

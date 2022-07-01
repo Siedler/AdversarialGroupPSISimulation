@@ -11,11 +11,12 @@ public class SelfHeal : ActionPlan {
 		HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager,
 		Environment environment) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
-		expectedPainAvoidance = 0.5;
-		expectedEnergyIntake = 0;
-		expectedAffiliation = 0;
-		expectedCertainty = 0.3;
-		expectedCompetence = 0.5;
+	
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
@@ -30,46 +31,46 @@ public class SelfHeal : ActionPlan {
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return 4*(1-hypothalamus.GetPainAvoidanceDifference());
+		return 0.1 * (1-hypothalamus.GetPainAvoidanceDifference());
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return -0.2;
+		return SimulationSettings.SelfHealingOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.SelfHealingOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.SelfHealingOnSuccess[2];
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.3;
+		return SimulationSettings.SelfHealingOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.5;
+		return SimulationSettings.SelfHealingOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.SelfHealingOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.SelfHealingOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.SelfHealingOnFailure[2];
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return 0;
+		return SimulationSettings.SelfHealingOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.3;
+		return SimulationSettings.SelfHealingOnFailure[4];
 	}
 }

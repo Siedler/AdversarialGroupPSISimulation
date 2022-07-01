@@ -19,11 +19,11 @@ public class GiveFood : ActionPlan {
 
 		_correspondingAgent = correspondingAgent;
 		
-		expectedPainAvoidance = 0;
-		expectedEnergyIntake = 0;
-		expectedAffiliation = 0.3;
-		expectedCertainty = 0.2;
-		expectedCompetence = 0.3;
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	private void GiveFoodToAgent() {
@@ -74,43 +74,47 @@ public class GiveFood : ActionPlan {
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.GiveFoodOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.GiveFoodOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0.3;
+		// the friendlyModifier adds an incentive to help friends more often than non-friends
+		double friendlyModifier = socialMemory.GetSocialScore(_correspondingAgent) + 1;
+		return SimulationSettings.GiveFoodOnSuccess[2] * friendlyModifier;
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.2;
+		return SimulationSettings.GiveFoodOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.3;
+		return SimulationSettings.GiveFoodOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.GiveFoodOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.GiveFoodOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return -0.2;
+		// the friendlyModifier adds an incentive to help friends more often than non-friends
+		double friendlyModifier = socialMemory.GetSocialScore(_correspondingAgent) + 1;
+		return SimulationSettings.GiveFoodOnFailure[2] * friendlyModifier;
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.2;
+		return SimulationSettings.GiveFoodOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.2;
+		return SimulationSettings.GiveFoodOnFailure[4]; 
 	}
 
 	public void RegisterRequest() {
