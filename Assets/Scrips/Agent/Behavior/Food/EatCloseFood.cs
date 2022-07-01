@@ -50,7 +50,8 @@ public class EatCloseFood : ActionPlanFoodRelated {
 	}
 	
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return IsFoodInRange(currentEnvironmentWorldCell, agentsFieldOfView);
+		return IsFoodInRange(currentEnvironmentWorldCell, agentsFieldOfView)
+			&& !IsFoodClusterInSight(currentEnvironmentWorldCell, agentsFieldOfView);
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {

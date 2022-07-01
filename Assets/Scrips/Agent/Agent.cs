@@ -4,6 +4,7 @@ using Priority_Queue;
 using Scrips.Agent;
 using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -110,10 +111,10 @@ public class Agent : MonoBehaviour {
             _eventHistoryManager, _environment));
         _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
-        _actionPlans.Add(new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+        /*_actionPlans.Add(new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
         _actionPlans.Add(new CallForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment));
+            _eventHistoryManager, _environment));*/
     }
     
     private void GenerateSocialActionPlans(Agent newlyMetAgent) {
@@ -133,7 +134,7 @@ public class Agent : MonoBehaviour {
         _actionPlans.Add(giveFood);
         _giveFoodActionPlans.Add(newlyMetAgent, giveFood);
         
-        ExchangeLocationInformation exchangeLocationInformation = new ExchangeLocationInformation(this,
+        /*ExchangeLocationInformation exchangeLocationInformation = new ExchangeLocationInformation(this,
             _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment,
             newlyMetAgent);
         _actionPlans.Add(exchangeLocationInformation);
@@ -145,7 +146,7 @@ public class Agent : MonoBehaviour {
         _socialMemoryExchangeActionPlans.Add(newlyMetAgent, exchangeSocialInformation);
 
         _actionPlans.Add(new Flee(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment, newlyMetAgent));
+            _eventHistoryManager, _environment, newlyMetAgent));*/
     }
 
     public void AddNewFoodCluster(FoodCluster foodCluster) {
@@ -167,6 +168,10 @@ public class Agent : MonoBehaviour {
 
         if (_currentActionPlan == foodClusterActionPlan.Item1 || _currentActionPlan == foodClusterActionPlan.Item2)
             _currentActionPlan = null;
+    }
+
+    public IEnumerable<FoodCluster> GetFoodClusters() {
+        return _foodClusterActionPlans.Keys;
     }
 
     public void Spawn(EnvironmentWorldCell spawnCell, Direction startDirection) {
@@ -259,6 +264,9 @@ public class Agent : MonoBehaviour {
     public void ReceiveFood(Agent receiveFromAgent) {
         _foodCount++;
         
+        // Manage affiliation experience
+        double affiliationScore = _socialMemory.GetSocialScore(receiveFromAgent) > 0 ? 0.2 : 0.15;
+        Experience(0, 0, affiliationScore, 0, 0);
         _socialMemory.SocialInfluence(receiveFromAgent, 0.1);
     }
     

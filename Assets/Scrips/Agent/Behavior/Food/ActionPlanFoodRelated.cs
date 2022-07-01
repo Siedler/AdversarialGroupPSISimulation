@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Scrips.Agent;
+using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
 
 public abstract class ActionPlanFoodRelated : ActionPlan{
@@ -43,43 +45,59 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 		return false;
 	}
 	
+	// Check if any food cluster is insight the field of view
+	protected bool IsFoodClusterInSight(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView) {
+		IEnumerable <FoodCluster> foodClusters = agent.GetFoodClusters();
+
+		// Add the current world cell to the list of agentsFieldOfView to make calculation easier
+		agentsFieldOfView.Add(currentEnvironmentWorldCell);
+		IEnumerable<EnvironmentWorldCell> worldCellsInRange = agentsFieldOfView.Where(x => x != null);
+		
+		foreach(FoodCluster cluster in foodClusters) {
+			if (worldCellsInRange.Any(x => x.cellCoordinates == cluster.GetCenter().cellCoordinates))
+				return true;
+		}
+
+		return false;
+	}
+	
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.FoodRelatedOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return SimulationSettings.FoodEnergyIntakeValue;
+		return SimulationSettings.FoodRelatedOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.FoodRelatedOnSuccess[2];
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.2;
+		return SimulationSettings.FoodRelatedOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.5;
+		return SimulationSettings.FoodRelatedOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.FoodRelatedOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.FoodRelatedOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.FoodRelatedOnFailure[2];
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.2;
+		return SimulationSettings.FoodRelatedOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.2;
+		return SimulationSettings.FoodRelatedOnFailure[4];
 	}
 }

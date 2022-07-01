@@ -128,4 +128,54 @@ public class SimulationSettings {
         -0.2,
         -0.2
     };
+    
+    // Food Related
+    public static readonly double[] FoodRelatedOnSuccess = new[] {
+        0,
+        SimulationSettings.FoodEnergyIntakeValue,
+        0,
+        0.2,
+        0.2
+    };
+    public static readonly double[] FoodRelatedOnFailure = new double[] {
+        0,
+        0,
+        0,
+        -0.2,
+        -0.2
+    };
+    
+    // Call For Food
+    // The affiliation signal for this action plan is regulated through the "receive food" method inside the
+    // agent script
+    public static readonly double[] CallForFoodOnSuccess = new double[] {
+        0,
+        FoodEnergyIntakeValue,
+        0,
+        0.2,
+        0.2
+    };
+    public static readonly double[] CallForFoodOnFailure = new double[] {
+        0,
+        FoodEnergyIntakeValue,
+        -0.2,
+        -0.2,
+        -0.2
+    };
+
+    // Collect Food
+    public static readonly double[] CollectFoodOnSuccess = new double[] {
+        0,
+        0,
+        0,
+        0.21,
+        0.2,
+    };
+    public static readonly double[] CollectFoodOnFailure = new double[] {
+        0,
+        0,
+        0,
+        -0.2,
+        -0.2
+    };
 }

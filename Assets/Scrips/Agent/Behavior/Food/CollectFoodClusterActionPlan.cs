@@ -85,42 +85,42 @@ public class CollectFoodClusterActionPlan : ActionPlanFoodRelated {
 	}
 	
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnSuccess[2];
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.4;
+		return SimulationSettings.CollectFoodOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.5;
+		return SimulationSettings.CollectFoodOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnFailure[2];
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.2;
+		return SimulationSettings.CollectFoodOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.2;
+		return SimulationSettings.CollectFoodOnFailure[4];
 	}
 }

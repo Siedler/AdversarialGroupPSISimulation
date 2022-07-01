@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Scrips.Agent;
+using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
+using UnityEngine;
 
 public class CollectCloseFood : ActionPlanFoodRelated {
 	private EnvironmentWorldCell _foodLocation;
@@ -48,8 +51,12 @@ public class CollectCloseFood : ActionPlanFoodRelated {
 		return ActionResult.InProgress;
 	}
 
+	// This action plan is only executable, if no food cluster is in sight. Otherwise the food cluster action plan
+	// is taken.
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return IsFoodInRange(currentEnvironmentWorldCell, agentsFieldOfView) && agent.GetFoodCount() < SimulationSettings.MaximumStoredFoodCount;;
+		return IsFoodInRange(currentEnvironmentWorldCell, agentsFieldOfView) 
+		       && agent.GetFoodCount() < SimulationSettings.MaximumStoredFoodCount
+		       && !IsFoodClusterInSight(currentEnvironmentWorldCell, agentsFieldOfView);
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
@@ -57,43 +64,43 @@ public class CollectCloseFood : ActionPlanFoodRelated {
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnSuccess[2];
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.6;
+		return SimulationSettings.CollectFoodOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.5;
+		return SimulationSettings.CollectFoodOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return 0;
+		return SimulationSettings.CollectFoodOnFailure[2];
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.3;
+		return SimulationSettings.CollectFoodOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.5;
+		return SimulationSettings.CollectFoodOnFailure[4];
 	}
 	
 }

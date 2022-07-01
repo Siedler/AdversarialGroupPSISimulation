@@ -65,42 +65,42 @@ public class CallForFoodToEat : ActionPlanFoodRelated {
 	}
 	
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.CallForFoodOnSuccess[0];
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return SimulationSettings.FoodEnergyIntakeValue;
+		return SimulationSettings.CallForFoodOnSuccess[1];
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return 0.2;
+		return SimulationSettings.CallForFoodOnSuccess[2];
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
-		return 0.2;
+		return SimulationSettings.CallForFoodOnSuccess[3];
 	}
 
 	protected override double GetOnSuccessCompetenceSatisfaction() {
-		return 0.2;
+		return SimulationSettings.CallForFoodOnSuccess[4];
 	}
 
 	protected override double GetOnFailurePainAvoidanceSatisfaction() {
-		return 0;
+		return SimulationSettings.CallForFoodOnFailure[0];
 	}
 
 	protected override double GetOnFailureEnergySatisfaction() {
-		return 0;
+		return SimulationSettings.CallForFoodOnFailure[1];
 	}
 
 	protected override double GetOnFailureAffiliationSatisfaction() {
-		return -0.2;
+		return SimulationSettings.CallForFoodOnFailure[2];
 	}
 
 	protected override double GetOnFailureCertaintySatisfaction() {
-		return -0.2;
+		return SimulationSettings.CallForFoodOnFailure[3];
 	}
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
-		return -0.2;
+		return SimulationSettings.CallForFoodOnFailure[4];
 	}
 }
