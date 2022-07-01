@@ -16,25 +16,25 @@ public class SimulationSettings {
     public static readonly double SetValueEnergyMean = 0.8;
     public static readonly double SetValueEnergySigma = 0.03;
     
-    public static readonly double LeakageValueEnergyMean = 0.02;
+    public static readonly double LeakageValueEnergyMean = 0.005;
     public static readonly double LeakageValueEnergySigma = 0.002;
 
     public static readonly double SetValueAffiliationMean = 0.8;
     public static readonly double SetValueAffiliationSigma = 0.03;
     
-    public static readonly double LeakageValueAffiliationMean = 0.02;
+    public static readonly double LeakageValueAffiliationMean = 0.005;
     public static readonly double LeakageValueAffiliationSigma = 0.002;
     
     public static readonly double SetValueCertaintyMean = 0.8;
     public static readonly double SetValueCertaintySigma = 0.03;
     
-    public static readonly double LeakageValueCertaintyMean = 0.02;
+    public static readonly double LeakageValueCertaintyMean = 0.005;
     public static readonly double LeakageValueCertaintySigma = 0.002;
     
     public static readonly double SetValueCompetenceMean = 1;
     public static readonly double SetValueCompetenceSigma = 0;
     
-    public static readonly double LeakageValueCompetenceMean = 0.02;
+    public static readonly double LeakageValueCompetenceMean = 0.005;
     public static readonly double LeakageValueCompetenceSigma = 0.002;
     
     // FOOD
@@ -84,7 +84,7 @@ public class SimulationSettings {
         0,
         0,
         0,
-        0.3,
+        0.25,
         0.2,
     };
     public static readonly double[] ExploreOnFailure = new double[] {
@@ -101,15 +101,15 @@ public class SimulationSettings {
         0,
         0,
         -0.2,
-        0.2,
-        0.2
+        0.21,
+        0.35
     };
     public static readonly double[] EngageOnFailure = new double[] {
         0,
         0,
         -0.2, 
-        -0.2,
-        -0.2
+        -0.25,
+        -0.4
     };
     
     // Flee

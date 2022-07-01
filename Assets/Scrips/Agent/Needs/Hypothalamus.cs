@@ -121,11 +121,16 @@ public class Hypothalamus {
 	}
 
 	private double CalculateCompetenceIndicatorChange() {
+		double maxChangeValue = SimulationSettings.CompetenceIndicatorWeightPainAvoidance +
+		                        SimulationSettings.CompetenceIndicatorWeightEnergy +
+		                        SimulationSettings.CompetenceIndicatorWeightAffiliation +
+		                        SimulationSettings.CompetenceIndicatorWeightCertainty;
+		
 		double painAvoidanceChange = _painAvoidance.GetDelta() * SimulationSettings.CompetenceIndicatorWeightPainAvoidance;
 		double energyIntakeChange = _energy.GetDelta() * SimulationSettings.CompetenceIndicatorWeightEnergy;
 		double affiliationChange = _affiliation.GetDelta() * SimulationSettings.CompetenceIndicatorWeightAffiliation;
 		double certaintyChange = _certainty.GetDelta() * SimulationSettings.CompetenceIndicatorWeightCertainty;
 
-		return painAvoidanceChange + energyIntakeChange + affiliationChange + certaintyChange;
+		return 0.05 * (painAvoidanceChange + energyIntakeChange + affiliationChange + certaintyChange)/(maxChangeValue);
 	}
 }

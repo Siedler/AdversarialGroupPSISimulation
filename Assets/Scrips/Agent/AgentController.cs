@@ -127,7 +127,7 @@ public class AgentController : MonoBehaviour {
 				1));
 		_agentPersonality.SetValue("HypothalamusCertaintyLeakage",MathHelper.NextGaussian(
 			SimulationSettings.LeakageValueCertaintyMean,
-			SimulationSettings.LeakageValueAffiliationSigma, 
+			SimulationSettings.LeakageValueCertaintySigma, 
 			0, 
 			1));
 		_agentPersonality.SetValue("HypothalamusCompetenceLeakage",MathHelper.NextGaussian(
