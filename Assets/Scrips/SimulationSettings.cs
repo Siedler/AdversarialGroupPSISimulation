@@ -156,7 +156,7 @@ public class SimulationSettings {
     };
     public static readonly double[] CallForFoodOnFailure = new double[] {
         0,
-        FoodEnergyIntakeValue,
+        0,
         -0.2,
         -0.2,
         -0.2
