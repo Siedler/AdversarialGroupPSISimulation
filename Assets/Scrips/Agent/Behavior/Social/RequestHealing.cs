@@ -29,7 +29,7 @@ public class RequestHealing : ActionPlan {
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
 		base.InitiateActionPlan(correspondingAgent);
 		_calledOutForHealing = false;
-		_timeRemainingToWait = 7;
+		_timeRemainingToWait = 5;
 
 		_initialHealth = agent.GetHealth();
 	}

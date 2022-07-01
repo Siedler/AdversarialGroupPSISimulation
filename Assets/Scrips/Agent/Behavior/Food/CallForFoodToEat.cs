@@ -1,8 +1,6 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
-using UnityEngine;
 
 public class CallForFoodToEat : ActionPlanFoodRelated {
 
@@ -19,18 +17,18 @@ public class CallForFoodToEat : ActionPlanFoodRelated {
 		Environment environment) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory,
 		eventHistoryManager, environment) {
 		
-		expectedPainAvoidance = 0;
-		expectedEnergyIntake = 0.1;
-		expectedAffiliation = 0.2;
-		expectedCertainty = 0.2;
-		expectedCompetence = 0.2;
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
 		base.InitiateActionPlan(correspondingAgent);
 
 		_calledOutForFood = false;
-		_timeRemainingToWait = 7;
+		_timeRemainingToWait = 5;
 		_prevFoodCount = agent.GetFoodCount();
 	}
 
@@ -71,7 +69,7 @@ public class CallForFoodToEat : ActionPlanFoodRelated {
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0.5;
+		return SimulationSettings.FoodEnergyIntakeValue;
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {

@@ -15,11 +15,11 @@ public class EatCloseFood : ActionPlanFoodRelated {
 		AgentEventHistoryManager eventHistoryManager,
 		Environment environment) : base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 		
-		expectedPainAvoidance = 0;
-		expectedEnergyIntake = 0.5;
-		expectedAffiliation = 0;
-		expectedCertainty = 0;
-		expectedCompetence = 0.5;
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {

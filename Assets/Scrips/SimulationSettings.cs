@@ -38,6 +38,9 @@ public class SimulationSettings {
     public static readonly double LeakageValueCompetenceMean = 0.02;
     public static readonly double LeakageValueCompetenceSigma = 0.002;
     
+    // FOOD
+    public static readonly double FoodEnergyIntakeValue = 0.4;
+    
     // DAMAGE AMOUNT
     public static readonly double HitMinDamage = 1;
     public static readonly double HitMaxDamage = 12;

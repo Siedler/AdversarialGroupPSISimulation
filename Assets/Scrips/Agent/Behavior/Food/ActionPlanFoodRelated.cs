@@ -48,7 +48,7 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
-		return 0.5;
+		return SimulationSettings.FoodEnergyIntakeValue;
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {

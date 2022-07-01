@@ -17,11 +17,11 @@ public class CollectFoodClusterActionPlan : ActionPlanFoodRelated {
 
 		_foodCluster = correspondingFoodCluster;
 		
-		expectedPainAvoidance = 0;
-		expectedEnergyIntake = 0;
-		expectedAffiliation = 0;
-		expectedCertainty = 0.4;
-		expectedCompetence = 0.5;
+		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
+		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
+		expectedCertainty = GetOnSuccessCertaintySatisfaction();
+		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
 	public override void InitiateActionPlan(Agent correspondingAgent = null) {
