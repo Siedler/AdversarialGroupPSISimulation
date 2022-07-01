@@ -20,7 +20,7 @@ public class CallForFoodToEat : ActionPlanFoodRelated {
 		eventHistoryManager, environment) {
 		
 		expectedPainAvoidance = 0;
-		expectedEnergyIntake = 0.5;
+		expectedEnergyIntake = 0.1;
 		expectedAffiliation = 0.2;
 		expectedCertainty = 0.2;
 		expectedCompetence = 0.2;

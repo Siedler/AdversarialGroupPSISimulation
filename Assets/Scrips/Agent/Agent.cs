@@ -271,7 +271,7 @@ public class Agent : MonoBehaviour {
     }
 
     public bool HasFood() {
-        return _foodCount >= 0;
+        return _foodCount > 0;
     }
 
     public int GetFoodCount() {
