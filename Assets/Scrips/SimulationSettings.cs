@@ -16,6 +16,9 @@ public class SimulationSettings {
     public static readonly double SetValuePainAvoidanceMean = 0.8;
     public static readonly double SetValuePainAvoidanceSigma = 0.03;
 
+    public static readonly double LeakageValuePainAvoidanceMean = -0.02;
+    public static readonly double LeakageValuePainAvoidanceSigma = 0.002;
+    
     public static readonly double SetValueEnergyMean = 0.8;
     public static readonly double SetValueEnergySigma = 0.03;
     
