@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
-using UnityEngine;
 
 public class EatCloseFood : ActionPlanFoodRelated {
 	

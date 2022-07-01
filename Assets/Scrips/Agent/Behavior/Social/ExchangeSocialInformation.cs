@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Priority_Queue;
+﻿using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
-using UnityEngine;
-
 public class ExchangeSocialInformation : ActionPlan {
 
 	private readonly Agent _correspondingAgent;

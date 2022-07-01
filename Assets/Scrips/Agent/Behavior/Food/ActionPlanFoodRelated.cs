@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;

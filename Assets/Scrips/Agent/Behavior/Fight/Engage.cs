@@ -2,8 +2,6 @@
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
-using UnityEngine;
-using Random = System.Random;
 
 public class Engage : ActionPlan {
 	private Agent _agentToAttack;

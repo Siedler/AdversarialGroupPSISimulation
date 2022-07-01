@@ -1,10 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
-using TMPro;
-using UnityEngine;
 
 public class CollectCloseFood : ActionPlanFoodRelated {
 	private EnvironmentWorldCell _foodLocation;
