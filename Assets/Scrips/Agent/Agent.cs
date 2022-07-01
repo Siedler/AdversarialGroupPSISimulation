@@ -443,6 +443,16 @@ public class Agent : MonoBehaviour {
     private void ProcessIncomingRequests() {
         while (_incomingRequests.Count > 0) {
             RequestInformation incomingRequestInformation = _incomingRequests.Dequeue();
+
+            // If the agent does not know the other agents: Add them to their list
+            if (!_socialMemory.KnowsAgent(incomingRequestInformation.GetCallingAgent())) {
+                AddNewAgentToSocialScore(incomingRequestInformation.GetCallingAgent());
+            }
+            if (incomingRequestInformation.GetRegardingAgent() != null &&
+                !_socialMemory.KnowsAgent(incomingRequestInformation.GetRegardingAgent())) {
+                AddNewAgentToSocialScore(incomingRequestInformation.GetRegardingAgent());
+            }
+            
             if (incomingRequestInformation.GetRequestType() == RequestType.InformationLocation) {
                 if(incomingRequestInformation.GetRegardingAgent() != null && incomingRequestInformation.GetRegardingAgent() != this) continue;
                 
