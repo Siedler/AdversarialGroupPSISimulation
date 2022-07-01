@@ -37,7 +37,7 @@ public class Agent : MonoBehaviour {
 
     // Internal State
     [Range(0,100)]
-    private int _health;
+    private double _health;
     private int _foodCount;
 
     private Queue<RequestInformation> _incomingRequests;
@@ -207,7 +207,7 @@ public class Agent : MonoBehaviour {
         _incomingRequests.Enqueue(requestInformation);
     }
     
-    public void TakeDamage(int damage, Agent attackingAgent) {
+    public void TakeDamage(double damage, Agent attackingAgent) {
         _health -= damage;
 
         // TODO variable on damage and on how inflicted damage (better influence)
@@ -222,7 +222,7 @@ public class Agent : MonoBehaviour {
         }
     }
 
-    public void Heal(int amount, Agent healingAgent = null) {
+    public void Heal(double amount, Agent healingAgent = null) {
         if (amount <= 0) throw new ArgumentException("The amount to heal is not positive!");
 
         _health += amount;
@@ -248,7 +248,7 @@ public class Agent : MonoBehaviour {
         return _health > 0;
     }
     
-    public int GetHealth() {
+    public double GetHealth() {
         return _health;
     }
 

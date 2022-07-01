@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
+using Scrips.Helper.Math;
 using UnityEngine;
+using Random = System.Random;
 
 public class Engage : ActionPlan {
 	private Agent _agentToAttack;
@@ -38,6 +40,10 @@ public class Engage : ActionPlan {
 		}
 	}
 
+	private double GetDamageAmount() {
+		return MathHelper.NextGaussianFromInterval(SimulationSettings.HitMinDamage, SimulationSettings.HitMaxDamage);
+	}
+
 	private ActionResult Hit(List<EnvironmentWorldCell> agentsFieldOfView) {
 		EnvironmentWorldCell environmentWorldCellToAttack = null;
 		int i;
@@ -53,8 +59,12 @@ public class Engage : ActionPlan {
 			return ActionResult.Failure;
 		}
 
-		_agentToAttack.TakeDamage(10, agent);
+		double damage = GetDamageAmount();
+		
+		_agentToAttack.TakeDamage(damage, agent);
 		agent.SetOrientation((Direction) i);
+		
+		socialMemory.SocialInfluence(_agentToAttack, -0.1);
 		
 		return ActionResult.Success;
 	}

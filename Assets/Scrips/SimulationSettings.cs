@@ -38,6 +38,10 @@ public class SimulationSettings {
     public static readonly double LeakageValueCompetenceMean = 0.02;
     public static readonly double LeakageValueCompetenceSigma = 0.002;
     
+    // DAMAGE AMOUNT
+    public static readonly double HitMinDamage = 1;
+    public static readonly double HitMaxDamage = 12;
+    
     // MEMORY SECTION
     // Defining the radius of which the memory of the agent is affected if a new experience was made
     public static readonly int MemoryWorldCellNeedSatisfactionAssociationRadius = 4;

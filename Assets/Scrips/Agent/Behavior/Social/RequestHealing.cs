@@ -9,7 +9,7 @@ public class RequestHealing : ActionPlan {
 	private bool _calledOutForHealing;
 
 	private int _timeRemainingToWait;
-	private int _initialHealth;
+	private double _initialHealth;
 	
 	public RequestHealing(
 		Agent agent,
