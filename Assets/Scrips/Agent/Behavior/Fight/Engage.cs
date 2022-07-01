@@ -37,6 +37,7 @@ public class Engage : ActionPlan {
 		// If the action plan was enacted as the response to the request of another agent: reward socially
 		if (_requestedHelp) {
 			_agentThatCalledForHelp.ReceivedHelpAfterCalling(agent);
+			socialMemory.SocialInfluence(_agentThatCalledForHelp, 0.1);
 		}
 	}
 

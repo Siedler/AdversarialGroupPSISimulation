@@ -30,6 +30,8 @@ public class GiveFood : ActionPlan {
 	private void GiveFoodToAgent() {
 		agent.ConsumeFoodFromStorage();
 		_correspondingAgent.ReceiveFood(agent);
+		
+		socialMemory.SocialInfluence(_correspondingAgent, 0.1);
 	}
 	
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {

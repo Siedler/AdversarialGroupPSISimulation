@@ -41,7 +41,7 @@ public class ExchangeSocialInformation : ActionPlan {
 		(Agent, AgentIndividualMemory) agentIndividualMemoryPair =
 			socialMemory.GetRandomAgentMemory(_correspondingAgent);
 		_correspondingAgent.ReceiveAgentIndividualMemory(agentIndividualMemoryPair.Item1,
-			agentIndividualMemoryPair.Item2.GetSocialScore());
+			agentIndividualMemoryPair.Item2.GetSocialScore(), agent);
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell,

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
+using Scrips.Helper.Math;
 using UnityEngine;
 
 public class GoHeal : ActionPlan {
@@ -34,6 +35,10 @@ public class GoHeal : ActionPlan {
 		_agentToHeal = correspondingAgent;
 	}
 
+	private double GetAmountToHeal() {
+		return MathHelper.NextGaussianFromInterval(SimulationSettings.HealMinAmount, SimulationSettings.HealMaxAmount);
+	}
+
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 
 		int agentInRange = IsAgentInRange(agentsFieldOfView, _agentToHeal);
@@ -51,7 +56,11 @@ public class GoHeal : ActionPlan {
 			return ActionResult.InProgress;
 		}
 
-		_agentToHeal.Heal(10, _agentToHeal);
+		double amountToHeal = GetAmountToHeal();
+		_agentToHeal.Heal(amountToHeal, agent);
+		
+		socialMemory.SocialInfluence(_agentToHeal, 0.1);
+		
 		agent.SetOrientation((Direction) agentInRange);
 		
 		OnSuccess();

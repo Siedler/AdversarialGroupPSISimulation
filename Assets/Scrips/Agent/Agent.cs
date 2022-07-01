@@ -212,7 +212,7 @@ public class Agent : MonoBehaviour {
 
         // TODO variable on damage and on how inflicted damage (better influence)
         Experience(-0.1, 0, -0.1, -0.3, -0.3);
-        _socialMemory.SocialInfluence(attackingAgent, -0.5);
+        _socialMemory.SocialInfluence(attackingAgent, -0.1);
         
         _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got hit by " + attackingAgent.name + " with " + damage + " points of damage.");
         
@@ -259,7 +259,7 @@ public class Agent : MonoBehaviour {
     public void ReceiveFood(Agent receiveFromAgent) {
         _foodCount++;
         
-        _socialMemory.SocialInfluence(receiveFromAgent, 0.2);
+        _socialMemory.SocialInfluence(receiveFromAgent, 0.1);
     }
     
     public void ConsumeFoodFromStorage() {
@@ -278,20 +278,23 @@ public class Agent : MonoBehaviour {
         return _foodCount;
     }
 
-    public void ReceiveLocationMemory(Dictionary<Vector3Int, double[]> needSatisfactionAssociations) {
+    public void ReceiveLocationMemory(Dictionary<Vector3Int, double[]> needSatisfactionAssociations, Agent receiveFromAgent) {
         foreach ((Vector3Int coordinates, double[] associations) in needSatisfactionAssociations) {
             if(!_locationMemory.KnowsLocation(coordinates)) continue;
             
             _locationMemory.ReceiveLocationInformation(coordinates, associations);
         }
         
+        _socialMemory.SocialInfluence(receiveFromAgent, 0.1);
         _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got new location information!");
     }
     
-    public void ReceiveAgentIndividualMemory(Agent correspondingAgent, double socialScore) {
+    public void ReceiveAgentIndividualMemory(Agent correspondingAgent, double socialScore, Agent receiveFromAgent) {
+        _socialMemory.SocialInfluence(receiveFromAgent, 0.1);
+        
         if (_socialMemory.KnowsAgent(correspondingAgent)) {
             _socialMemory.ReceiveSocialInfluence(correspondingAgent, socialScore, _agentPersonality.GetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor"));
-
+            
             _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got new information about " +
                                                  correspondingAgent.name + " (social score " + socialScore + ").");
             return;
@@ -309,7 +312,7 @@ public class Agent : MonoBehaviour {
     }
 
     public void ReceivedHelpAfterCalling(Agent agentThatHelps) {
-        _socialMemory.SocialInfluence(agentThatHelps, 0.2);
+        _socialMemory.SocialInfluence(agentThatHelps, 0.1);
     }
     
     // Experience something, i.e. influence the need satisfaction values

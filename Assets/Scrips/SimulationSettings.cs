@@ -41,7 +41,14 @@ public class SimulationSettings {
     // DAMAGE AMOUNT
     public static readonly double HitMinDamage = 1;
     public static readonly double HitMaxDamage = 12;
-
+    
+    // HEAL AMOUNT
+    public static readonly double HealMinAmount = 5;
+    public static readonly double HealMaxAmount = 15;
+    
+    // SOCIAL SECTION
+    
+    
     // MEMORY SECTION
     // Defining the radius of which the memory of the agent is affected if a new experience was made
     public static readonly int MemoryWorldCellNeedSatisfactionAssociationRadius = 4;
