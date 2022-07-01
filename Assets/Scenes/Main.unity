@@ -5296,7 +5296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   foodPrefab: {fileID: 623844235218281919, guid: 7af595a5bea7f9e4dba36ed0f632c824, type: 3}
-  chanceToRespawnFood: 0.01
+  chanceToRespawnFood: 0.02
 --- !u!4 &1891078203
 Transform:
   m_ObjectHideFlags: 0
