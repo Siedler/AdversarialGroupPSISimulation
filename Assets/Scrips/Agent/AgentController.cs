@@ -55,11 +55,11 @@ public class AgentController : MonoBehaviour {
 	}
 
 	// Execute actions of one time-step
-	public void Tick() {
+	public void Tick(int timeStep) {
 		SpawnAllQueuedAgentsIfPossible();
 
 		foreach (GameObject agent in _agents) {
-			agent.GetComponent<Agent>().Tick();
+			agent.GetComponent<Agent>().Tick(timeStep);
 		}
 	}
 

@@ -43,12 +43,12 @@ public class Environment : MonoBehaviour {
     }
 
     // Execute actions of one time-step
-    public void Tick() {
+    public void Tick(int timeStep) {
         Debug.Log("Tick");
-        _foodController.Tick();
+        _foodController.Tick(timeStep);
         
-        _team1Controller.Tick();
-        _team2Controller.Tick();
+        _team1Controller.Tick(timeStep);
+        _team2Controller.Tick(timeStep);
     }
 
     public List<EnvironmentWorldCell> SenseWorld(EnvironmentWorldCell currentEnvironmentWorldCell, Direction facingDirection) {

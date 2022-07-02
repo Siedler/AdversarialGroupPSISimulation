@@ -83,7 +83,7 @@ public class Agent : MonoBehaviour {
 
         _agentPersonality = agentPersonality;
 
-        _eventHistoryManager = new AgentEventHistoryManager();
+        _eventHistoryManager = new AgentEventHistoryManager(name);
         
         // Setup Agent
         _hypothalamus = new Hypothalamus(_agentPersonality);
@@ -187,7 +187,7 @@ public class Agent : MonoBehaviour {
         
         AgentEventManager.current.AgentSpawned(this);
         
-        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Spawned!");
+        _eventHistoryManager.AddHistoryEvent("Spawned!");
     }
 
     public void Despawn() {
@@ -203,7 +203,7 @@ public class Agent : MonoBehaviour {
 
         AgentEventManager.current.AgentDespawned(this);
         
-        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Despawned");
+        _eventHistoryManager.AddHistoryEvent("Despawned!");
     }
 
     // Internal State regulation functions
@@ -218,7 +218,7 @@ public class Agent : MonoBehaviour {
         Experience(-0.1, 0, -0.1, -0.3, -0.3);
         _socialMemory.SocialInfluence(attackingAgent, -0.1);
         
-        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got hit by " + attackingAgent.name + " with " + damage + " points of damage.");
+        _eventHistoryManager.AddHistoryEvent("Got hit by " + attackingAgent.name + " with " + damage + " points of damage.");
         
         if (_health <= 0) {
             _health = 0;
@@ -246,7 +246,7 @@ public class Agent : MonoBehaviour {
         // Add the experience from healing
         Experience(amount/100, 0, socialEffect, 0, 0);
         
-        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got healed by " + healingAgent.name + " with " +
+        _eventHistoryManager.AddHistoryEvent("Got healed by " + healingAgent.name + " with " +
                                                              amount + " and credited " + socialEffect +
                                                              " social score points.");
     }
@@ -303,7 +303,7 @@ public class Agent : MonoBehaviour {
             AddNewAgentToSocialScore(receiveFromAgent);
         
         _socialMemory.SocialInfluence(receiveFromAgent, 0.1);
-        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got new location information!");
+        _eventHistoryManager.AddHistoryEvent("Got new location information!");
     }
     
     public void ReceiveAgentIndividualMemory(Agent correspondingAgent, double socialScore, Agent receiveFromAgent) {
@@ -315,7 +315,7 @@ public class Agent : MonoBehaviour {
         if (_socialMemory.KnowsAgent(correspondingAgent)) {
             _socialMemory.ReceiveSocialInfluence(correspondingAgent, socialScore, _agentPersonality.GetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor"));
             
-            _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Got new information about " +
+            _eventHistoryManager.AddHistoryEvent("Got new information about " +
                                                  correspondingAgent.name + " (social score " + socialScore + ").");
             return;
         }
@@ -323,7 +323,7 @@ public class Agent : MonoBehaviour {
         double initialSocialScore =
             socialScore * _agentPersonality.GetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor");
 
-        _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Met new agent with social score " + socialScore +
+        _eventHistoryManager.AddHistoryEvent("Met new agent with social score " + socialScore +
                                              ". Setting own initial social score to " + initialSocialScore + ".");
         
         // Agent is not know:
@@ -552,7 +552,9 @@ public class Agent : MonoBehaviour {
     }
     
     // Execute actions of one time-step
-    public void Tick() {
+    public void Tick(int timeStep) {
+        _eventHistoryManager.Tick(timeStep);
+        
         if (!IsAlive()) return;
 
         clock++;
@@ -569,7 +571,7 @@ public class Agent : MonoBehaviour {
         ProcessIncomingRequests();
 
         if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
-            _eventHistoryManager.AddHistoryEvent("Agent " + name + ": reevaluating the current motive!");
+            _eventHistoryManager.AddHistoryEvent("Reevaluating the current motive!");
             
             clock = 0;
 
@@ -586,7 +588,7 @@ public class Agent : MonoBehaviour {
 
                 _currentActionPlan = strongestActionPlan;
                 
-                _eventHistoryManager.AddHistoryEvent("Agent " + name + ": Changed my current action plan!");
+                _eventHistoryManager.AddHistoryEvent("Changed my current action plan!");
             }
         }
 

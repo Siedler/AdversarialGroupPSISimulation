@@ -88,7 +88,7 @@ public class Explore : ActionPlan {
 			
 			_goalFound = true;
 
-			_eventHistoryManager.AddHistoryEvent(agent.name + ": I want to explore the cell with coordinates " + _goalCoordinate);
+			_eventHistoryManager.AddHistoryEvent("I want to explore the cell with coordinates " + _goalCoordinate);
 		}
 
 		ActionResult actionResult = WalkTo(_goalCoordinate);

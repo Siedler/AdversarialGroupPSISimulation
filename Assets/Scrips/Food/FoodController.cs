@@ -17,7 +17,7 @@ public class FoodController : MonoBehaviour {
 		_spawnPoints = spawnPoints;
 	}
 	
-	public void Tick() {
+	public void Tick(int timeStep) {
 		foreach (EnvironmentWorldCell foodSpawn in _spawnPoints) {
 			if(foodSpawn.ContainsFood()) continue;
 

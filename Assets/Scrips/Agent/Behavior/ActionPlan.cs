@@ -71,9 +71,9 @@ public abstract class ActionPlan
 		}
 
 		if (regardingAgent != null) {
-			_eventHistoryManager.AddHistoryEvent("Agent " + agent.name + ": Called out for " + requestType + " for regarding agent " + regardingAgent.name + ".");
+			_eventHistoryManager.AddHistoryEvent("Called out for " + requestType + " for regarding agent " + regardingAgent.name + ".");
 		} else {
-			_eventHistoryManager.AddHistoryEvent("Agent " + agent.name + ": Called out for " + requestType + ".");
+			_eventHistoryManager.AddHistoryEvent("Called out for " + requestType + ".");
 		}
 		
 		return ActionResult.Success;

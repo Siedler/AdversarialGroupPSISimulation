@@ -84,7 +84,7 @@ public class Engage : ActionPlan {
 			if (i < 6) {
 				Hit(agentsFieldOfView);
 				
-				_eventHistoryManager.AddHistoryEvent("Agent " + agent.name + ": Attacking " + _agentToAttack.name + "!");
+				_eventHistoryManager.AddHistoryEvent("Attacking " + _agentToAttack.name + "!");
 
 				if (!environmentWorldCell.IsOccupied()) {
 					OnSuccess();

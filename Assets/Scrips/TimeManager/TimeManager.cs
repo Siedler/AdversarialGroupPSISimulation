@@ -50,7 +50,7 @@ public class TimeManager : MonoBehaviour {
     public void Tick() {
         _timeStep++;
         
-        _environment.Tick();
+        _environment.Tick(_timeStep);
         
         TimeEventManager.current.Tick(_timeStep);
     }
