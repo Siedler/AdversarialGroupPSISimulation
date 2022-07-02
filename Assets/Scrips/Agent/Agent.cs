@@ -4,7 +4,6 @@ using Priority_Queue;
 using Scrips.Agent;
 using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
