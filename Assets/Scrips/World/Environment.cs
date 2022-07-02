@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Scrips.Agent;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Environment : MonoBehaviour {
 
@@ -101,6 +103,10 @@ public class Environment : MonoBehaviour {
 
     public Dictionary<Vector3Int, EnvironmentWorldCell> GetEnvironmentMap() {
         return _environmentMap;
+    }
+
+    public Tuple<AgentController, AgentController> getAgentController() {
+        return new Tuple<AgentController, AgentController>(_team1Controller, _team2Controller);
     }
     
     // TODO DEBUG

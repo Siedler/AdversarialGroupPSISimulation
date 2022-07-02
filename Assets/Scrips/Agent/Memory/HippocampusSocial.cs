@@ -72,4 +72,14 @@ public class HippocampusSocial {
 			agentIndividualMemory.Forget(socialForgetRatePositiveNegative);
 		}	
 	}
+
+	public string ToJson() {
+		string jsonString = "{ ";
+		foreach ((Agent agent, AgentIndividualMemory agentIndividualMemory) in _agentIndividualMemory) {
+			jsonString += agent.name + " : " + agentIndividualMemory.GetSocialScore() + " ,\n";
+		}
+		jsonString += "}";
+		
+		return jsonString;
+	}
 }

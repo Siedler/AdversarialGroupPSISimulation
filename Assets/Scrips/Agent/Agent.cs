@@ -4,6 +4,7 @@ using Priority_Queue;
 using Scrips.Agent;
 using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
+using Scrips.Helper.Math;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -414,7 +415,7 @@ public class Agent : MonoBehaviour {
         // -> Add to social memory
         // -> Generate new Action Plans associated with the agent
         if(double.IsNaN(initialSocialScore)) 
-            initialSocialScore = newlyMetAgent._team == _team ? Random.Range(0, 1) : Random.Range(-1, 0);
+            initialSocialScore = newlyMetAgent._team == _team ? MathHelper.NextGaussian(0.5, 0.5, 0, 1) : MathHelper.NextGaussian(-0.5, 0.5, -1, 0);
         _socialMemory.AddNewlyMetAgent(newlyMetAgent, initialSocialScore);
         GenerateSocialActionPlans(newlyMetAgent);
     }
@@ -685,6 +686,11 @@ public class Agent : MonoBehaviour {
     public string GetEventHistoryString() {
         return _eventHistoryManager.GetListOfEventsAsString();
     }
+
+    public string GetAgentSocialMemoryJson() {
+        return _socialMemory.ToJson();
+    }
+    
     
     // UNITY METHODS
     private void OnMouseDown() {

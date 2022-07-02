@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Linq;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
@@ -250,5 +248,9 @@ public class AgentController : MonoBehaviour {
 		agent.Spawn(environmentWorldCell, _spawnDirection);
 		
 		return true;
+	}
+
+	public List<Agent> GetAgents() {
+		return _agents.Select(agent => agent.GetComponent<Agent>()).ToList();
 	}
 }
