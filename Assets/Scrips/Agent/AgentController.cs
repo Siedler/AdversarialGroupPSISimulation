@@ -155,8 +155,8 @@ public class AgentController : MonoBehaviour {
 		_agentPersonality.SetValue("HippocampusLocationCompetenceForgetRateNegative", 0.9);
 		
 		// Set the positive and negative forget rate for social memory of the agent
-		_agentPersonality.SetValue("HippocampusSocialForgetRatePositive", 0.95);
-		_agentPersonality.SetValue("HippocampusSocialForgetRateNegative", 0.9);
+		_agentPersonality.SetValue("HippocampusSocialForgetRatePositive", 0.995);
+		_agentPersonality.SetValue("HippocampusSocialForgetRateNegative", 0.992);
 
 		// A factor regulating by how much the new information is taken into account. This value should be close to
 		// 0 as otherwise the new information would dominate the currently known information

@@ -424,7 +424,7 @@ public class Agent : MonoBehaviour {
         // -> Add to social memory
         // -> Generate new Action Plans associated with the agent
         if(double.IsNaN(initialSocialScore)) 
-            initialSocialScore = newlyMetAgent._team == _team ? MathHelper.NextGaussian(0.5, 0.5, 0, 1) : MathHelper.NextGaussian(-0.5, 0.5, -1, 0);
+            initialSocialScore = newlyMetAgent._team == _team ? MathHelper.NextGaussian(0.75, 0.05, 0, 1) : MathHelper.NextGaussian(-0.75, 0.05, -1, 0);
         _socialMemory.AddNewlyMetAgent(newlyMetAgent, initialSocialScore);
         GenerateSocialActionPlans(newlyMetAgent);
     }

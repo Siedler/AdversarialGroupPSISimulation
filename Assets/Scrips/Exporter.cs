@@ -2,17 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Scrips.Agent;
 using UnityEngine;
 
 public class Exporter : MonoBehaviour {
 
     private char separator = System.IO.Path.DirectorySeparatorChar;
+    private string _pathToData;    
     
     private Environment _environment;
     
     void Start() {
         _environment = GameObject.Find("World").GetComponent<Environment>();
+        _pathToData = Application.persistentDataPath + separator + "data";
     }
     
     // Update is called once per frame
@@ -20,6 +21,14 @@ public class Exporter : MonoBehaviour {
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.E)) {
             Export();
         }
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.O)) {
+            OpenInFileSystem();
+        }
+    }
+
+    private void OpenInFileSystem() {
+        Application.OpenURL("file://" + _pathToData);
     }
 
     private void WriteAgent(Agent agent, string pathToTeam) {
@@ -43,7 +52,7 @@ public class Exporter : MonoBehaviour {
 
     private void Export() {
         string dateTime = System.DateTime.Now.ToString("yyyy_MM_dd_HHmmss");
-        string pathToData = Application.persistentDataPath + separator + "data" + separator + dateTime;
+        string pathToData = _pathToData + separator + dateTime;
 
         string pathToTeam1 = pathToData + separator + "team1";
         string pathToTeam2 = pathToData + separator + "team2";
