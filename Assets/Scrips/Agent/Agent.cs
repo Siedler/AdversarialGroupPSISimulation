@@ -54,10 +54,9 @@ public class Agent : MonoBehaviour {
     private SimplePriorityQueue<ActionPlan> _currentMotives;
     private ActionPlan _currentActionPlan;
     
-    
     private int _motiveCheckInterval = 5;
     private int clock = 0;
-    
+
     // DEBUG
     public GameObject debugObject;
     private Queue<GameObject> toDespawn = new Queue<GameObject>();
@@ -178,10 +177,16 @@ public class Agent : MonoBehaviour {
         SetOrientation(startDirection);
         SetCurrentWorldCell(spawnCell);
 
-        this.agentDirection = startDirection;
+        // THIS IS JUST A BUG FIX!
+        // IF AN AGENT JUST SPAWNED AND ANOTHER AGENT INTERACTS WITH HIM/HER THEN THE AGENT MIGHT NOT BE ABLE TO
+        // ASSOCIATE THE EXPERIENCE WITH THE LOCATION
+        List<EnvironmentWorldCell> fieldOfView = SenseEnvironment();
+        SenseCloseAgents(fieldOfView);
 
-        this._health = 100;
-        this._foodCount = 0;
+        agentDirection = startDirection;
+
+        _health = 100;
+        _foodCount = 0;
         gameObject.SetActive(true);
 
         UpdateSpriteOrientation();
@@ -215,8 +220,10 @@ public class Agent : MonoBehaviour {
     public void TakeDamage(double damage, Agent attackingAgent) {
         _health -= damage;
 
+        double painAvoidanceSignal = -(damage / 100);
+        
         // TODO variable on damage and on how inflicted damage (better influence)
-        Experience(-0.1, 0, -0.1, -0.3, -0.3);
+        Experience(painAvoidanceSignal, 0, -0.1, -0.3, -0.3);
         _socialMemory.SocialInfluence(attackingAgent, -0.1);
         
         _eventHistoryManager.AddHistoryEvent("Got hit by " + attackingAgent.name + " with " + damage + " points of damage.");
