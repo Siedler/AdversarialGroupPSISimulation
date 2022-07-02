@@ -30,8 +30,8 @@ public class Flee : ActionPlan {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
-	public override void InitiateActionPlan(Agent correspondingAgent) {
-		base.InitiateActionPlan(correspondingAgent);
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
 
 		_worldCellAgentFeelsMostCertain = null;
 		_calledForHelp = false;

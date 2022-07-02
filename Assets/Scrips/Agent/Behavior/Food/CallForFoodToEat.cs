@@ -24,8 +24,8 @@ public class CallForFoodToEat : ActionPlanFoodRelated {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
-	public override void InitiateActionPlan(Agent correspondingAgent = null) {
-		base.InitiateActionPlan(correspondingAgent);
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
 
 		_calledOutForFood = false;
 		_timeRemainingToWait = 5;

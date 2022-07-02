@@ -49,7 +49,7 @@ public abstract class ActionPlan
 		this.environment = environment;
 	}
 
-	public virtual void InitiateActionPlan(Agent correspondingAgent = null) {
+	public virtual void InitiateActionPlan() {
 		_pathToWalk = null;
 	}
 	

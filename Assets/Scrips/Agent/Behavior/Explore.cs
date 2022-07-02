@@ -23,8 +23,8 @@ public class Explore : ActionPlan {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
-	public override void InitiateActionPlan(Agent correspondingAgent = null) {
-		base.InitiateActionPlan(correspondingAgent);
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
 		
 		_goalFound = false;
 	}

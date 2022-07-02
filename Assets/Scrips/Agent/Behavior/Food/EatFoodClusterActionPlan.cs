@@ -24,8 +24,8 @@ public class EatFoodClusterActionPlan : ActionPlanFoodRelated {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
-	public override void InitiateActionPlan(Agent correspondingAgent = null) {
-		base.InitiateActionPlan(correspondingAgent);
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
 
 		_foodLocation = null;
 		_reachedFoodCluster = false;

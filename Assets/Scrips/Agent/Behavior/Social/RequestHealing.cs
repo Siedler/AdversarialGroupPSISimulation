@@ -26,8 +26,8 @@ public class RequestHealing : ActionPlan {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
-	public override void InitiateActionPlan(Agent correspondingAgent = null) {
-		base.InitiateActionPlan(correspondingAgent);
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
 		_calledOutForHealing = false;
 		_timeRemainingToWait = 5;
 

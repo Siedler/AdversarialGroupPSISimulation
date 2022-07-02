@@ -410,6 +410,8 @@ public class Agent : MonoBehaviour {
     }
 
     private void AddNewAgentToSocialScore(Agent newlyMetAgent, double initialSocialScore = Double.NaN) {
+        if (newlyMetAgent == null)
+            throw new ArgumentException("Tried to add a new agent, but the agent provided is null!");
         // If the agent is seen for the first time
         // -> Assign social score depending on team
         // -> Add to social memory

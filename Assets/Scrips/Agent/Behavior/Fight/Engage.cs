@@ -28,11 +28,9 @@ public class Engage : ActionPlan {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
-	public override void InitiateActionPlan(Agent correspondingAgent = null) {
-		base.InitiateActionPlan(correspondingAgent);
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
 		
-		_agentToAttack = correspondingAgent;
-
 		// If the action plan was enacted as the response to the request of another agent: reward socially
 		if (_requestedHelp) {
 			_agentThatCalledForHelp.ReceivedHelpAfterCalling(agent);

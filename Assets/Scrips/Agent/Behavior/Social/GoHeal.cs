@@ -2,6 +2,7 @@
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
+using UnityEngine;
 
 public class GoHeal : ActionPlan {
 
@@ -28,10 +29,8 @@ public class GoHeal : ActionPlan {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
-	public override void InitiateActionPlan(Agent correspondingAgent = null) {
-		base.InitiateActionPlan(correspondingAgent);
-		
-		_agentToHeal = correspondingAgent;
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
 	}
 
 	private double GetAmountToHeal() {
