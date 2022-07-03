@@ -520,12 +520,15 @@ public class Agent : MonoBehaviour {
         EnvironmentWorldCell currentEnvironmentWorldCell,
         List<EnvironmentWorldCell> agentsFieldOfView,
         List<Agent> nearbyAgents) {
+        // TODO check with Nabil if this cap is correct
+        // If the need_indicator is not capped to 0, then the agent searches actively for behaviour that would affect
+        // a need negatively
         double[] indicator = new double[] {
-            _hypothalamus.GetPainAvoidanceDifference(),
-            _hypothalamus.GetEnergyDifference(),
-            _hypothalamus.GetAffiliationDifference(),
-            _hypothalamus.GetCertaintyDifference(),
-            _hypothalamus.GetCompetenceDifference(),
+            Math.Max(0, _hypothalamus.GetPainAvoidanceDifference()),
+            Math.Max(0, _hypothalamus.GetEnergyDifference()),
+            Math.Max(0, _hypothalamus.GetAffiliationDifference()),
+            Math.Max(0, _hypothalamus.GetCertaintyDifference()),
+            Math.Max(0, _hypothalamus.GetCompetenceDifference()),
         };
         double[] multiplier = new double[] {
             SimulationSettings.PainAvoidanceMultiplier,
@@ -563,7 +566,7 @@ public class Agent : MonoBehaviour {
             double newMotiveStrength = (_currentActionPlan == null || actionPlan == _currentActionPlan) ? 0 : -selectionThreshold;
             // Create the weighted sum of the need-indicators
             for (int i = 0; i < indicator.Length; i++) {
-                newMotiveStrength += indicator[i] * multiplier[i] * expectedSatisfaction[i];
+                newMotiveStrength += multiplier[i] * indicator[i] * expectedSatisfaction[i];
             }
             
             newMotiveStrength += actionPlan.GetUrgency(currentEnvironmentWorldCell, agentsFieldOfView, nearbyAgents);
