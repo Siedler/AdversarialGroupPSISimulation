@@ -150,6 +150,48 @@ public abstract class ActionPlan
 			cellCoordinates, environment.GetEnvironmentMap());
 	}
 
+	protected Vector3Int GetNextCoordinateToExplore() {
+		List<AgentMemoryWorldCell> unexploredWorldCells = GetUnexploredWorldCells();
+
+		// If there are no more unexplored world cells:
+		// Take a random world cell weighted by their certainty score
+		if (unexploredWorldCells.Count > 0) {
+			int randomIndex = Random.Range(0, unexploredWorldCells.Count - 1);
+			return unexploredWorldCells[randomIndex].cellCoordinates;
+		}
+		
+		List<AgentMemoryWorldCell> allAgentMemoryWorldCellsSortedByCertainty = GetExploredWorldCellsSortedByCertainty();
+		float randomNum = Random.Range(0.0f, 1.0f);
+		int n = (int) Math.Floor(-Math.Log(-randomNum + 1, 2));
+			
+		if (n > allAgentMemoryWorldCellsSortedByCertainty.Count)
+			n = allAgentMemoryWorldCellsSortedByCertainty.Count;
+
+		return allAgentMemoryWorldCellsSortedByCertainty[n].cellCoordinates;
+	}
+	
+	protected List<AgentMemoryWorldCell> GetUnexploredWorldCells() {
+		Dictionary<Vector3Int, AgentMemoryWorldCell> agentWorldMemory = locationMemory.GetAgentsLocationMemory();
+		
+		List<AgentMemoryWorldCell> unexploredWorldCells = new List<AgentMemoryWorldCell>();
+
+		foreach (AgentMemoryWorldCell agentMemoryWorldCell in agentWorldMemory.Values) {
+			if(agentMemoryWorldCell.IsExplored()) continue;
+				
+			unexploredWorldCells.Add(agentMemoryWorldCell);
+		}
+
+		return unexploredWorldCells;
+	}
+
+	protected List<AgentMemoryWorldCell> GetExploredWorldCellsSortedByCertainty() {
+		Dictionary<Vector3Int, AgentMemoryWorldCell> agentWorldMemory = locationMemory.GetAgentsLocationMemory();
+
+		List<AgentMemoryWorldCell> allWorldCellsAsList =
+			agentWorldMemory.Values.OrderBy(o => o.GetNeedSatisfactionAssociations()[3]).ToList();
+		return allWorldCellsAsList;
+	}
+	
 	protected Agent GetWorstEnemyAgentInFieldOfView(List<EnvironmentWorldCell> agentsFieldOfView) {
 		Agent worstEnemyInRange = null;
 		AgentIndividualMemory worstEnemyScore = null;

@@ -38,29 +38,7 @@ public class Explore : ActionPlan {
 
 		return false;
 	}
-	
-	private List<AgentMemoryWorldCell> GetUnexploredWorldCells() {
-		Dictionary<Vector3Int, AgentMemoryWorldCell> agentWorldMemory = locationMemory.GetAgentsLocationMemory();
-		
-		List<AgentMemoryWorldCell> unexploredWorldCells = new List<AgentMemoryWorldCell>();
 
-		foreach (AgentMemoryWorldCell agentMemoryWorldCell in agentWorldMemory.Values) {
-			if(agentMemoryWorldCell.IsExplored()) continue;
-				
-			unexploredWorldCells.Add(agentMemoryWorldCell);
-		}
-
-		return unexploredWorldCells;
-	}
-
-	private List<AgentMemoryWorldCell> GetExploredWorldCellsSortedByCertainty() {
-		Dictionary<Vector3Int, AgentMemoryWorldCell> agentWorldMemory = locationMemory.GetAgentsLocationMemory();
-
-		List<AgentMemoryWorldCell> allWorldCellsAsList =
-			agentWorldMemory.Values.OrderBy(o => o.GetNeedSatisfactionAssociations()[3]).ToList();
-		return allWorldCellsAsList;
-	}
-	
 	public override ActionResult Execute(
 		EnvironmentWorldCell currentEnvironmentWorldCell,
 		List<EnvironmentWorldCell> agentsFieldOfView,
@@ -71,21 +49,7 @@ public class Explore : ActionPlan {
 
 			// If there are no more unexplored world cells:
 			// Take a random world cell weighted by their certainty score
-			if (unexploredWorldCells.Count > 0) {
-				int randomIndex = Random.Range(0, unexploredWorldCells.Count - 1);
-				_goalCoordinate = unexploredWorldCells[randomIndex].cellCoordinates;
-				
-			} else {
-				List<AgentMemoryWorldCell> allAgentMemoryWorldCellsSortedByCertainty = GetExploredWorldCellsSortedByCertainty();
-				float randomNum = Random.Range(0.0f, 1.0f);
-				int n = (int) Math.Floor(-Math.Log(-randomNum + 1, 2));
-				
-				if (n > allAgentMemoryWorldCellsSortedByCertainty.Count)
-					n = allAgentMemoryWorldCellsSortedByCertainty.Count;
-
-				_goalCoordinate = allAgentMemoryWorldCellsSortedByCertainty[n].cellCoordinates;
-			}
-			
+			_goalCoordinate = GetNextCoordinateToExplore();
 			_goalFound = true;
 
 			_eventHistoryManager.AddHistoryEvent("I want to explore the cell with coordinates " + _goalCoordinate);

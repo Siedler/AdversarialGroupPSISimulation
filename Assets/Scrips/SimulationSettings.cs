@@ -7,26 +7,26 @@ public class SimulationSettings {
     public static readonly int MaximumStoredFoodCount = 2;
 
     // Agent Personality values
-    public static readonly double SetValuePainAvoidanceMean = 0.8;
+    public static readonly double SetValuePainAvoidanceMean = 0.85;
     public static readonly double SetValuePainAvoidanceSigma = 0.03;
 
     public static readonly double LeakageValuePainAvoidanceMean = -0.02;
     public static readonly double LeakageValuePainAvoidanceSigma = 0.002;
     
     public static readonly double SetValueEnergyMean = 0.8;
-    public static readonly double SetValueEnergySigma = 0.03;
+    public static readonly double SetValueEnergySigma = 0.005;
     
     public static readonly double LeakageValueEnergyMean = 0.005;
     public static readonly double LeakageValueEnergySigma = 0.002;
 
     public static readonly double SetValueAffiliationMean = 0.8;
-    public static readonly double SetValueAffiliationSigma = 0.03;
+    public static readonly double SetValueAffiliationSigma = 0.005;
     
     public static readonly double LeakageValueAffiliationMean = 0.005;
     public static readonly double LeakageValueAffiliationSigma = 0.002;
     
     public static readonly double SetValueCertaintyMean = 0.8;
-    public static readonly double SetValueCertaintySigma = 0.03;
+    public static readonly double SetValueCertaintySigma = 0.005;
     
     public static readonly double LeakageValueCertaintyMean = 0.005;
     public static readonly double LeakageValueCertaintySigma = 0.002;
@@ -66,7 +66,7 @@ public class SimulationSettings {
     
     // TODO Check if these can be variable
     public static readonly double PainAvoidanceMultiplier = 3;
-    public static readonly double EnergyMultiplier = 2;
+    public static readonly double EnergyMultiplier = 2.3;
     public static readonly double AffiliationMultiplier = 1;
     public static readonly double CertaintyMultiplier = 1;
     public static readonly double CompetenceMultiplier = 1;
@@ -84,8 +84,8 @@ public class SimulationSettings {
         0,
         0,
         0,
-        0.25,
         0.2,
+        0.25,
     };
     public static readonly double[] ExploreOnFailure = new double[] {
         0,
@@ -95,33 +95,56 @@ public class SimulationSettings {
         0,
     };
     
+    // SearchForFood
+    public static readonly double[] SearchForFoodOnSuccess = new double[] {
+        0,
+        FoodEnergyIntakeValue,
+        0,
+        0.2,
+        0.25,
+    };
+    public static readonly double[] SearchForFoodOnFailure = new double[] {
+        0,
+        0,
+        0,
+        -0.2,
+        -0.3,
+    };
+    public static readonly double[] SearchForFoodIntermediateExploreReward = new double[] {
+        0,
+        0,
+        0,
+        0.1,
+        0,
+    };
+    
     // Engage
     // Both are set as base values and modified based on the social score of the specific agent
     public static readonly double[] EngageOnSuccess = new double[] {
         0,
         0,
-        -0.2,
-        0.21,
-        0.35
+        -0.25,
+        0.2,
+        0.25
     };
     public static readonly double[] EngageOnFailure = new double[] {
         0,
         0,
-        -0.2, 
-        -0.25,
+        -0.25, 
+        -0.3,
         -0.4
     };
     
     // Flee
     public static readonly double[] FleeOnSuccess = new double[] {
-        0.1,
+        0.15,
         0,
         0,
         0.2,
         0.2,
     };
     public static readonly double[] FleeOnFailure = new double[] {
-        -0.1,
+        -0.15,
         0,
         0,
         -0.2,
@@ -133,15 +156,15 @@ public class SimulationSettings {
         0,
         SimulationSettings.FoodEnergyIntakeValue,
         0,
-        0.2,
-        0.2
+        0.25,
+        0.25
     };
     public static readonly double[] FoodRelatedOnFailure = new double[] {
         0,
         0,
         0,
-        -0.2,
-        -0.2
+        -0.3,
+        -0.3
     };
     
     // Call For Food
@@ -150,9 +173,9 @@ public class SimulationSettings {
     public static readonly double[] CallForFoodOnSuccess = new double[] {
         0,
         FoodEnergyIntakeValue,
-        0,
         0.2,
-        0.2
+        0.15,
+        0.1
     };
     public static readonly double[] CallForFoodOnFailure = new double[] {
         0,
@@ -182,9 +205,9 @@ public class SimulationSettings {
     public static readonly double[] ExchangeInformationOnSuccess = new double[] {
         0,
         0,
-        0.3,
+        0.21,
         0.1,
-        0.2,
+        0.1,
     };
     public static readonly double[] ExchangeInformationOnFailure = new double[] {
         0,
@@ -199,13 +222,13 @@ public class SimulationSettings {
         0,
         0,
         0.2,
-        0.2,
-        0.2,
+        0.1,
+        0.1,
     };
     public static readonly double[] GiveFoodOnFailure = new double[] {
         0,
         0,
-        -0.2,
+        -0.22,
         -0.2,
         -0.2,
     };
@@ -215,8 +238,8 @@ public class SimulationSettings {
         0,
         0,
         0.2,
-        0.2,
-        0.2,
+        0.1,
+        0.15,
     };
     public static readonly double[] GoHealOnFailure = new double[] {
         0,
@@ -231,9 +254,9 @@ public class SimulationSettings {
     public static readonly double[] RequestHealingOnSuccess = new double[] {
         0,
         0,
-        0,
         0.2,
-        0.2,
+        0.1,
+        0.15,
     };
     public static readonly double[] RequestHealingOnFailure = new double[] {
         0,

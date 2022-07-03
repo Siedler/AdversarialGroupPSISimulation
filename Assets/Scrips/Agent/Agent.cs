@@ -110,11 +110,13 @@ public class Agent : MonoBehaviour {
 
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
-        _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment));
+        //_actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+        //    _eventHistoryManager, _environment));
         _actionPlans.Add(new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
         _actionPlans.Add(new CallForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment));
+        _actionPlans.Add(new SearchForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
     }
     
