@@ -227,13 +227,18 @@ public class Agent : MonoBehaviour {
         _health -= damage;
 
         double painAvoidanceSignal = -(damage / 100);
-        
-        // TODO variable on damage and on how inflicted damage (better influence)
-        Experience(painAvoidanceSignal, 0, -0.1, -0.3, -0.3);
-        _socialMemory.SocialInfluence(attackingAgent, -0.1);
-        
-        _eventHistoryManager.AddHistoryEvent("Got hit by " + attackingAgent.name + " with " + damage + " points of damage.");
-        
+
+        if (attackingAgent != null) {
+            Experience(painAvoidanceSignal, 0, -0.1, -0.3, -0.3);
+            _socialMemory.SocialInfluence(attackingAgent, -0.1);
+
+            _eventHistoryManager.AddHistoryEvent("Got hit by " + attackingAgent.name + " with " + damage +
+                                                 " points of damage.");
+        } else {
+            Experience(painAvoidanceSignal, 0, 0,  0, 0);
+            _eventHistoryManager.AddHistoryEvent("Got " + damage + " damage!");
+        }
+
         if (_health <= 0) {
             _health = 0;
             Despawn();
@@ -628,6 +633,10 @@ public class Agent : MonoBehaviour {
 
         ProcessCertaintyUpdateForAgentsInRange(_currentEnvironmentWorldCell, fieldOfView, agentsInFieldOfView);
         ProcessIncomingRequests();
+
+        if (_hypothalamus.GetCurrentEnergyValue() == 0) {
+            TakeDamage(1, null);
+        }
 
         if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
             _eventHistoryManager.AddHistoryEvent("Reevaluating the current motive!");
