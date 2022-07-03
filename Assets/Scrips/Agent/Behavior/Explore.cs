@@ -27,6 +27,7 @@ public class Explore : ActionPlan {
 		base.InitiateActionPlan();
 		
 		_goalFound = false;
+		_eventHistoryManager.AddHistoryEvent("Started to explore!");
 	}
 
 	private bool AreThereUnexploredWorldCells() {
