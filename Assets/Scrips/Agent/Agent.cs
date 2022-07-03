@@ -421,6 +421,10 @@ public class Agent : MonoBehaviour {
     private void AddNewAgentToSocialScore(Agent newlyMetAgent, double initialSocialScore = Double.NaN) {
         if (newlyMetAgent == null)
             throw new ArgumentException("Tried to add a new agent, but the agent provided is null!");
+        
+        // Skip if AddNewAgentToSocialScore is called for one self 
+        if(newlyMetAgent == this) return;
+        
         // If the agent is seen for the first time
         // -> Assign social score depending on team
         // -> Add to social memory
@@ -436,10 +440,14 @@ public class Agent : MonoBehaviour {
 
         foreach (EnvironmentWorldCell environmentWorldCell in fieldOfView) {
             if(environmentWorldCell == null || !environmentWorldCell.IsOccupied()) continue;
-            
+
             // If the world cell contains an agent
 
             Agent agentOnWorldCell = environmentWorldCell.GetAgent();
+
+            // Skip myself
+            if(agentOnWorldCell == this) continue;
+            
             agentsInFieldOfView.Add(agentOnWorldCell);
             
             // Check if the Agent already knows the 
