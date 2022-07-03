@@ -241,6 +241,9 @@ public class Agent : MonoBehaviour {
 
         _health += amount;
 
+        // Cap health at 100
+        if (_health > 100) _health = 100;
+        
         if (healingAgent == null) {
             // Add the experience from healing
             Experience(amount/100, 0, 0, 0, 0);
