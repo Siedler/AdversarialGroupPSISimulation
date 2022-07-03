@@ -67,7 +67,11 @@ public abstract class ActionPlan
 		foreach (EnvironmentWorldCell environmentWorldCell in agentsFieldOfView) {
 			if(environmentWorldCell == null || !environmentWorldCell.IsOccupied()) continue;
 
-			environmentWorldCell.GetAgent().RegisterIncomingRequest(requestInformation);
+			Agent agentInRange = environmentWorldCell.GetAgent();
+			// Ignore myself when calling out to other agents
+			if(agentInRange == agent) continue;
+			
+			agentInRange.RegisterIncomingRequest(requestInformation);
 		}
 
 		if (regardingAgent != null) {

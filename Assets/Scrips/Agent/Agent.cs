@@ -463,28 +463,35 @@ public class Agent : MonoBehaviour {
         while (_incomingRequests.Count > 0) {
             RequestInformation incomingRequestInformation = _incomingRequests.Dequeue();
 
+            if (incomingRequestInformation.GetCallingAgent() == this)
+                throw new InvalidOperationException("Agent got a request from him/herself");
+            
             // If the agent does not know the other agents: Add them to their list
             if (!_socialMemory.KnowsAgent(incomingRequestInformation.GetCallingAgent())) {
                 AddNewAgentToSocialScore(incomingRequestInformation.GetCallingAgent());
             }
-            if (incomingRequestInformation.GetRegardingAgent() != null &&
-                !_socialMemory.KnowsAgent(incomingRequestInformation.GetRegardingAgent())) {
+            if (incomingRequestInformation.GetRegardingAgent() != null
+                && incomingRequestInformation.GetRegardingAgent() != this
+                && !_socialMemory.KnowsAgent(incomingRequestInformation.GetRegardingAgent())) {
                 AddNewAgentToSocialScore(incomingRequestInformation.GetRegardingAgent());
             }
             
             if (incomingRequestInformation.GetRequestType() == RequestType.InformationLocation) {
-                if(incomingRequestInformation.GetRegardingAgent() != null && incomingRequestInformation.GetRegardingAgent() != this) continue;
+                if(incomingRequestInformation.GetRegardingAgent() != null
+                   && incomingRequestInformation.GetRegardingAgent() != this) continue;
                 
                 _locationMemoryExchangeActionPlans[incomingRequestInformation.GetCallingAgent()].RegisterRequest();
                 
             } else if (incomingRequestInformation.GetRequestType() == RequestType.InformationSocial) {
-                if(incomingRequestInformation.GetRegardingAgent() != null && incomingRequestInformation.GetRegardingAgent() != this) continue;
+                if(incomingRequestInformation.GetRegardingAgent() != null
+                   && incomingRequestInformation.GetRegardingAgent() != this) continue;
 
                 _socialMemoryExchangeActionPlans[incomingRequestInformation.GetCallingAgent()].RegisterRequest();
                 
             } else if (incomingRequestInformation.GetRequestType() == RequestType.Help) {
-                if(!_socialMemory.KnowsAgent(incomingRequestInformation.GetRegardingAgent())) continue;
-                
+                if (incomingRequestInformation.GetRegardingAgent() == this
+                    || !_socialMemory.KnowsAgent(incomingRequestInformation.GetRegardingAgent())) continue;
+
                 _engagingActionPlans[incomingRequestInformation.GetRegardingAgent()].RequestHelpToAttackThisAgent(incomingRequestInformation.GetCallingAgent());
             } else if (incomingRequestInformation.GetRequestType() == RequestType.Healing) {
                 _healingActionPlans[incomingRequestInformation.GetCallingAgent()].RequestHealing();
@@ -587,7 +594,6 @@ public class Agent : MonoBehaviour {
         List<EnvironmentWorldCell> fieldOfView = SenseEnvironment();
         List<Agent> agentsInFieldOfView = SenseCloseAgents(fieldOfView);
         
-        // TODO handle incoming requests
         ProcessIncomingRequests();
 
         if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
