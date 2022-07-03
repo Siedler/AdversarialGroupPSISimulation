@@ -615,11 +615,10 @@ public class Agent : MonoBehaviour {
             ActionPlan strongestActionPlan = GetStrongestMotive(_currentEnvironmentWorldCell, fieldOfView, agentsInFieldOfView);
 
             if (_currentActionPlan != strongestActionPlan) {
+                _eventHistoryManager.AddHistoryEvent("Changed my current action plan!");
                 strongestActionPlan.InitiateActionPlan();
 
                 _currentActionPlan = strongestActionPlan;
-                
-                _eventHistoryManager.AddHistoryEvent("Changed my current action plan!");
             }
         }
 
