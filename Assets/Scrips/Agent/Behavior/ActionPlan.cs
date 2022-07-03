@@ -4,6 +4,7 @@ using System.Linq;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -104,7 +105,7 @@ public abstract class ActionPlan
 		}
 
 		EnvironmentWorldCell newEnvironmentWorldCell = environment.GetWorldCellByCoordinates(newCoordinate);
-        
+
 		// If the world cell is occupied => Do nothing
 		// TODO Improve evasion method
 		// IDEA: Agent with less competence evades

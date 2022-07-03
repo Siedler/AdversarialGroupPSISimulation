@@ -634,10 +634,6 @@ public class Agent : MonoBehaviour {
         ProcessCertaintyUpdateForAgentsInRange(_currentEnvironmentWorldCell, fieldOfView, agentsInFieldOfView);
         ProcessIncomingRequests();
 
-        if (_hypothalamus.GetCurrentEnergyValue() == 0) {
-            TakeDamage(1, null);
-        }
-
         if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
             _eventHistoryManager.AddHistoryEvent("Reevaluating the current motive!");
             
@@ -666,6 +662,10 @@ public class Agent : MonoBehaviour {
             if (actionResult == ActionResult.Success) _currentMotives.Dequeue();
         }
 
+        if (_hypothalamus.GetCurrentEnergyValue() == 0) {
+            TakeDamage(1, null);
+        }
+        
         // Despawn
         while (toDespawn.Count > 0) {
             Destroy(toDespawn.Dequeue());
