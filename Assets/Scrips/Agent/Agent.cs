@@ -197,6 +197,8 @@ public class Agent : MonoBehaviour {
         
         AgentEventManager.current.AgentSpawned(this);
         
+        _hypothalamus.ResetNeedTanks();
+
         _eventHistoryManager.AddHistoryEvent("Spawned!");
     }
 

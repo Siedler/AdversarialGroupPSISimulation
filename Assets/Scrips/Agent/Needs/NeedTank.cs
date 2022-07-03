@@ -7,11 +7,15 @@ public class NeedTank {
 
 	private double _leakage;
 
+	private double _initialValue;
+
 	public NeedTank(double currentValue, double setValue, double leakage) {
 		_currentValue = currentValue;
 		_setValue = setValue;
 		_leakage = leakage;
 
+		_initialValue = currentValue;
+		
 		_delta = 0;
 	}
 
@@ -27,6 +31,10 @@ public class NeedTank {
 	public void Tick() {
 		_delta = 0;
 		UpdateTankValue(-_leakage);		
+	}
+
+	public void ResetTankValue() {
+		_currentValue = _initialValue;
 	}
 
 	public double GetCurrentValue() {

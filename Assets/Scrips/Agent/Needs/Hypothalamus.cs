@@ -35,6 +35,14 @@ public class Hypothalamus {
 		generalCompetence = competenceSetValue;
 	}
 
+	public void ResetNeedTanks() {
+		_painAvoidance.ResetTankValue();
+		_energy.ResetTankValue();
+		_affiliation.ResetTankValue();
+		_certainty.ResetTankValue();
+		_competence.ResetTankValue();
+	}
+
 	public void Tick() {
 		// This value is positive if the competence should shrink!!!
 		// i.e. if the agent is not able to handle the situation / fill his need-tanks then the competence shrinks
