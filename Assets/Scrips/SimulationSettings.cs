@@ -49,7 +49,11 @@ public class SimulationSettings {
     public static readonly double HealMaxAmount = 15;
     
     // SOCIAL SECTION
-    
+    public static readonly double NewlyMetAgentSameTeamMean = 0.75;
+    public static readonly double NewlyMetAgentSameTeamSigma = 0.05;
+
+    public static readonly double NewlyMetAgentOppositeTeamMean = -0.9;
+    public static readonly double NewlyMetAgentOppositeTeamSigma = 0.05;
     
     // MEMORY SECTION
     // Defining the radius of which the memory of the agent is affected if a new experience was made
@@ -71,12 +75,15 @@ public class SimulationSettings {
     public static readonly double CertaintyMultiplier = 1;
     public static readonly double CompetenceMultiplier = 1;
     
+    // Certainty adjustment parameter for nearby agents
+    public static readonly double CertaintyAdjustmentParameter = 0.05;
+    
     // Competence indicator weights
     public static readonly double CompetenceIndicatorWeightPainAvoidance = 0.9;
     public static readonly double CompetenceIndicatorWeightEnergy = 0.8;
     public static readonly double CompetenceIndicatorWeightAffiliation = 0.7;
     public static readonly double CompetenceIndicatorWeightCertainty = 0.7;
-    
+
     // ACTION PLAN SECTION
     // Structure double[] = {painAvoidance, energyIntake, affiliation, certainty, competence}
     // EXPLORE
@@ -124,8 +131,8 @@ public class SimulationSettings {
         0,
         0,
         -0.25,
-        0.2,
-        0.25
+        0.35,
+        0.4
     };
     public static readonly double[] EngageOnFailure = new double[] {
         0,
@@ -140,7 +147,7 @@ public class SimulationSettings {
         0.15,
         0,
         0,
-        0.2,
+        0.08,
         0.2,
     };
     public static readonly double[] FleeOnFailure = new double[] {
@@ -156,7 +163,7 @@ public class SimulationSettings {
         0,
         SimulationSettings.FoodEnergyIntakeValue,
         0,
-        0.25,
+        0.2,
         0.25
     };
     public static readonly double[] FoodRelatedOnFailure = new double[] {
@@ -174,7 +181,7 @@ public class SimulationSettings {
         0,
         FoodEnergyIntakeValue,
         0.2,
-        0.15,
+        0.05,
         0.1
     };
     public static readonly double[] CallForFoodOnFailure = new double[] {
@@ -206,7 +213,7 @@ public class SimulationSettings {
         0,
         0,
         0.21,
-        0.1,
+        0.05,
         0.1,
     };
     public static readonly double[] ExchangeInformationOnFailure = new double[] {
@@ -222,7 +229,7 @@ public class SimulationSettings {
         0,
         0,
         0.2,
-        0.1,
+        0.05,
         0.1,
     };
     public static readonly double[] GiveFoodOnFailure = new double[] {
@@ -238,7 +245,7 @@ public class SimulationSettings {
         0,
         0,
         0.2,
-        0.1,
+        0.05,
         0.15,
     };
     public static readonly double[] GoHealOnFailure = new double[] {

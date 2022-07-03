@@ -437,7 +437,9 @@ public class Agent : MonoBehaviour {
         // -> Add to social memory
         // -> Generate new Action Plans associated with the agent
         if(double.IsNaN(initialSocialScore)) 
-            initialSocialScore = newlyMetAgent._team == _team ? MathHelper.NextGaussian(0.75, 0.05, 0, 1) : MathHelper.NextGaussian(-0.75, 0.05, -1, 0);
+            initialSocialScore = newlyMetAgent._team == _team ? 
+                MathHelper.NextGaussian(SimulationSettings.NewlyMetAgentSameTeamMean, SimulationSettings.NewlyMetAgentSameTeamSigma, 0, 1) 
+                : MathHelper.NextGaussian(SimulationSettings.NewlyMetAgentOppositeTeamMean, SimulationSettings.NewlyMetAgentOppositeTeamSigma, -1, 0);
         _socialMemory.AddNewlyMetAgent(newlyMetAgent, initialSocialScore);
         GenerateSocialActionPlans(newlyMetAgent);
     }
@@ -466,6 +468,24 @@ public class Agent : MonoBehaviour {
         return agentsInFieldOfView;
     }
 
+    private void ProcessCertaintyUpdateForAgentsInRange(
+        EnvironmentWorldCell currentEnvironmentWorldCell,
+        List<EnvironmentWorldCell> agentFieldOfView,
+        List<Agent> nearbyAgents) {
+
+        if(nearbyAgents.Count == 0) return;
+        
+        double socialScoreSum = 0;
+        foreach (Agent nearbyAgent in nearbyAgents) {
+            socialScoreSum += _socialMemory.GetSocialScore(nearbyAgent);
+        }
+
+        double averageSocialScore = socialScoreSum / nearbyAgents.Count;
+        double certaintyInfluence = SimulationSettings.CertaintyAdjustmentParameter * averageSocialScore;
+        
+        Experience(0, 0, 0, certaintyInfluence, 0);
+    }
+    
     private void ProcessIncomingRequests() {
         while (_incomingRequests.Count > 0) {
             RequestInformation incomingRequestInformation = _incomingRequests.Dequeue();
@@ -603,7 +623,8 @@ public class Agent : MonoBehaviour {
         // Sense the world and process it
         List<EnvironmentWorldCell> fieldOfView = SenseEnvironment();
         List<Agent> agentsInFieldOfView = SenseCloseAgents(fieldOfView);
-        
+
+        ProcessCertaintyUpdateForAgentsInRange(_currentEnvironmentWorldCell, fieldOfView, agentsInFieldOfView);
         ProcessIncomingRequests();
 
         if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
@@ -646,9 +667,9 @@ public class Agent : MonoBehaviour {
     }
     
     public void SetCurrentWorldCell(EnvironmentWorldCell environmentWorldCell) {
-        this._currentEnvironmentWorldCell = environmentWorldCell;
+        _currentEnvironmentWorldCell = environmentWorldCell;
         if (environmentWorldCell != null) {
-            this.transform.position = environmentWorldCell.worldCoordinates;
+            transform.position = environmentWorldCell.worldCoordinates;
             environmentWorldCell.Occupy(this);
         }
     }
