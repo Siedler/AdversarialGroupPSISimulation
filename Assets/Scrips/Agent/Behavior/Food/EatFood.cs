@@ -20,6 +20,12 @@ public class EatFood : ActionPlanFoodRelated{
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
+		
+		_eventHistoryManager.AddHistoryEvent("Starting ActionPlan to eat food from storage!");
+	}
+
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		if (!agent.HasFood()) {
 			OnFailure();

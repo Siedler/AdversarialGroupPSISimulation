@@ -31,6 +31,8 @@ public class GoHeal : ActionPlan {
 
 	public override void InitiateActionPlan() {
 		base.InitiateActionPlan();
+		
+		_eventHistoryManager.AddHistoryEvent("Started ActionPlan to heal " + _agentToHeal.name);
 	}
 
 	private double GetAmountToHeal() {
@@ -46,6 +48,7 @@ public class GoHeal : ActionPlan {
 				IsAgentInFieldOfView(agentsFieldOfView, _agentToHeal);
 
 			if (environmentWorldCellOfAgentToHeal == null) {
+				_eventHistoryManager.AddHistoryEvent("Failed to heal " + _agentToHeal.name + " :(");
 				OnFailure();
 				return ActionResult.Failure;
 			}
@@ -60,6 +63,8 @@ public class GoHeal : ActionPlan {
 		socialMemory.SocialInfluence(_agentToHeal, 0.1);
 		
 		agent.SetOrientation((Direction) agentInRange);
+		
+		_eventHistoryManager.AddHistoryEvent("Healed " + _agentToHeal.name + "!");
 		
 		OnSuccess();
 		return ActionResult.Success;

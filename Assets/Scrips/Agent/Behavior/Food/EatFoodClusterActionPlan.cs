@@ -30,7 +30,7 @@ public class EatFoodClusterActionPlan : ActionPlanFoodRelated {
 		_foodLocation = null;
 		_reachedFoodCluster = false;
 		
-		_eventHistoryManager.AddHistoryEvent("Walking to food cluster with coordinates " + _foodCluster.GetCenter());
+		_eventHistoryManager.AddHistoryEvent("Walking to food cluster with coordinates " + _foodCluster.GetCenter() + " to eat food!");
 	}
 
 	private bool IsFoodClusterCenterInFieldOfView(List<EnvironmentWorldCell> agentsFieldOfView) {
@@ -56,11 +56,17 @@ public class EatFoodClusterActionPlan : ActionPlanFoodRelated {
 			if (currentEnvironmentWorldCell.ContainsFood()) return CollectAndEatFood(currentEnvironmentWorldCell);
 			
 			// Food was already eaten!
-			if (_foodLocation != null && !_foodLocation.ContainsFood()) _foodLocation = null;
+			if (_foodLocation != null && !_foodLocation.ContainsFood()) {
+				_eventHistoryManager.AddHistoryEvent("Food was already eaten! Search for a new food location.");
+				_foodLocation = null;
+			}
 
 			// Search for food location
 			if (_foodLocation == null) {
 				_foodLocation = GetClosestFoodLocationInFieldOfView(agentsFieldOfView);
+				
+				_eventHistoryManager.AddHistoryEvent("Going to " + _foodLocation.cellCoordinates + " to eat food!");
+				
 				if (_foodLocation == null) {
 					OnFailure();
 					return ActionResult.Failure;

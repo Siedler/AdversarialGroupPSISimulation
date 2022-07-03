@@ -252,7 +252,7 @@ public class Agent : MonoBehaviour {
         // TODO implement social credit!
         double socialEffect = 0.1;
         _socialMemory.SocialInfluence(healingAgent, socialEffect);
-
+        
         // Add the experience from healing
         Experience(amount/100, 0, socialEffect, 0, 0);
         
@@ -279,6 +279,8 @@ public class Agent : MonoBehaviour {
 
     public void ReceiveFood(Agent receiveFromAgent) {
         _foodCount++;
+        
+        _eventHistoryManager.AddHistoryEvent("Received food from " + receiveFromAgent.name);
         
         // Manage affiliation experience
         double affiliationScore = _socialMemory.GetSocialScore(receiveFromAgent) > 0 ? 0.2 : 0.15;

@@ -19,6 +19,12 @@ public class SelfHeal : ActionPlan {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
+		
+		_eventHistoryManager.AddHistoryEvent("Started ActionPlan to heal myself!");
+	}
+
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		agent.Heal(10);
 		

@@ -36,6 +36,8 @@ public class Engage : ActionPlan {
 			_agentThatCalledForHelp.ReceivedHelpAfterCalling(agent);
 			socialMemory.SocialInfluence(_agentThatCalledForHelp, 0.1);
 		}
+		
+		_eventHistoryManager.AddHistoryEvent("Starting attack of agent " + _agentToAttack.name);
 	}
 
 	private double GetDamageAmount() {

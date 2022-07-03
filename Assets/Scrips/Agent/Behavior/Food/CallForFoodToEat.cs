@@ -30,6 +30,8 @@ public class CallForFoodToEat : ActionPlanFoodRelated {
 		_calledOutForFood = false;
 		_timeRemainingToWait = 5;
 		_prevFoodCount = agent.GetFoodCount();
+		
+		_eventHistoryManager.AddHistoryEvent("Calling out for food to eat!");
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
@@ -48,6 +50,7 @@ public class CallForFoodToEat : ActionPlanFoodRelated {
 
 		_timeRemainingToWait--;
 		if (_timeRemainingToWait == 0) {
+			_eventHistoryManager.AddHistoryEvent("Waiting time expired! No food was given :(");
 			OnFailure();
 			return ActionResult.Failure;
 		}

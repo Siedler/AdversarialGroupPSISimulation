@@ -26,8 +26,10 @@ public class CollectCloseFood : ActionPlanFoodRelated {
 
 	public override void InitiateActionPlan() {
 		base.InitiateActionPlan();
-		
+
 		_foodLocation = null;
+		
+		_eventHistoryManager.AddHistoryEvent("Collecting close food!");
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
@@ -45,6 +47,8 @@ public class CollectCloseFood : ActionPlanFoodRelated {
 				OnFailure();
 				return ActionResult.Failure;
 			}
+			
+			_eventHistoryManager.AddHistoryEvent("Going to " + _foodLocation.cellCoordinates + " to collect the food!");
 		}
 
 		WalkTo(_foodLocation.cellCoordinates);

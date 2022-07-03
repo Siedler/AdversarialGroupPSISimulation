@@ -26,6 +26,8 @@ public class EatCloseFood : ActionPlanFoodRelated {
 		base.InitiateActionPlan();
 		
 		_foodLocation = null;
+		
+		_eventHistoryManager.AddHistoryEvent("Going to close food to eat it!");
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
@@ -34,15 +36,21 @@ public class EatCloseFood : ActionPlanFoodRelated {
 		if (currentEnvironmentWorldCell.ContainsFood()) return CollectAndEatFood(currentEnvironmentWorldCell);
 
 		// Food was already eaten!
-		if (_foodLocation != null && !_foodLocation.ContainsFood()) _foodLocation = null;
+		if (_foodLocation != null && !_foodLocation.ContainsFood()) {
+			_eventHistoryManager.AddHistoryEvent("Food was eaten! Go to a new food location.");
+			_foodLocation = null;
+		}
 
 		// Search for food location
 		if (_foodLocation == null) {
 			_foodLocation = GetClosestFoodLocationInFieldOfView(agentsFieldOfView);
+
 			if (_foodLocation == null) {
 				OnFailure();
 				return ActionResult.Failure;
 			}
+			
+			_eventHistoryManager.AddHistoryEvent("Going to " + _foodLocation.cellCoordinates + " to eat the food!");
 		}
 
 		WalkTo(_foodLocation.cellCoordinates);

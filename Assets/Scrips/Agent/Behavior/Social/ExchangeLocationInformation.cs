@@ -31,6 +31,9 @@ public class ExchangeLocationInformation : ActionPlan {
 	public override void InitiateActionPlan() {
 		base.InitiateActionPlan();
 		_calledOutRequest = false;
+
+		_eventHistoryManager.AddHistoryEvent("Starting ActionPlan to exchange location information with " +
+		                                     _correspondingAgent.name);
 	}
 
 	private void GiveLocationInformation() {
@@ -58,6 +61,7 @@ public class ExchangeLocationInformation : ActionPlan {
 		
 		// Give information
 		_correspondingAgent.ReceiveLocationMemory(needSatisfactionAssociations, agent);
+		_eventHistoryManager.AddHistoryEvent("Gave " + _correspondingAgent.name + " location information.");
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
@@ -74,6 +78,8 @@ public class ExchangeLocationInformation : ActionPlan {
 				IsAgentInFieldOfView(agentsFieldOfView, _correspondingAgent);
 
 			if (environmentWorldCellOfAgentToExchangeInformation == null) {
+				_eventHistoryManager.AddHistoryEvent("Failed to give " + _correspondingAgent.name + " location information :(");
+				
 				OnFailure();
 				return ActionResult.Failure;
 			}

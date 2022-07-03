@@ -32,6 +32,8 @@ public class RequestHealing : ActionPlan {
 		_timeRemainingToWait = 5;
 
 		_initialHealth = agent.GetHealth();
+		
+		_eventHistoryManager.AddHistoryEvent("Started ActionPlan to request healing");
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {

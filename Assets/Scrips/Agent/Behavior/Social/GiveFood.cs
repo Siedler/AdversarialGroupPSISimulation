@@ -26,11 +26,19 @@ public class GiveFood : ActionPlan {
 		expectedCompetence = GetOnSuccessCompetenceSatisfaction();
 	}
 
+	public override void InitiateActionPlan() {
+		base.InitiateActionPlan();
+		
+		_eventHistoryManager.AddHistoryEvent("Started ActionPlan to give food to " + _correspondingAgent.name);
+	}
+
 	private void GiveFoodToAgent() {
 		agent.ConsumeFoodFromStorage();
 		_correspondingAgent.ReceiveFood(agent);
 		
 		socialMemory.SocialInfluence(_correspondingAgent, 0.1);
+		
+		_eventHistoryManager.AddHistoryEvent("Gave " + _correspondingAgent.name + " food!");
 	}
 	
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
@@ -41,6 +49,8 @@ public class GiveFood : ActionPlan {
 				IsAgentInFieldOfView(agentsFieldOfView, _correspondingAgent);
 
 			if (environmentWorldCellOfAgentToExchangeInformation == null) {
+				_eventHistoryManager.AddHistoryEvent("Failed to give " + _correspondingAgent.name + " food :(");
+				
 				OnFailure();
 				return ActionResult.Failure;
 			}

@@ -18,6 +18,8 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 	protected ActionResult CollectAndEatFood(EnvironmentWorldCell currentEnvironmentWorldCell) {
 		if (!currentEnvironmentWorldCell.ContainsFood()) throw new InvalidOperationException("Tried to collect food even though the world cell has no food");
 
+		_eventHistoryManager.AddHistoryEvent("Eating food from " + currentEnvironmentWorldCell.cellCoordinates);
+		
 		currentEnvironmentWorldCell.ConsumeFood();
 
 		OnSuccess();
@@ -27,6 +29,8 @@ public abstract class ActionPlanFoodRelated : ActionPlan{
 	protected ActionResult CollectFood(EnvironmentWorldCell currentEnvironmentWorldCell) {
 		if (!currentEnvironmentWorldCell.ContainsFood()) throw new InvalidOperationException("Tried to collect food even though the world cell has no food");
 
+		_eventHistoryManager.AddHistoryEvent("Collecting food from " + currentEnvironmentWorldCell.cellCoordinates);
+		
 		agent.CollectFood();
 		currentEnvironmentWorldCell.ConsumeFood();
 		

@@ -31,6 +31,8 @@ public class ExchangeSocialInformation : ActionPlan {
 	public override void InitiateActionPlan() {
 		base.InitiateActionPlan();
 		_calledOutRequest = false;
+		
+		_eventHistoryManager.AddHistoryEvent("Start action plan to give " + _correspondingAgent.name + " social information.");
 	}
 
 	private void GiveSocialInformation() {
@@ -38,6 +40,8 @@ public class ExchangeSocialInformation : ActionPlan {
 			socialMemory.GetRandomAgentMemory(_correspondingAgent);
 		_correspondingAgent.ReceiveAgentIndividualMemory(agentIndividualMemoryPair.Item1,
 			agentIndividualMemoryPair.Item2.GetSocialScore(), agent);
+		
+		_eventHistoryManager.AddHistoryEvent("Gave " + _correspondingAgent.name + " social information.");
 	}
 
 	public override ActionResult Execute(EnvironmentWorldCell currentEnvironmentWorldCell,
@@ -55,6 +59,8 @@ public class ExchangeSocialInformation : ActionPlan {
 				IsAgentInFieldOfView(agentsFieldOfView, _correspondingAgent);
 
 			if (environmentWorldCellOfAgentToExchangeInformation == null) {
+				_eventHistoryManager.AddHistoryEvent("Failed to give " + _correspondingAgent.name + " social information :(");
+				
 				OnFailure();
 				return ActionResult.Failure;
 			}

@@ -35,6 +35,8 @@ public class Flee : ActionPlan {
 
 		_worldCellAgentFeelsMostCertain = null;
 		_calledForHelp = false;
+		
+		_eventHistoryManager.AddHistoryEvent("Fleeing from " + _agentToFleeFrom.name);
 	}
 
 	private AgentMemoryWorldCell GetAgentMemoryWorldCellToFleeTo(EnvironmentWorldCell currentEnvironmentWorldCell) {
@@ -70,6 +72,8 @@ public class Flee : ActionPlan {
 		if (_worldCellAgentFeelsMostCertain == null) {
 			_worldCellAgentFeelsMostCertain = GetAgentMemoryWorldCellToFleeTo(currentEnvironmentWorldCell);
 
+			_eventHistoryManager.AddHistoryEvent("Fleeing to " + _worldCellAgentFeelsMostCertain.cellCoordinates);
+			
 			WalkTo(_worldCellAgentFeelsMostCertain.cellCoordinates);
 			return ActionResult.InProgress;
 		}

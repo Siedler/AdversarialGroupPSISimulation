@@ -30,7 +30,7 @@ public class CollectFoodClusterActionPlan : ActionPlanFoodRelated {
 		_foodLocation = null;
 		_reachedFoodCluster = false;
 		
-		_eventHistoryManager.AddHistoryEvent("Walking to food cluster with coordinates " + _foodCluster.GetCenter());
+		_eventHistoryManager.AddHistoryEvent("Walking to food cluster with coordinates " + _foodCluster.GetCenter() + " to collect food!");
 	}
 
 	private bool IsFoodClusterCenterInFieldOfView(List<EnvironmentWorldCell> agentsFieldOfView) {
