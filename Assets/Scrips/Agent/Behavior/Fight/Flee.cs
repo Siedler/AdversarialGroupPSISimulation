@@ -9,6 +9,7 @@ public class Flee : ActionPlan {
 	private AgentMemoryWorldCell _worldCellAgentFeelsMostCertain;
 
 	private bool _calledForHelp = false;
+	private int _maxTimeStepsForFleeingCount;
 	
 	public Flee(
 		Agent agent,
@@ -35,6 +36,8 @@ public class Flee : ActionPlan {
 
 		_worldCellAgentFeelsMostCertain = null;
 		_calledForHelp = false;
+
+		_maxTimeStepsForFleeingCount = 30;
 		
 		_eventHistoryManager.AddHistoryEvent("Fleeing from " + _agentToFleeFrom.name);
 	}
@@ -69,6 +72,12 @@ public class Flee : ActionPlan {
 			return ActionResult.Success;
 		}
 
+		_maxTimeStepsForFleeingCount--;
+		if (_maxTimeStepsForFleeingCount == 0) {
+			OnFailure();
+			return ActionResult.Failure;
+		}
+		
 		if (_worldCellAgentFeelsMostCertain == null) {
 			_worldCellAgentFeelsMostCertain = GetAgentMemoryWorldCellToFleeTo(currentEnvironmentWorldCell);
 
