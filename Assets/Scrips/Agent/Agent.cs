@@ -93,6 +93,8 @@ public class Agent : MonoBehaviour {
         _locationMemory = new HippocampusLocation(this, _environment, agentPersonality);
         _socialMemory = new HippocampusSocial(agentPersonality);
 
+        _health = 0;
+
         SetupActionPlans();
     }
 
@@ -622,7 +624,10 @@ public class Agent : MonoBehaviour {
     
     public void SetCurrentWorldCell(EnvironmentWorldCell environmentWorldCell) {
         this._currentEnvironmentWorldCell = environmentWorldCell;
-        if(environmentWorldCell != null) environmentWorldCell.Occupy(this);
+        if (environmentWorldCell != null) {
+            this.transform.position = environmentWorldCell.worldCoordinates;
+            environmentWorldCell.Occupy(this);
+        }
     }
 
     public void ChangeCurrentWorldCell(EnvironmentWorldCell newEnvironmentWorldCell, Direction direction = Direction.E) {

@@ -43,10 +43,10 @@ public class AgentController : MonoBehaviour {
 			newAgentObject.SetActive(false);
 			Agent newAgent = newAgentObject.GetComponent<Agent>();
 			
-			AgentPersonality _agentPersonality = GenerateAgentPersonality();
+			AgentPersonality agentPersonality = GenerateAgentPersonality();
 			
-			newAgent.InitiateAgent(_teamNumber, _agentPersonality, this);
-			
+			newAgent.InitiateAgent(_teamNumber, agentPersonality, this);
+
 			_agents.Add(newAgentObject);
 			_agentsToRespawn.Enqueue(newAgentObject);
 		}
@@ -61,7 +61,7 @@ public class AgentController : MonoBehaviour {
 		}
 	}
 
-	// Generate the per
+	// Generate the personality
 	private AgentPersonality GenerateAgentPersonality() {
 		// Set all values for the agent personality!
 		AgentPersonality _agentPersonality = new AgentPersonality();
