@@ -258,7 +258,7 @@ public abstract class ActionPlan
 		return expectedSatisfaction;
 	}
 	
-	protected void OnSuccess() {
+	protected virtual void OnSuccess() {
 		successProbability = MathHelper.RunningAverage(successProbability, 1, agentPersonality.GetValue("ActionPlanSuccessProbabilityFactor"));
 
 		double painAvoidanceSatisfaction = GetOnSuccessPainAvoidanceSatisfaction();
@@ -276,7 +276,7 @@ public abstract class ActionPlan
 		agent.Experience(painAvoidanceSatisfaction, energySatisfaction, affiliationSatisfaction, certaintySatisfaction, competenceSatisfaction);
 	}
 
-	protected void OnFailure() {
+	protected virtual void OnFailure() {
 		successProbability = MathHelper.RunningAverage(successProbability, 0, agentPersonality.GetValue("ActionPlanSuccessProbabilityFactor"));
 		
 		double painAvoidanceSatisfaction = GetOnFailurePainAvoidanceSatisfaction();

@@ -5,17 +5,21 @@ using Scrips.Agent.Personality;
 
 public class EatFoodClusterActionPlan : ActionPlanFoodRelated {
 	private FoodCluster _foodCluster;
+
+	private SearchForFoodToEat _searchForFoodToEat;
 	
 	private EnvironmentWorldCell _foodLocation;
 
 	private bool _reachedFoodCluster;
-	
+
 	public EatFoodClusterActionPlan(Agent agent, AgentPersonality agentPersonality, Hypothalamus hypothalamus,
 		HippocampusLocation locationMemory, HippocampusSocial socialMemory,
-		AgentEventHistoryManager eventHistoryManager, Environment environment, FoodCluster correspondingFoodCluster) :
+		AgentEventHistoryManager eventHistoryManager, Environment environment, FoodCluster correspondingFoodCluster, SearchForFoodToEat searchForFoodToEat) :
 		base(agent, agentPersonality, hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 
 		_foodCluster = correspondingFoodCluster;
+
+		_searchForFoodToEat = searchForFoodToEat;
 		
 		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
 		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
@@ -80,6 +84,12 @@ public class EatFoodClusterActionPlan : ActionPlanFoodRelated {
 		WalkTo(_foodCluster.GetCenter().cellCoordinates);
 		
 		return ActionResult.InProgress;
+	}
+
+	protected override void OnFailure() {
+		base.OnFailure();
+
+		_searchForFoodToEat.Activate();
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {

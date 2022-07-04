@@ -50,6 +50,7 @@ public class Agent : MonoBehaviour {
     private Dictionary<Agent, ExchangeSocialInformation> _socialMemoryExchangeActionPlans;
     private Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>> _foodClusterActionPlans;
     private Dictionary<Agent, GiveFood> _giveFoodActionPlans;
+    private SearchForFoodToEat _searchForFoodToEat;
 
     private SimplePriorityQueue<ActionPlan> _currentMotives;
     private ActionPlan _currentActionPlan;
@@ -116,8 +117,9 @@ public class Agent : MonoBehaviour {
             _eventHistoryManager, _environment));
         _actionPlans.Add(new CallForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
-        _actionPlans.Add(new SearchForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment));
+        _searchForFoodToEat = new SearchForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory,
+            _socialMemory, _eventHistoryManager, _environment);
+        _actionPlans.Add(_searchForFoodToEat);
     }
     
     private void GenerateSocialActionPlans(Agent newlyMetAgent) {
@@ -153,7 +155,7 @@ public class Agent : MonoBehaviour {
     }
 
     public void AddNewFoodCluster(FoodCluster foodCluster) {
-        ActionPlan eatFoodClusterActionPlan = new EatFoodClusterActionPlan(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, foodCluster);
+        ActionPlan eatFoodClusterActionPlan = new EatFoodClusterActionPlan(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, foodCluster, _searchForFoodToEat);
         ActionPlan collectFoodClusterActionPlan = new CollectFoodClusterActionPlan(this, _agentPersonality,
             _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, foodCluster);
         _foodClusterActionPlans.Add(foodCluster, new Tuple<ActionPlan, ActionPlan>(eatFoodClusterActionPlan, collectFoodClusterActionPlan));
@@ -559,6 +561,13 @@ public class Agent : MonoBehaviour {
             Math.Max(0, _hypothalamus.GetCertaintyDifference()),
             Math.Max(0, _hypothalamus.GetCompetenceDifference()),
         };
+        /*double[] indicator = new double[] {
+            _hypothalamus.GetPainAvoidanceDifference(),
+            _hypothalamus.GetEnergyDifference(),
+            _hypothalamus.GetAffiliationDifference(),
+            _hypothalamus.GetCertaintyDifference(),
+            _hypothalamus.GetCompetenceDifference(),
+        };*/
         double[] multiplier = new double[] {
             SimulationSettings.PainAvoidanceMultiplier,
             SimulationSettings.EnergyMultiplier,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using UnityEngine;
@@ -15,10 +16,14 @@ public class SearchForFoodToEat : ActionPlanFoodRelated{
 	// 2 = found food!
 	private int _state = 0;
 
+	private bool _activated;
+
 	public SearchForFoodToEat(Agent agent, AgentPersonality agentPersonality, Hypothalamus hypothalamus,
 		HippocampusLocation locationMemory, HippocampusSocial socialMemory,
 		AgentEventHistoryManager eventHistoryManager, Environment environment) : base(agent, agentPersonality,
 		hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
+
+		_activated = false;
 		
 		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
 		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
@@ -110,7 +115,7 @@ public class SearchForFoodToEat : ActionPlanFoodRelated{
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return true;
+		return _activated || !agent.GetFoodClusters().Any();
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
@@ -157,4 +162,21 @@ public class SearchForFoodToEat : ActionPlanFoodRelated{
 	protected override double GetOnFailureCompetenceSatisfaction() {
 		return SimulationSettings.SearchForFoodOnFailure[4];
 	}
+
+	protected override void OnSuccess() {
+		base.OnSuccess();
+		
+		_activated = false;
+	}
+
+	protected override void OnFailure() {
+		base.OnFailure();
+
+		_activated = false;
+	}
+
+	public void Activate() {
+		_activated = true;
+	}
+	
 }

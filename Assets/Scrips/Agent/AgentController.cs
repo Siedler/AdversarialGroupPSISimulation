@@ -109,8 +109,8 @@ public class AgentController : MonoBehaviour {
 			MathHelper.NextGaussian(
 				SimulationSettings.LeakageValuePainAvoidanceMean,
 				SimulationSettings.LeakageValuePainAvoidanceSigma,
-				-0.002,
-				-0.03));
+				-1,
+				0));
 		_agentPersonality.SetValue("HypothalamusEnergyLeakage",
 			MathHelper.NextGaussian(
 				SimulationSettings.LeakageValueEnergyMean,

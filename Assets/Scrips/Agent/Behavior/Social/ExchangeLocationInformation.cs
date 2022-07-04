@@ -124,7 +124,10 @@ public class ExchangeLocationInformation : ActionPlan {
 	}
 
 	protected override double GetOnSuccessAffiliationSatisfaction() {
-		return SimulationSettings.ExchangeInformationOnSuccess[2];
+		// The friendly modifier is 2 if the agents get well along and therefore the punishment for asocial behaviour
+		// is high
+		double friendlyModifier = socialMemory.GetSocialScore(_correspondingAgent) + 1;
+		return SimulationSettings.ExchangeInformationOnSuccess[2] * friendlyModifier;
 	}
 
 	protected override double GetOnSuccessCertaintySatisfaction() {
