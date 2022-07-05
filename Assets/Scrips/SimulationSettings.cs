@@ -84,7 +84,12 @@ public class SimulationSettings {
     public static readonly double CompetenceIndicatorWeightAffiliation = 0.7;
     public static readonly double CompetenceIndicatorWeightCertainty = 0.7;
 
-    // ACTION PLAN SECTION
+    // Pain avoidance adaption
+    // If an agent has less health than the pain avoidance level then it gets a negative pain-avoidance signal
+    public static readonly bool PainAvoidanceHealthAdaptionActivated = true;
+    public static readonly double PainAvoidanceHealthAdaptionAlpha = 0.1; // Defining how much its adapted per step
+
+        // ACTION PLAN SECTION
     // Structure double[] = {painAvoidance, energyIntake, affiliation, certainty, competence}
     // EXPLORE
     public static readonly double[] ExploreOnSuccess = new double[] {
@@ -236,7 +241,7 @@ public class SimulationSettings {
         0,
         0,
         -0.22,
-        -0.2,
+        -0.1,
         -0.2,
     };
     
@@ -252,14 +257,14 @@ public class SimulationSettings {
         0,
         0,
         -0.2,
-        -0.2,
+        -0.1,
         -0.2
     };
     
     // Request Healing
     // The painAvoidance feeling and the affiliation feeling is satisfied through the action of the other agent
     public static readonly double[] RequestHealingOnSuccess = new double[] {
-        0.15,
+        0,
         0,
         0.2,
         0,
@@ -269,13 +274,13 @@ public class SimulationSettings {
         0,
         0,
         -0.2,
-        -0.2,
+        -0.05,
         -0.2,
     };
     
     // Self Heal
     public static readonly double[] SelfHealingOnSuccess = new double[] {
-        0.15,
+        0,
         0,
         0,
         0,
@@ -285,7 +290,7 @@ public class SimulationSettings {
         0,
         0,
         0,
-        -0.2,
+        -0.05,
         -0.2
     };
 }

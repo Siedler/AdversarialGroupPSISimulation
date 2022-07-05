@@ -19,7 +19,7 @@ public class RequestHealing : ActionPlan {
 		Environment environment) : base(agent, agentPersonality,
 		hypothalamus, locationMemory, socialMemory, eventHistoryManager, environment) {
 		
-		expectedPainAvoidance = GetOnSuccessPainAvoidanceSatisfaction();
+		expectedPainAvoidance = SimulationSettings.RequestHealingOnSuccess[0];
 		expectedEnergyIntake = GetOnSuccessEnergySatisfaction();
 		expectedAffiliation = GetOnSuccessAffiliationSatisfaction();
 		expectedCertainty = GetOnSuccessCertaintySatisfaction();
@@ -67,8 +67,9 @@ public class RequestHealing : ActionPlan {
 		return 0.1 * (1 - (agent.GetHealth() / 100.0));
 	}
 
+	// Return the pain avoidance of the healing process
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return SimulationSettings.RequestHealingOnSuccess[0];
+		return (agent.GetHealth() - _initialHealth) / 100;
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {

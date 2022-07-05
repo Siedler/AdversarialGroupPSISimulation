@@ -51,7 +51,8 @@ public class Agent : MonoBehaviour {
     private Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>> _foodClusterActionPlans;
     private Dictionary<Agent, GiveFood> _giveFoodActionPlans;
     private SearchForFoodToEat _searchForFoodToEat;
-
+    private RequestHealing _requestHealing;
+    
     private SimplePriorityQueue<ActionPlan> _currentMotives;
     private ActionPlan _currentActionPlan;
     
@@ -111,10 +112,11 @@ public class Agent : MonoBehaviour {
 
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
-        //_actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-        //    _eventHistoryManager, _environment));
-        _actionPlans.Add(new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment));
+
+        _requestHealing = new RequestHealing(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment);
+        _actionPlans.Add(_requestHealing);
+        
         _actionPlans.Add(new CallForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment));
         _searchForFoodToEat = new SearchForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory,
@@ -254,10 +256,9 @@ public class Agent : MonoBehaviour {
 
         // Cap health at 100
         if (_health > 100) _health = 100;
-        
+
+        // if the agent healed itself
         if (healingAgent == null) {
-            // Add the experience from healing
-            Experience(amount/100, 0, 0, 0, 0);
             return;
         }
         
@@ -266,9 +267,13 @@ public class Agent : MonoBehaviour {
         // TODO implement social credit!
         double socialEffect = 0.1;
         _socialMemory.SocialInfluence(healingAgent, socialEffect);
+
+        // If the healing resulted out of a request => Handle the pain avoidance signal inside the action plan
+        // otherwise handle it here
+        double painAvoidanceEffect = _currentActionPlan == _requestHealing ? 0 : amount / 100;
         
         // Add the experience from healing
-        Experience(amount/100, 0, socialEffect, 0, 0);
+        Experience(painAvoidanceEffect, 0, socialEffect, 0, 0);
         
         _eventHistoryManager.AddHistoryEvent("Got healed by " + healingAgent.name + " with " +
                                                              amount + " and credited " + socialEffect +
@@ -642,6 +647,17 @@ public class Agent : MonoBehaviour {
 
         ProcessCertaintyUpdateForAgentsInRange(_currentEnvironmentWorldCell, fieldOfView, agentsInFieldOfView);
         ProcessIncomingRequests();
+
+        // If it is activated it adapt the pain avoidance tank according to the health level
+        if (SimulationSettings.PainAvoidanceHealthAdaptionActivated) {
+            if (_hypothalamus.GetCurrentPainAvoidanceValue() > (_health / 100)) {
+                Experience(((_health/100)-_hypothalamus.GetCurrentPainAvoidanceValue())*SimulationSettings.PainAvoidanceHealthAdaptionAlpha,
+                    0,
+                    0,
+                    0,
+                    0);
+            }
+        }
 
         if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
             _eventHistoryManager.AddHistoryEvent("Reevaluating the current motive!");

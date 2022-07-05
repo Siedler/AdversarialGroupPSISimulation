@@ -115,7 +115,7 @@ public class SearchForFoodToEat : ActionPlanFoodRelated{
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		return _activated || !agent.GetFoodClusters().Any();
+		return (_activated && !IsFoodClusterInSight(currentEnvironmentWorldCell, agentsFieldOfView)) || !agent.GetFoodClusters().Any();
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {

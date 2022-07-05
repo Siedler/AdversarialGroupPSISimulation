@@ -41,7 +41,7 @@ public class SelfHeal : ActionPlan {
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
-		return SimulationSettings.SelfHealingOnSuccess[0];
+		return 0.1;
 	}
 
 	protected override double GetOnSuccessEnergySatisfaction() {
