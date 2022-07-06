@@ -486,6 +486,8 @@ public class Agent : MonoBehaviour {
         EnvironmentWorldCell currentEnvironmentWorldCell,
         List<EnvironmentWorldCell> agentFieldOfView,
         List<Agent> nearbyAgents) {
+        
+        if(!SimulationSettings.CertaintyAdjustmentActivated) return;
 
         if(nearbyAgents.Count == 0) return;
         
@@ -645,12 +647,15 @@ public class Agent : MonoBehaviour {
         List<EnvironmentWorldCell> fieldOfView = SenseEnvironment();
         List<Agent> agentsInFieldOfView = SenseCloseAgents(fieldOfView);
 
+        // Update the certainty tank if agents are around you accordingly if you like them or not, i.e. if you feel safe
         ProcessCertaintyUpdateForAgentsInRange(_currentEnvironmentWorldCell, fieldOfView, agentsInFieldOfView);
+        
+        // Process all incoming signals
         ProcessIncomingRequests();
 
         // If it is activated it adapt the pain avoidance tank according to the health level
         if (SimulationSettings.PainAvoidanceHealthAdaptionActivated) {
-            if (_hypothalamus.GetCurrentPainAvoidanceValue() > (_health / 100)) {
+            if (Math.Abs(_hypothalamus.GetCurrentPainAvoidanceValue() - (_health / 100)) > 0.01) {
                 Experience(((_health/100)-_hypothalamus.GetCurrentPainAvoidanceValue())*SimulationSettings.PainAvoidanceHealthAdaptionAlpha,
                     0,
                     0,

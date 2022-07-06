@@ -76,8 +76,9 @@ public class SimulationSettings {
     public static readonly double CompetenceMultiplier = 1;
     
     // Certainty adjustment parameter for nearby agents
+    public static readonly bool CertaintyAdjustmentActivated = true;
     public static readonly double CertaintyAdjustmentParameter = 0.05;
-    
+
     // Competence indicator weights
     public static readonly double CompetenceIndicatorWeightPainAvoidance = 0.9;
     public static readonly double CompetenceIndicatorWeightEnergy = 0.8;
