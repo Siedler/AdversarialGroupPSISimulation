@@ -75,6 +75,41 @@ public class SimulationSettings {
     public static readonly double CertaintyMultiplier = 1;
     public static readonly double CompetenceMultiplier = 1;
     
+    // General competence indicator
+    // Set the value of how much the general competence is influenced by a new competence signal:
+    // (alpha * new_signal) + ((1-alpha) * general_competence)
+    public static readonly double HypothalamusGeneralCompetenceInfluence = 0.1;
+    
+    // Forget rate
+    public static readonly double HippocampusLocationPainAvoidanceForgetRatePositive = 0.9995;
+    public static readonly double HippocampusLocationPainAvoidanceForgetRateNegative = 0.9985;
+        
+    public static readonly double HippocampusLocationEnergyForgetRatePositive = 0.9995;
+    public static readonly double HippocampusLocationEnergyForgetRateNegative = 0.9985;
+    
+    public static readonly double HippocampusLocationAffiliationForgetRatePositive = 0.9995;
+    public static readonly double HippocampusLocationAffiliationForgetRateNegative = 0.9995;
+    
+    public static readonly double HippocampusLocationCertaintyForgetRatePositive = 0.9995;
+    public static readonly double HippocampusLocationCertaintyForgetRateNegative = 0.9995;
+    
+    public static readonly double HippocampusLocationCompetenceForgetRatePositive =  0.9995;
+    public static readonly double HippocampusLocationCompetenceForgetRateNegative = 0.9995;
+    
+    public static readonly double HippocampusSocialForgetRatePositive = 0.9995;
+    public static readonly double HippocampusSocialForgetRateNegative = 0.9992;
+    
+    // Location memory adjustment alphas (how much of the information should be taken into account
+    public static readonly double LocationMemoryReceiveLocationPainAvoidanceInformationFactor = 0.1;
+    public static readonly double LocationMemoryReceiveLocationEnergyInformationFactor = 0.1;
+    public static readonly double LocationMemoryReceiveLocationAffiliationInformationFactor = 0.1;
+    public static readonly double LocationMemoryReceiveLocationCertaintyInformationFactor = 0.1;
+    public static readonly double LocationMemoryReceiveLocationCompetenceInformationFactor = 0.1;
+
+    // Social memory adjustment alpha (How much of the information should be taken into account)
+    public static readonly double SocialMemoryReceiveNewUnknownAgentSoftenFactor = 0.8;
+    public static readonly double SocialMemoryReceiveNewKnownAgentAlphaFactor = 0.4;
+    
     // Certainty adjustment parameter for nearby agents
     public static readonly bool CertaintyAdjustmentActivated = true;
     public static readonly double CertaintyAdjustmentParameter = 0.05;

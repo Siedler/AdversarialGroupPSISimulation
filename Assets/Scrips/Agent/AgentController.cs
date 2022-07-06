@@ -136,48 +136,48 @@ public class AgentController : MonoBehaviour {
 		
 		// Set the value of how much the general competence is influenced by a new competence signal:
 		// (alpha * new_signal) + ((1-alpha) * general_competence)
-		_agentPersonality.SetValue("HypothalamusGeneralCompetenceInfluence", 0.1);
+		_agentPersonality.SetValue("HypothalamusGeneralCompetenceInfluence", SimulationSettings.HypothalamusGeneralCompetenceInfluence);
 		
 		// Set the positive and negative forget rate for the location memory of the agent
-		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRatePositive", 0.99);
-		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRateNegative", 0.98);
+		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRatePositive", SimulationSettings.HippocampusLocationPainAvoidanceForgetRatePositive);
+		_agentPersonality.SetValue("HippocampusLocationPainAvoidanceForgetRateNegative", SimulationSettings.HippocampusLocationPainAvoidanceForgetRateNegative);
 		
-		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRatePositive", 0.99);
-		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRateNegative", 0.98);
+		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRatePositive", SimulationSettings.HippocampusLocationEnergyForgetRatePositive);
+		_agentPersonality.SetValue("HippocampusLocationEnergyForgetRateNegative", SimulationSettings.HippocampusLocationEnergyForgetRateNegative);
 		
-		_agentPersonality.SetValue("HippocampusLocationAffiliationForgetRatePositive", 0.95);
-		_agentPersonality.SetValue("HippocampusLocationAffiliationForgetRateNegative", 0.9);
+		_agentPersonality.SetValue("HippocampusLocationAffiliationForgetRatePositive", SimulationSettings.HippocampusLocationAffiliationForgetRatePositive);
+		_agentPersonality.SetValue("HippocampusLocationAffiliationForgetRateNegative", SimulationSettings.HippocampusLocationAffiliationForgetRateNegative);
 		
-		_agentPersonality.SetValue("HippocampusLocationCertaintyForgetRatePositive", 0.95);
-		_agentPersonality.SetValue("HippocampusLocationCertaintyForgetRateNegative", 0.9);
+		_agentPersonality.SetValue("HippocampusLocationCertaintyForgetRatePositive", SimulationSettings.HippocampusLocationCertaintyForgetRatePositive);
+		_agentPersonality.SetValue("HippocampusLocationCertaintyForgetRateNegative", SimulationSettings.HippocampusLocationCertaintyForgetRateNegative);
 		
-		_agentPersonality.SetValue("HippocampusLocationCompetenceForgetRatePositive", 0.95);
-		_agentPersonality.SetValue("HippocampusLocationCompetenceForgetRateNegative", 0.9);
+		_agentPersonality.SetValue("HippocampusLocationCompetenceForgetRatePositive", SimulationSettings.HippocampusLocationCompetenceForgetRatePositive);
+		_agentPersonality.SetValue("HippocampusLocationCompetenceForgetRateNegative", SimulationSettings.HippocampusLocationCompetenceForgetRateNegative);
 		
 		// Set the positive and negative forget rate for social memory of the agent
-		_agentPersonality.SetValue("HippocampusSocialForgetRatePositive", 0.995);
-		_agentPersonality.SetValue("HippocampusSocialForgetRateNegative", 0.992);
+		_agentPersonality.SetValue("HippocampusSocialForgetRatePositive", SimulationSettings.HippocampusSocialForgetRatePositive);
+		_agentPersonality.SetValue("HippocampusSocialForgetRateNegative", SimulationSettings.HippocampusSocialForgetRateNegative);
 
 		// A factor regulating by how much the new information is taken into account. This value should be close to
 		// 0 as otherwise the new information would dominate the currently known information
-		_agentPersonality.SetValue("LocationMemoryReceiveLocationPainAvoidanceInformationFactor", 0.1);
-		_agentPersonality.SetValue("LocationMemoryReceiveLocationEnergyInformationFactor", 0.1);
-		_agentPersonality.SetValue("LocationMemoryReceiveLocationAffiliationInformationFactor", 0.1);
-		_agentPersonality.SetValue("LocationMemoryReceiveLocationCertaintyInformationFactor", 0.1);
-		_agentPersonality.SetValue("LocationMemoryReceiveLocationCompetenceInformationFactor", 0.1);
+		_agentPersonality.SetValue("LocationMemoryReceiveLocationPainAvoidanceInformationFactor", SimulationSettings.LocationMemoryReceiveLocationPainAvoidanceInformationFactor);
+		_agentPersonality.SetValue("LocationMemoryReceiveLocationEnergyInformationFactor", SimulationSettings.LocationMemoryReceiveLocationEnergyInformationFactor);
+		_agentPersonality.SetValue("LocationMemoryReceiveLocationAffiliationInformationFactor", SimulationSettings.LocationMemoryReceiveLocationAffiliationInformationFactor);
+		_agentPersonality.SetValue("LocationMemoryReceiveLocationCertaintyInformationFactor", SimulationSettings.LocationMemoryReceiveLocationCertaintyInformationFactor);
+		_agentPersonality.SetValue("LocationMemoryReceiveLocationCompetenceInformationFactor", SimulationSettings.LocationMemoryReceiveLocationCompetenceInformationFactor);
 		
 		// Set values for receiving agent information
 		// A factor of how much the agent takes in the information about the previously unknown agent
 		// Situation: An agent receives social information about another agent he/she does not know yet. The value of how
 		// much the agent is influenced by the previous agent received information is controlled by this factor.
 		// 0 < x <= 1
-		_agentPersonality.SetValue("SocialMemoryReceiveNewUnknownAgentSoftenFactor", 0.8);
+		_agentPersonality.SetValue("SocialMemoryReceiveNewUnknownAgentSoftenFactor", SimulationSettings.SocialMemoryReceiveNewUnknownAgentSoftenFactor);
 		// A factor regulating how much the newly shared information about a known agent is taken into account.
 		// Example: I have a friend that I like by 0.8. Another friends tells me they like them only 0.5. I'll get influenced
 		// by a small factor by this saying. This factor regulated this here. So the new value would be:
 		// (0.5 * SocialMemoryReceiveNewKnownAgentAlphaFactor) + (0.8 * (1 - SocialMemoryReceiveNewKnownAgentAlphaFactor))
 		// 0 <= x <= 1
-		_agentPersonality.SetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor", 0.3);
+		_agentPersonality.SetValue("SocialMemoryReceiveNewKnownAgentAlphaFactor", SimulationSettings.SocialMemoryReceiveNewKnownAgentAlphaFactor);
 		
 		// This factor regulates how much a new experience is taken into account for the running average
 		// in the success probability calculation.
