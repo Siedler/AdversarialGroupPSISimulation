@@ -122,6 +122,9 @@ public class Agent : MonoBehaviour {
         _searchForFoodToEat = new SearchForFoodToEat(this, _agentPersonality, _hypothalamus, _locationMemory,
             _socialMemory, _eventHistoryManager, _environment);
         _actionPlans.Add(_searchForFoodToEat);
+
+        _actionPlans.Add(new EatCloseFood(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment));
     }
     
     private void GenerateSocialActionPlans(Agent newlyMetAgent) {
