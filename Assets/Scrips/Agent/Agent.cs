@@ -44,12 +44,12 @@ public class Agent : MonoBehaviour {
     private Queue<RequestInformation> _incomingRequests;
 
     private List<ActionPlan> _actionPlans;
-    private Dictionary<Agent, Engage> _engagingActionPlans;
     private Dictionary<Agent, GoHeal> _healingActionPlans;
     private Dictionary<Agent, ExchangeLocationInformation> _locationMemoryExchangeActionPlans;
     private Dictionary<Agent, ExchangeSocialInformation> _socialMemoryExchangeActionPlans;
     private Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>> _foodClusterActionPlans;
     private Dictionary<Agent, GiveFood> _giveFoodActionPlans;
+    private Dictionary<Agent, Tuple<Flee, Engage>> _fightFlightActionPlans;
     private SearchForFoodToEat _searchForFoodToEat;
     private RequestHealing _requestHealing;
     
@@ -58,6 +58,10 @@ public class Agent : MonoBehaviour {
     
     private int _motiveCheckInterval = 5;
     private int clock = 0;
+    
+    // This boolean is used to manage if the agent should evaluate its motives for a special occasion such as
+    // being hit by another agent...
+    private bool specialMotiveSelectionEvaluationRequired = false;
 
     // DEBUG
     public GameObject debugObject;
@@ -103,11 +107,11 @@ public class Agent : MonoBehaviour {
     private void SetupActionPlans() {
         _currentMotives = new SimplePriorityQueue<ActionPlan>();
         _actionPlans = new List<ActionPlan>();
-        _engagingActionPlans = new Dictionary<Agent, Engage>();
         _healingActionPlans = new Dictionary<Agent, GoHeal>();
         _locationMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeLocationInformation>();
         _socialMemoryExchangeActionPlans = new Dictionary<Agent, ExchangeSocialInformation>();
         _foodClusterActionPlans = new Dictionary<FoodCluster, Tuple<ActionPlan, ActionPlan>>();
+        _fightFlightActionPlans = new Dictionary<Agent, Tuple<Flee, Engage>>();
         _giveFoodActionPlans = new Dictionary<Agent, GiveFood>();
 
         _actionPlans.Add(new Explore(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
@@ -132,7 +136,11 @@ public class Agent : MonoBehaviour {
         Engage engage = new Engage(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment, newlyMetAgent);
         _actionPlans.Add(engage);
-        _engagingActionPlans.Add(newlyMetAgent, engage);
+
+        Flee flee = new Flee(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
+            _eventHistoryManager, _environment, newlyMetAgent);
+        _actionPlans.Add(flee);
+        _fightFlightActionPlans.Add(newlyMetAgent, new Tuple<Flee, Engage>(flee, engage));
 
         GoHeal goHeal = new GoHeal(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
             _eventHistoryManager, _environment, newlyMetAgent);
@@ -154,9 +162,6 @@ public class Agent : MonoBehaviour {
             _hypothalamus, _locationMemory, _socialMemory, _eventHistoryManager, _environment, newlyMetAgent);
         _actionPlans.Add(exchangeSocialInformation);
         _socialMemoryExchangeActionPlans.Add(newlyMetAgent, exchangeSocialInformation);
-
-        _actionPlans.Add(new Flee(this, _agentPersonality, _hypothalamus, _locationMemory, _socialMemory,
-            _eventHistoryManager, _environment, newlyMetAgent));
     }
 
     public void AddNewFoodCluster(FoodCluster foodCluster) {
@@ -236,8 +241,14 @@ public class Agent : MonoBehaviour {
         double painAvoidanceSignal = -(damage / 100);
 
         if (attackingAgent != null) {
-            Experience(painAvoidanceSignal, 0, -0.1, -0.3, -0.3);
+            Experience(painAvoidanceSignal, 0, -0.1, -0.05, -0.07);
             _socialMemory.SocialInfluence(attackingAgent, -0.1);
+            
+            // Register hit for both engage and flee operation
+            _fightFlightActionPlans[attackingAgent].Item1.RegisterHit();
+            _fightFlightActionPlans[attackingAgent].Item2.RegisterHit();
+
+            specialMotiveSelectionEvaluationRequired = true;
 
             _eventHistoryManager.AddHistoryEvent("Got hit by " + attackingAgent.name + " with " + damage +
                                                  " points of damage.");
@@ -538,7 +549,7 @@ public class Agent : MonoBehaviour {
                 if (incomingRequestInformation.GetRegardingAgent() == this
                     || !_socialMemory.KnowsAgent(incomingRequestInformation.GetRegardingAgent())) continue;
 
-                _engagingActionPlans[incomingRequestInformation.GetRegardingAgent()].RequestHelpToAttackThisAgent(incomingRequestInformation.GetCallingAgent());
+                _fightFlightActionPlans[incomingRequestInformation.GetRegardingAgent()].Item2.RequestHelpToAttackThisAgent(incomingRequestInformation.GetCallingAgent());
             } else if (incomingRequestInformation.GetRequestType() == RequestType.Healing) {
                 _healingActionPlans[incomingRequestInformation.GetCallingAgent()].RequestHealing();
             } else if (incomingRequestInformation.GetRequestType() == RequestType.Food) {
@@ -667,9 +678,10 @@ public class Agent : MonoBehaviour {
             }
         }
 
-        if (clock >= _motiveCheckInterval || _currentActionPlan == null) {
+        if (clock >= _motiveCheckInterval || _currentActionPlan == null || specialMotiveSelectionEvaluationRequired) {
             _eventHistoryManager.AddHistoryEvent("Reevaluating the current motive!");
-            
+
+            specialMotiveSelectionEvaluationRequired = false;
             clock = 0;
 
             // The agents certainty is effected by the types of agents that are around him. If the agent is close to

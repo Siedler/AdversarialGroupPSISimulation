@@ -22,25 +22,25 @@ public class SimulationSettings {
     public static readonly double SetValueEnergySigma = 0.005;
     
     public static readonly double LeakageValueEnergyMean = 0.005;
-    public static readonly double LeakageValueEnergySigma = 0.002;
+    public static readonly double LeakageValueEnergySigma = 0.00033;
 
     public static readonly double SetValueAffiliationMean = 0.8;
     public static readonly double SetValueAffiliationSigma = 0.005;
     
     public static readonly double LeakageValueAffiliationMean = 0.005;
-    public static readonly double LeakageValueAffiliationSigma = 0.002;
+    public static readonly double LeakageValueAffiliationSigma = 0.00033;
     
     public static readonly double SetValueCertaintyMean = 0.8;
     public static readonly double SetValueCertaintySigma = 0.005;
     
     public static readonly double LeakageValueCertaintyMean = 0.005;
-    public static readonly double LeakageValueCertaintySigma = 0.002;
+    public static readonly double LeakageValueCertaintySigma = 0.00033;
     
     public static readonly double SetValueCompetenceMean = 1;
     public static readonly double SetValueCompetenceSigma = 0;
     
     public static readonly double LeakageValueCompetenceMean = 0.005;
-    public static readonly double LeakageValueCompetenceSigma = 0.002;
+    public static readonly double LeakageValueCompetenceSigma = 0.00033;
     
     // FOOD
     public static readonly double FoodEnergyIntakeValue = 0.2;
@@ -116,7 +116,7 @@ public class SimulationSettings {
     public static readonly double SocialMemoryReceiveNewKnownAgentAlphaFactor = 0.4;
     
     // Certainty adjustment parameter for nearby agents
-    public static readonly bool CertaintyAdjustmentActivated = true;
+    public static readonly bool CertaintyAdjustmentActivated = false;
     public static readonly double CertaintyAdjustmentParameter = 0.05;
 
     // Competence indicator weights
@@ -137,7 +137,7 @@ public class SimulationSettings {
         0,
         0,
         0,
-        0.2,
+        0.3,
         0.25,
     };
     public static readonly double[] ExploreOnFailure = new double[] {
@@ -193,7 +193,7 @@ public class SimulationSettings {
         0.1,
         0,
         0,
-        0.08,
+        0.1,
         0.05,
     };
     public static readonly double[] FleeOnFailure = new double[] {

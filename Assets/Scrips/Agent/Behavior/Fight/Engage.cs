@@ -10,6 +10,8 @@ public class Engage : ActionPlan {
 	private Agent _agentThatCalledForHelp;
 	private bool _requestedHelp;
 
+	private bool _wasHit;
+
 	public Engage(
 		Agent agent,
 		AgentPersonality agentPersonality,
@@ -104,13 +106,20 @@ public class Engage : ActionPlan {
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		_requestedHelp = _requestedHelp && nearbyAgents.Contains(_agentToAttack);
+		_wasHit = _wasHit && nearbyAgents.Contains(_agentToAttack);
 		return nearbyAgents.Contains(_agentToAttack);
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
 		_requestedHelp = _requestedHelp && nearbyAgents.Contains(_agentToAttack);
-		double socialScore = socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore();
+		_wasHit = _wasHit && nearbyAgents.Contains(_agentToAttack);
 		
+		// If the agent was recently hit => increase urgency
+		if (_wasHit) {
+			return 0.1;
+		}
+
+		double socialScore = socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore();
 		// TODO maybe change socialMemory.GetIndividualMemory(_agentToAttack).GetSocialScore() > 0 to individual limit
 		if (!_requestedHelp || socialScore > 0) return 0;
 
@@ -168,5 +177,9 @@ public class Engage : ActionPlan {
 	public void RequestHelpToAttackThisAgent(Agent agentThatCalledForHelp) {
 		_agentThatCalledForHelp = agentThatCalledForHelp;
 		_requestedHelp = true;
+	}
+
+	public void RegisterHit() {
+		_wasHit = true;
 	}
 }

@@ -8,8 +8,10 @@ public class Flee : ActionPlan {
 	private Agent _agentToFleeFrom;
 	private AgentMemoryWorldCell _worldCellAgentFeelsMostCertain;
 
-	private bool _calledForHelp = false;
+	private bool _calledForHelp;
 	private int _maxTimeStepsForFleeingCount;
+
+	private bool _wasHit;
 	
 	public Flee(
 		Agent agent,
@@ -101,14 +103,23 @@ public class Flee : ActionPlan {
 		EnvironmentWorldCell currentEnvironmentWorldCell,
 		List<EnvironmentWorldCell> agentsFieldOfView,
 		List<Agent> nearbyAgents) {
+		_wasHit = _wasHit && nearbyAgents.Contains(_agentToFleeFrom);
 		return nearbyAgents.Contains(_agentToFleeFrom);
 	}
 
 	public override double GetUrgency(EnvironmentWorldCell currentEnvironmentWorldCell, List<EnvironmentWorldCell> agentsFieldOfView, List<Agent> nearbyAgents) {
-		double painAvoidanceValue = 1-hypothalamus.GetCurrentPainAvoidanceValue();
+		_wasHit = _wasHit && nearbyAgents.Contains(_agentToFleeFrom);
 		
+		if (_wasHit) {
+			return 0.1;
+		}
+		
+		double painAvoidanceValue = 1-hypothalamus.GetCurrentPainAvoidanceValue();
+		double urgency = 0.1 * painAvoidanceValue;
+
 		double competenceCancellation = (hypothalamus.GetCurrentCompetenceValue() + GetSuccessProbability());
-		return (painAvoidanceValue) / competenceCancellation;
+		
+		return urgency / competenceCancellation;
 	}
 
 	protected override double GetOnSuccessPainAvoidanceSatisfaction() {
@@ -149,5 +160,9 @@ public class Flee : ActionPlan {
 
 	protected override double GetOnFailureCompetenceSatisfaction() {
 		return SimulationSettings.FleeOnFailure[4];
+	}
+
+	public void RegisterHit() {
+		_wasHit = true;
 	}
 }
