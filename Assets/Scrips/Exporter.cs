@@ -1,19 +1,23 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Permissions;
+using Scrips.EventManager;
 using UnityEngine;
 
 public class Exporter : MonoBehaviour {
 
-    private char separator = System.IO.Path.DirectorySeparatorChar;
-    private string _pathToData;    
+    private char separator = Path.DirectorySeparatorChar;
+    private string _pathToData;
     
     private Environment _environment;
-    
+
     void Start() {
         _environment = GameObject.Find("World").GetComponent<Environment>();
-        _pathToData = Application.persistentDataPath + separator + "data";
+        
+        SetupExport();
+
+        TimeEventManager.current.OnTick += Tick;
     }
     
     // Update is called once per frame
@@ -26,11 +30,29 @@ public class Exporter : MonoBehaviour {
             OpenInFileSystem();
         }
     }
+    
+    private void Tick(int step) {
+        if (step == 1) {
+            ExportNames();
+            Export();
+        }
+        
+        if (SimulationSettings.FrequentExport && step % SimulationSettings.ExportInterval == 0) {
+            Export();
+        }
+    }
 
     private void OpenInFileSystem() {
         Application.OpenURL("file://" + _pathToData);
     }
 
+    private void SetupExport() {
+        string dateTime = DateTime.Now.ToString("yyyy_MM_dd_HHmmss");
+        _pathToData = Application.persistentDataPath + separator + "data" + separator + dateTime;
+        
+        Directory.CreateDirectory(_pathToData);
+    }
+    
     private void WriteAgent(Agent agent, string pathToTeam) {
         string pathAgent = pathToTeam + separator + agent.name;
         Directory.CreateDirectory(pathAgent);
@@ -50,10 +72,36 @@ public class Exporter : MonoBehaviour {
         streamWriter.Close();
     }
 
-    private void Export() {
-        string dateTime = System.DateTime.Now.ToString("yyyy_MM_dd_HHmmss");
-        string pathToData = _pathToData + separator + dateTime;
+    private void ExportNames() {
+        string team1NamesFilePath = _pathToData + separator + "team1_names.txt";
+        string team2NamesFilePath = _pathToData + separator + "team2_names.txt";
+        
+        (AgentController team1, AgentController team2) = _environment.getAgentController();
+        List<Agent> team1Agents = team1.GetAgents();
+        List<Agent> team2Agents = team2.GetAgents();
 
+        string team1NamesString = "";
+        foreach (Agent agent in team1Agents) {
+            team1NamesString += agent.name + "\n";
+        }
+        
+        string team2NamesString = "";
+        foreach (Agent agent in team2Agents) {
+            team2NamesString += agent.name + "\n";
+        }
+        
+        StreamWriter streamWriter = new StreamWriter(team1NamesFilePath);
+        streamWriter.Write(team1NamesString);
+        streamWriter.Close();
+        
+        streamWriter = new StreamWriter(team2NamesFilePath);
+        streamWriter.Write(team2NamesString);
+        streamWriter.Close();
+    }
+
+    private void Export() {
+        string pathToData = _pathToData + separator + TimeManager.current.GetCurrentTimeStep();
+        
         string pathToTeam1 = pathToData + separator + "team1";
         string pathToTeam2 = pathToData + separator + "team2";
         
