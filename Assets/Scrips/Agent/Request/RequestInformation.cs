@@ -1,6 +1,4 @@
 ﻿
-using UnityEngine.Rendering;
-
 public class RequestInformation {
 	private readonly RequestType _requestType;
 	

@@ -1,13 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Mono.Cecil;
 using Scrips.EventManager;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class UIAgentEvenManager : MonoBehaviour  {
     

@@ -2,7 +2,6 @@
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
-using UnityEngine;
 
 public class GoHeal : ActionPlan {
 

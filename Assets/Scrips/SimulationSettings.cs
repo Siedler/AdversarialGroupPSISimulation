@@ -83,7 +83,7 @@ public class SimulationSettings {
     // General competence indicator
     // Set the value of how much the general competence is influenced by a new competence signal:
     // (alpha * new_signal) + ((1-alpha) * general_competence)
-    public static readonly double HypothalamusGeneralCompetenceInfluence = 0.1;
+    public static readonly double HypothalamusGeneralCompetenceInfluence = 0.5;
     
     // Forget rate
     public static readonly double HippocampusLocationPainAvoidanceForgetRatePositive = 0.9995;

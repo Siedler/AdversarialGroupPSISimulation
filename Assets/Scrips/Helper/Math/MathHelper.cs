@@ -1,6 +1,4 @@
-﻿using System.Net.NetworkInformation;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Scrips.Helper.Math {
 	public class MathHelper {

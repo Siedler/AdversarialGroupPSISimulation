@@ -6,7 +6,6 @@ using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Agent : MonoBehaviour {
     

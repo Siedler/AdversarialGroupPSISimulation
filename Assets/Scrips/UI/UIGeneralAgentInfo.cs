@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Priority_Queue;
 using Scrips.EventManager;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIGeneralAgentInfo : MonoBehaviour {

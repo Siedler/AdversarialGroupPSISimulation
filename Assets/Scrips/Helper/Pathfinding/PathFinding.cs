@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using Priority_Queue;
-using Scrips;
 using Scrips.Agent;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PathFinding {

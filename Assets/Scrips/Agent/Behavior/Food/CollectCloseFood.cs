@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Scrips.Agent;
-using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
-using UnityEngine;
 
 public class CollectCloseFood : ActionPlanFoodRelated {
 	private EnvironmentWorldCell _foodLocation;

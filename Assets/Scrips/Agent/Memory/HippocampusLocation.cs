@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Priority_Queue;
 using Scrips.Agent.Memory;
 using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
@@ -237,7 +235,7 @@ public class HippocampusLocation {
 			competenceSatisfaction);
 		
 		for (int i = 0; i < SimulationSettings.MemoryWorldCellNeedSatisfactionAssociationRadius; i++) {
-			double reductionFactor = 1 - ((double) (i+1) / (SimulationSettings.MemoryWorldCellNeedSatisfactionAssociationRadius+1));
+			double reductionFactor = 1 - ((double) (i+1) / (SimulationSettings.MemoryWorldCellNeedSatisfactionAssociationRadius));
 
 			double painAvoidanceSatisfactionFactored = painAvoidanceSatisfaction * reductionFactor;
 			double energySatisfactionFactored = energySatisfaction * reductionFactor;

@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using Scrips.EventManager;
-using Scrips.UI;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UINeedTankGroupController : MonoBehaviour {

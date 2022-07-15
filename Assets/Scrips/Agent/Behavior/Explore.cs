@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Explore : ActionPlan {
 

@@ -1,5 +1,4 @@
-﻿
-using Scrips.Agent.Personality;
+﻿using Scrips.Agent.Personality;
 using Scrips.Helper.Math;
 
 public class Hypothalamus {

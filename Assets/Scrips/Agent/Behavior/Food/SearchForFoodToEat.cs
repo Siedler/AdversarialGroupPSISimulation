@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Scrips.Agent;
 using Scrips.Agent.Personality;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class SearchForFoodToEat : ActionPlanFoodRelated{
 	
