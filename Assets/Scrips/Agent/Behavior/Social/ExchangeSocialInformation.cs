@@ -70,8 +70,7 @@ public class ExchangeSocialInformation : ActionPlan {
 			// Recheck if agent is now in range. If so -> give information
 			agentInRange = IsAgentInRange(agentsFieldOfView, _correspondingAgent);
 			if (agentInRange != -1) {
-				GiveSocialInformation();
-				OnSuccess();
+				SuccessCall();
 				return ActionResult.Success;
 			}
 
@@ -79,9 +78,15 @@ public class ExchangeSocialInformation : ActionPlan {
 		}
 
 		// Agent is in range -> Exchange Social Information
-		GiveSocialInformation();
-		OnSuccess();
+		SuccessCall();
 		return ActionResult.Success;
+	}
+	
+	// Combining everything that has to be done on success
+	private void SuccessCall() {
+		GiveSocialInformation();
+		OnSuccess();		
+		Statistics._current.LogSocialEvent(agent, _correspondingAgent, TimeManager.current.GetCurrentTimeStep(), SocialEventType.ExchangeSocialInformation);
 	}
 
 	public override bool CanBeExecuted(EnvironmentWorldCell currentEnvironmentWorldCell,

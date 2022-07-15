@@ -1,12 +1,11 @@
 ﻿public class EngageEvent {
-
-	private Agent _attackingAgent { get; }
-	private Agent _attackedAgent { get; }
-
-	private bool _intraTeam { get; }
-
-	private int _timeStep { get; }
+	private readonly int _timeStep;
 	
+	private readonly Agent _attackingAgent;
+	private readonly Agent _attackedAgent;
+
+	private readonly bool _intraTeam;
+
 	public EngageEvent(Agent attackingAgent, Agent attackedAgent, int timeStep) {
 		_attackingAgent = attackingAgent;
 		_attackedAgent = attackedAgent;
@@ -21,6 +20,6 @@
 		       + "\"time_step\" : " + _timeStep + ","
 		       + "\"attacking_agent\" : \"" + _attackingAgent.name + "\","
 		       + "\"attacked_agent\" : \"" + _attackedAgent.name + "\","
-		       + "\"intra_group_attack\" : " + _intraTeam + "}";
+		       + "\"intra_group_attack\" : " + (_intraTeam ? "true" : "false") + "}";
 	}
 }

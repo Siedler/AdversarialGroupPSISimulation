@@ -66,6 +66,7 @@ public class GoHeal : ActionPlan {
 		_eventHistoryManager.AddHistoryEvent("Healed " + _agentToHeal.name + "!");
 		
 		OnSuccess();
+		Statistics._current.LogSocialEvent(agent, _agentToHeal, TimeManager.current.GetCurrentTimeStep(), SocialEventType.Heal);
 		return ActionResult.Success;
 	}
 
