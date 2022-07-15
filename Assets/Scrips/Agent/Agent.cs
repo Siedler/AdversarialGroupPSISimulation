@@ -96,7 +96,7 @@ public class Agent : MonoBehaviour {
         _incomingRequests = new Queue<RequestInformation>();
 
         _locationMemory = new HippocampusLocation(this, _environment, agentPersonality);
-        _socialMemory = new HippocampusSocial(agentPersonality);
+        _socialMemory = new HippocampusSocial(agentPersonality, team);
 
         _health = 0;
 

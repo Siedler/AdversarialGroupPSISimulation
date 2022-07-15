@@ -6,12 +6,18 @@ using UnityEngine;
 public class HippocampusSocial {
 	private Dictionary<Agent, AgentIndividualMemory> _agentIndividualMemory;
 
+	// Save the team association
+	// Important for export
+	private int _team;
+	
 	// Saves the forget rate for the agents separated for positive and negative associations
 	private double[] socialForgetRatePositiveNegative;
 
-	public HippocampusSocial(AgentPersonality agentPersonality) {
+	public HippocampusSocial(AgentPersonality agentPersonality, int team) {
 		_agentIndividualMemory = new Dictionary<Agent, AgentIndividualMemory>();
 
+		_team = team;
+		
 		socialForgetRatePositiveNegative = new double[] {
 			agentPersonality.GetValue("HippocampusSocialForgetRatePositive"),
 			agentPersonality.GetValue("HippocampusSocialForgetRateNegative")
@@ -73,14 +79,18 @@ public class HippocampusSocial {
 	}
 
 	public string ToJson() {
-		string jsonString = "{\n";
+		string jsonString = "[\n";
 		int i = 0;
 		foreach ((Agent agent, AgentIndividualMemory agentIndividualMemory) in _agentIndividualMemory) {
-			jsonString += "\"" + agent.name + "\"" + " : " + agentIndividualMemory.GetSocialScore();
+			string sameTeam = agent.GetTeam() == _team ? "true" : "false";
+			jsonString +=
+				"{\"name\" : \"" + agent.name + "\"" 
+				+ ", \"social_score\" : " + agentIndividualMemory.GetSocialScore()
+				+ ", \"same_team\" : " + sameTeam + "}";
 			jsonString += i != _agentIndividualMemory.Count - 1 ? ",\n" : "\n";
 			i++;
 		}
-		jsonString += "}";
+		jsonString += "]";
 		
 		return jsonString;
 	}
