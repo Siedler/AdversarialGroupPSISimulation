@@ -4,6 +4,8 @@ public class SimulationSettings {
     // This method manages if the tool should export the data on a frequent basis (e.g. every 5 time steps)
     public static readonly bool FrequentExport = true;
     public static readonly int ExportInterval = 5;
+
+    public static readonly bool Debug = false;
     
     public static readonly int AgentViewDistance = 4;
     

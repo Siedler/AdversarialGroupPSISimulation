@@ -709,15 +709,17 @@ public class Agent : MonoBehaviour {
         if (_hypothalamus.GetCurrentEnergyValue() == 0) {
             TakeDamage(1, null);
         }
-        
-        // Despawn
-        while (toDespawn.Count > 0) {
-            Destroy(toDespawn.Dequeue());
-        }
 
-        foreach (AgentMemoryWorldCell memoryWorldCell in _locationMemory.FindFoodCluster().Keys) {
-            GameObject g = Instantiate(debugObject, memoryWorldCell.worldCoordinates, Quaternion.identity);
-            toDespawn.Enqueue(g);
+        if (SimulationSettings.Debug) {
+            // Despawn
+            while (toDespawn.Count > 0) {
+                Destroy(toDespawn.Dequeue());
+            }
+
+            foreach (AgentMemoryWorldCell memoryWorldCell in _locationMemory.FindFoodCluster().Keys) {
+                GameObject g = Instantiate(debugObject, memoryWorldCell.worldCoordinates, Quaternion.identity);
+                toDespawn.Enqueue(g);
+            }   
         }
     }
     
