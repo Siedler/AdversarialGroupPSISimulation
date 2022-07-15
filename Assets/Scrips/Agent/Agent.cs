@@ -807,7 +807,6 @@ public class Agent : MonoBehaviour {
     }
 
     public string GetAgentDescriptorObjectJson() {
-
         return "{"
                + "\"Hypothalamus\" : " + _hypothalamus.GetHypothalamusDescriptorJson() + "}";
     }

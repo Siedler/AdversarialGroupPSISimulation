@@ -73,9 +73,12 @@ public class HippocampusSocial {
 	}
 
 	public string ToJson() {
-		string jsonString = "{ ";
+		string jsonString = "{\n";
+		int i = 0;
 		foreach ((Agent agent, AgentIndividualMemory agentIndividualMemory) in _agentIndividualMemory) {
-			jsonString += agent.name + " : " + agentIndividualMemory.GetSocialScore() + " ,\n";
+			jsonString += "\"" + agent.name + "\"" + " : " + agentIndividualMemory.GetSocialScore();
+			jsonString += i != _agentIndividualMemory.Count - 1 ? ",\n" : "\n";
+			i++;
 		}
 		jsonString += "}";
 		
