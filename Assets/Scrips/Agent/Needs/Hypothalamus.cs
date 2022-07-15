@@ -140,4 +140,14 @@ public class Hypothalamus {
 
 		return 0.05 * (painAvoidanceChange + energyIntakeChange + affiliationChange + certaintyChange)/(maxChangeValue);
 	}
+
+	public string GetHypothalamusDescriptorJson() {
+		return "{"
+		       + "\"PainAvoidance\" : " + _painAvoidance.GetNeedTankDescriptorObjectJson() + ","
+		       + "\"Energy\" : " + _energy.GetNeedTankDescriptorObjectJson() + ","
+		       + "\"Affiliation\" : " + _affiliation.GetNeedTankDescriptorObjectJson() + ","
+		       + "\"Certainty\" : " + _certainty.GetNeedTankDescriptorObjectJson() + ","
+		       + "\"Competence\" : " + _competence.GetNeedTankDescriptorObjectJson() 
+		       + "}";
+	}
 }

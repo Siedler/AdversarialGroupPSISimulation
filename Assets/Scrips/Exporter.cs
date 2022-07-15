@@ -32,7 +32,7 @@ public class Exporter : MonoBehaviour {
     
     private void Tick(int step) {
         if (step == 1) {
-            ExportNames();
+            ExportTeams();
             Export();
         }
         
@@ -71,30 +71,32 @@ public class Exporter : MonoBehaviour {
         streamWriter.Close();
     }
 
-    private void ExportNames() {
-        string team1NamesFilePath = _pathToData + separator + "team1_names.txt";
-        string team2NamesFilePath = _pathToData + separator + "team2_names.txt";
+    private void ExportTeams() {
+        string team1NamesFilePath = _pathToData + separator + "team1.json";
+        string team2NamesFilePath = _pathToData + separator + "team2.json";
         
         (AgentController team1, AgentController team2) = _environment.getAgentController();
         List<Agent> team1Agents = team1.GetAgents();
         List<Agent> team2Agents = team2.GetAgents();
 
-        string team1NamesString = "";
-        foreach (Agent agent in team1Agents) {
-            team1NamesString += agent.name + "\n";
+        string team1String = "{\n";
+        for (int i = 0; i < team1Agents.Count; i++) {
+            team1String += "\t\"" + team1Agents[i].name + "\" : " + team1Agents[i].GetAgentDescriptorObjectJson();
+            team1String += i != team1Agents.Count - 1 ? ",\n" : "\n}";
         }
         
-        string team2NamesString = "";
-        foreach (Agent agent in team2Agents) {
-            team2NamesString += agent.name + "\n";
+        string team2String = "{\n";
+        for (int i = 0; i < team2Agents.Count; i++) {
+            team2String += "\t" + team2Agents[i].GetAgentDescriptorObjectJson();
+            team2String += i != team2Agents.Count - 1 ? ",\n" : "\n}";
         }
         
         StreamWriter streamWriter = new StreamWriter(team1NamesFilePath);
-        streamWriter.Write(team1NamesString);
+        streamWriter.Write(team1String);
         streamWriter.Close();
         
         streamWriter = new StreamWriter(team2NamesFilePath);
-        streamWriter.Write(team2NamesString);
+        streamWriter.Write(team2String);
         streamWriter.Close();
     }
 

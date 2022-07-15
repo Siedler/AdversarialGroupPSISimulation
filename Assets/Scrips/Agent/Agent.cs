@@ -805,6 +805,12 @@ public class Agent : MonoBehaviour {
     public string GetAgentSocialMemoryJson() {
         return _socialMemory.ToJson();
     }
+
+    public string GetAgentDescriptorObjectJson() {
+
+        return "{"
+               + "\"Hypothalamus\" : " + _hypothalamus.GetHypothalamusDescriptorJson() + "}";
+    }
     
     
     // UNITY METHODS

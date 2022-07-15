@@ -56,10 +56,11 @@ public class NeedTank {
 		return _setValue - _currentValue;
 	}
 
-	/***
-	 * In German: Bedarfs-Indikator (BedIn)
-	 */
-	public double GetNeedIndicator() {
-		return -GetDifference();
+	public string GetNeedTankDescriptorObjectJson() {
+		return "{"
+		+ "\"is_value\" : " + _currentValue + ","
+        + "\"set_value\" : " + _setValue + ","
+        + "\"leakage\" : " + _leakage + "" 
+        + "}";
 	}
 }
