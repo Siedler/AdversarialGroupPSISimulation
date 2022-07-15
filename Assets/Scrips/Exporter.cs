@@ -87,7 +87,7 @@ public class Exporter : MonoBehaviour {
         
         string team2String = "{\n";
         for (int i = 0; i < team2Agents.Count; i++) {
-            team2String += "\t" + team2Agents[i].GetAgentDescriptorObjectJson();
+            team2String += "\t\"" + team2Agents[i].name + "\" : " + team2Agents[i].GetAgentDescriptorObjectJson();
             team2String += i != team2Agents.Count - 1 ? ",\n" : "\n}";
         }
         
