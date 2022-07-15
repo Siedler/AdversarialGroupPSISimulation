@@ -22,7 +22,9 @@ public class Exporter : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.E)) {
-            Export();
+            ExportEventHistory();
+            ExportSocialScores();
+            ExportStatistics();
         }
 
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.O)) {
@@ -33,11 +35,11 @@ public class Exporter : MonoBehaviour {
     private void Tick(int step) {
         if (step == 1) {
             ExportTeams();
-            Export();
+            ExportSocialScores();
         }
         
         if (SimulationSettings.FrequentExport && step % SimulationSettings.ExportInterval == 0) {
-            Export();
+            ExportSocialScores();
         }
     }
 
@@ -52,22 +54,15 @@ public class Exporter : MonoBehaviour {
         Directory.CreateDirectory(_pathToData);
     }
     
-    private void WriteAgent(Agent agent, string pathToTeam) {
+    private void WriteAgentEventHistory(Agent agent, string pathToTeam) {
         string pathAgent = pathToTeam + separator + agent.name;
         Directory.CreateDirectory(pathAgent);
 
         string eventHistoryFileName = "event_history.txt";
-        string socialMemoryJsonName = "social_memory.json";
             
         string eventString = agent.GetEventHistoryString();
-        string socialMemoryJson = agent.GetAgentSocialMemoryJson();
-
         StreamWriter streamWriter = new StreamWriter(pathAgent + separator + eventHistoryFileName);
         streamWriter.Write(eventString);
-        streamWriter.Close();
-
-        streamWriter = new StreamWriter(pathAgent + separator + socialMemoryJsonName);
-        streamWriter.Write(socialMemoryJson);
         streamWriter.Close();
     }
 
@@ -100,7 +95,7 @@ public class Exporter : MonoBehaviour {
         streamWriter.Close();
     }
 
-    private void Export() {
+    private void ExportEventHistory() {
         string pathToData = _pathToData + separator + TimeManager.current.GetCurrentTimeStep();
         
         string pathToTeam1 = pathToData + separator + "team1";
@@ -117,12 +112,63 @@ public class Exporter : MonoBehaviour {
         
         // Save team1
         foreach (Agent agent in team1Agents) {
-            WriteAgent(agent, pathToTeam1);
+            WriteAgentEventHistory(agent, pathToTeam1);
         }
 
         // Save team2
         foreach (Agent agent in team2Agents) {
-            WriteAgent(agent, pathToTeam2);
+            WriteAgentEventHistory(agent, pathToTeam2);
         }
+    }
+
+    private void WriteAgentSocialScores(Agent agent, string pathToTeam) {
+        string pathAgent = pathToTeam + separator + agent.name;
+        Directory.CreateDirectory(pathAgent);
+
+        string socialMemoryJsonName = "social_memory.json";
+            
+        string socialMemoryJson = agent.GetAgentSocialMemoryJson();
+        
+        StreamWriter streamWriter = new StreamWriter(pathAgent + separator + socialMemoryJsonName);
+        streamWriter.Write(socialMemoryJson);
+        streamWriter.Close();
+    }
+
+    private void ExportSocialScores() {
+        string pathToData = _pathToData + separator + TimeManager.current.GetCurrentTimeStep();
+        
+        string pathToTeam1 = pathToData + separator + "team1";
+        string pathToTeam2 = pathToData + separator + "team2";
+        
+        // Create directory
+        Directory.CreateDirectory(pathToData);
+        Directory.CreateDirectory(pathToTeam1);
+        Directory.CreateDirectory(pathToTeam2);
+        
+        (AgentController team1, AgentController team2) = _environment.getAgentController();
+        List<Agent> team1Agents = team1.GetAgents();
+        List<Agent> team2Agents = team2.GetAgents();
+        
+        // Save team1
+        foreach (Agent agent in team1Agents) {
+            WriteAgentSocialScores(agent, pathToTeam1);
+        }
+
+        // Save team2
+        foreach (Agent agent in team2Agents) {
+            WriteAgentSocialScores(agent, pathToTeam2);
+        }
+    }
+
+    private void ExportStatistics() {
+        string pathToData = _pathToData + separator + TimeManager.current.GetCurrentTimeStep();
+        
+        Directory.CreateDirectory(pathToData);
+
+        string statistics = Statistics._current.GetStatisticsJson();
+        
+        StreamWriter streamWriter = new StreamWriter(pathToData + separator + "statistics.json");
+        streamWriter.Write(statistics);
+        streamWriter.Close();
     }
 }

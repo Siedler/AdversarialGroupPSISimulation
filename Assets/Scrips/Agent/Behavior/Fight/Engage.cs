@@ -12,6 +12,8 @@ public class Engage : ActionPlan {
 
 	private bool _wasHit;
 
+	private bool _loggedInStatistics;
+	
 	public Engage(
 		Agent agent,
 		AgentPersonality agentPersonality,
@@ -38,6 +40,8 @@ public class Engage : ActionPlan {
 			_agentThatCalledForHelp.ReceivedHelpAfterCalling(agent);
 			socialMemory.SocialInfluence(_agentThatCalledForHelp, 0.1);
 		}
+
+		_loggedInStatistics = false;
 		
 		_eventHistoryManager.AddHistoryEvent("Starting attack of agent " + _agentToAttack.name);
 	}
@@ -67,6 +71,11 @@ public class Engage : ActionPlan {
 		agent.SetOrientation((Direction) i);
 		
 		socialMemory.SocialInfluence(_agentToAttack, -0.1);
+
+		if (!_loggedInStatistics) {
+			_loggedInStatistics = true;
+			Statistics._current.LogEngage(agent, _agentToAttack, TimeManager.current.GetCurrentTimeStep());
+		}
 		
 		return ActionResult.Success;
 	}
