@@ -73,11 +73,11 @@ public class SimulationSettings {
     public static readonly double ActionPlanSuccessProbabilityAlphaSigma = 0.05;
 
     public static readonly double ActionPlanGeneralVsSpecificCompetenceWeightMean = 0.5;
-    public static readonly double ActionPlanGeneralVsSpecificCompetenceWeightSigma = 0.033;
+    public static readonly double ActionPlanGeneralVsSpecificCompetenceWeightSigma = 0;
     
     // TODO Check if these can be variable
     public static readonly double PainAvoidanceMultiplier = 3;
-    public static readonly double EnergyMultiplier = 2.3;
+    public static readonly double EnergyMultiplier = 2;
     public static readonly double AffiliationMultiplier = 1;
     public static readonly double CertaintyMultiplier = 1;
     public static readonly double CompetenceMultiplier = 1;
@@ -307,7 +307,7 @@ public class SimulationSettings {
     // Request Healing
     // The painAvoidance feeling and the affiliation feeling is satisfied through the action of the other agent
     public static readonly double[] RequestHealingOnSuccess = new double[] {
-        0,
+        0.1,
         0,
         0.2,
         0,
@@ -323,7 +323,7 @@ public class SimulationSettings {
     
     // Self Heal
     public static readonly double[] SelfHealingOnSuccess = new double[] {
-        0,
+        0.1,
         0,
         0,
         0,
