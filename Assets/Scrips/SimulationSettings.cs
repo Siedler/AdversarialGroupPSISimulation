@@ -5,7 +5,7 @@ public class SimulationSettings {
     public static readonly bool FrequentExport = true;
     public static readonly int ExportInterval = 5;
 
-    public static readonly bool Debug = false;
+    public static readonly bool Debug = true;
     
     public static readonly int AgentViewDistance = 4;
     
@@ -59,7 +59,12 @@ public class SimulationSettings {
     public static readonly double NewlyMetAgentSameTeamMean = 0.75;
     public static readonly double NewlyMetAgentSameTeamSigma = 0.05;
 
-    public static readonly double NewlyMetAgentOppositeTeamMean = -0.9;
+    // Scenario 2!!!
+    //public static readonly double NewlyMetAgentOppositeTeamMean = -0.9;
+    //public static readonly double NewlyMetAgentOppositeTeamSigma = 0.05;
+    
+    // Scenario 3!!!
+    public static readonly double NewlyMetAgentOppositeTeamMean = -0.5;
     public static readonly double NewlyMetAgentOppositeTeamSigma = 0.05;
     
     // MEMORY SECTION

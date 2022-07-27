@@ -5173,8 +5173,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03167c77fc5c632459debe7f1938f86f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _agentSeed: 3
-  _gameSeed: 200
+  _agentSeed: 1
+  _gameSeed: 2
 --- !u!224 &1792287172 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7959639563145358209, guid: 66a3b79af0584e64c80dde669412f362, type: 3}

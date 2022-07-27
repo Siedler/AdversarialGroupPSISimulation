@@ -77,7 +77,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5304252c37f56384c90af79104dc7fad, type: 3}
   - {fileID: 21300000, guid: 9f890dc58c1afaf4cb0ebe536580c4a6, type: 3}
   agentDirection: 0
-  debugObject: {fileID: 6761312468805920298, guid: faab2d7060e39d242a9ed528f1446f06, type: 3}
+  debugObject: {fileID: 6761312468805920298, guid: 1a51d6701844ac840ab555cf3a0b338f, type: 3}
 --- !u!1 &7955802074724182846
 GameObject:
   m_ObjectHideFlags: 0

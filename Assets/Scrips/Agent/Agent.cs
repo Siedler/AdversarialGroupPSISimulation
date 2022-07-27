@@ -251,6 +251,12 @@ public class Agent : MonoBehaviour {
 
             _eventHistoryManager.AddHistoryEvent("Got hit by " + attackingAgent.name + " with " + damage +
                                                  " points of damage.");
+
+            if (SimulationSettings.Debug) {
+                GameObject g = Instantiate(debugObject, _currentEnvironmentWorldCell.worldCoordinates,
+                    Quaternion.identity);
+                toDespawn.Enqueue(g);
+            }
         } else {
             Experience(painAvoidanceSignal, 0, 0,  0, 0);
             _eventHistoryManager.AddHistoryEvent("Got " + damage + " damage!");
@@ -715,11 +721,6 @@ public class Agent : MonoBehaviour {
             while (toDespawn.Count > 0) {
                 Destroy(toDespawn.Dequeue());
             }
-
-            foreach (AgentMemoryWorldCell memoryWorldCell in _locationMemory.FindFoodCluster().Keys) {
-                GameObject g = Instantiate(debugObject, memoryWorldCell.worldCoordinates, Quaternion.identity);
-                toDespawn.Enqueue(g);
-            }   
         }
     }
     
